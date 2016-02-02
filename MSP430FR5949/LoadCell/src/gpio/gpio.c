@@ -491,6 +491,8 @@ uint8_t GPIO_DetachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin)
 /************************************************************************
 *					INTERRUPT VECTOR
 ************************************************************************/
+
+#ifdef PMEL
 #pragma vector = PORT1_VECTOR
 __interrupt void Port_1 (void)
 {
@@ -607,3 +609,5 @@ __interrupt void Port_4 (void)
 			break;		// Default case
 	}
 }
+
+#endif
