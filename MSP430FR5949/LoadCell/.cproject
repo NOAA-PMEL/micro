@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="iar.wtdx.msp430.toolchain.project.exe.configuration.debug.1535704426">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="iar.wtdx.msp430.toolchain.project.exe.configuration.debug.1535704426" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+				<externalSettings/>
+				<extensions>
+					<extension id="com.iar.msp430.toolchain.UBROFMSP430" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="com.iar.cdt.errorParser.com.iar.cdt.errorParser.ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactExtension="d43" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf" description="" id="iar.wtdx.msp430.toolchain.project.exe.configuration.debug.1535704426" name="Debug" parent="iar.wtdx.msp430.toolchain.project.exe.configuration.debug">
+					<folderInfo id="iar.wtdx.msp430.toolchain.project.exe.configuration.debug.1535704426." name="/" resourcePath="">
+						<toolChain id="iar.wtdx.msp430.toolchain.project.exe.configuration.debug.toolChain.1211673840" name="IAR Toolchain for MSP430" superClass="iar.wtdx.msp430.toolchain.project.exe.configuration.debug.toolChain">
+							<option id="iar.wtdx.msp430.toolchain.option.OGChip::deviceSelect.1440469397" superClass="iar.wtdx.msp430.toolchain.option.OGChip::deviceSelect" value="MSP430FR5949&#9;MSP430FR5949" valueType="string"/>
+							<targetPlatform binaryParser="com.iar.msp430.toolchain.UBROFMSP430" id="iar.wtdx.msp430.toolchain.targetPlatform.62563309" isAbstract="false" name="IAR MSP430 Target platform (UBROF)" osList="win32,linux" superClass="iar.wtdx.msp430.toolchain.targetPlatform"/>
+							<builder buildPath="${workspace_loc:/LoadCell}/Debug" id="iar.wtdx.msp430.toolchain.builder.1300313297" managedBuildOn="true" name="CDT Internal Builder.Debug" superClass="iar.wtdx.msp430.toolchain.builder"/>
+							<tool id="iar.wtdx.msp430.toolchain.compiler.1139351506" name="IAR MSP430 C/C++ Compiler" superClass="iar.wtdx.msp430.toolchain.compiler">
+								<option defaultValue="iar.wtdx.msp430.toolchain.option.OCCOptimization_razor::dRadios.OCCOptimization_razor::kLow" id="iar.wtdx.msp430.toolchain.option.OCCOptimization_razor::dRadios.2022687035" superClass="iar.wtdx.msp430.toolchain.option.OCCOptimization_razor::dRadios" valueType="enumerated"/>
+								<option defaultValue="OCCOptimization_razor::kComSubElim,0,1;OCCOptimization_razor::kLoopUnroll,0,1;OCCOptimization_razor::kFuncInline,0,1;OCCOptimization_razor::kCodeMotion,0,1;OCCOptimization_razor::kTBAA,0,1;" id="iar.wtdx.msp430.toolchain.option.OCCOptimization_razor::dCList.1076680127" superClass="iar.wtdx.msp430.toolchain.option.OCCOptimization_razor::dCList" valueType="string"/>
+								<option defaultValue="true" id="iar.wtdx.msp430.toolchain.option.OCCDebugInfo::dCheck.1026114865" superClass="iar.wtdx.msp430.toolchain.option.OCCDebugInfo::dCheck" valueType="boolean"/>
+								<option id="iar.wtdx.msp430.toolchain.option.OCCDefines::dEdit.1140161523" superClass="iar.wtdx.msp430.toolchain.option.OCCDefines::dEdit"/>
+								<option id="iar.wtdx.msp430.toolchain.option.OADefines::descriptor.26978287" superClass="iar.wtdx.msp430.toolchain.option.OADefines::descriptor"/>
+								<inputType id="iar.wtdx.msp430.toolchain.compiler.c.inputType.732075713" name="IAR C Compiler Input Type (MSP430)" superClass="iar.wtdx.msp430.toolchain.compiler.c.inputType"/>
+							</tool>
+							<tool id="iar.wtdx.msp430.toolchain.assembler.1192674034" name="IAR MSP430 Assembler" superClass="iar.wtdx.msp430.toolchain.assembler">
+								<option defaultValue="true" id="iar.wtdx.msp430.toolchain.option.OADebug::debug.341912479" superClass="iar.wtdx.msp430.toolchain.option.OADebug::debug" valueType="boolean"/>
+								<inputType id="iar.wtdx.msp430.toolchain.assembler.inputType.1296521148" name="IAR MSP430 Assembler input type (s43)" superClass="iar.wtdx.msp430.toolchain.assembler.inputType"/>
+							</tool>
+							<tool id="iar.wtdx.msp430.toolchain.linker.904263427" name="IAR MSP430 Xlink linker" superClass="iar.wtdx.msp430.toolchain.linker">
+								<option defaultValue="iar.wtdx.msp430.toolchain.option.OHXCom::OXNewDebugInfo::dRadio.OHXCom::OXNewDebugInfo::what::kCspyDebugInfo" id="iar.wtdx.msp430.toolchain.option.OHXCom::OXNewDebugInfo::dRadio.1955106184" superClass="iar.wtdx.msp430.toolchain.option.OHXCom::OXNewDebugInfo::dRadio" valueType="enumerated"/>
+								<inputType id="iar.wtdx.msp430.toolchain.linker.objectInputType.1199112563" name="IAR MSP430 Linker Input Type (r43)" superClass="iar.wtdx.msp430.toolchain.linker.objectInputType">
+									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
+									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
+								</inputType>
+							</tool>
+							<tool id="iar.wtdx.msp430.toolchain.archiver.791888130" name="IAR MSP430 Archvier" superClass="iar.wtdx.msp430.toolchain.archiver"/>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="iar.wtdx.msp430.toolchain.project.exe.configuration.release.1022858196">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="iar.wtdx.msp430.toolchain.project.exe.configuration.release.1022858196" moduleId="org.eclipse.cdt.core.settings" name="Release">
+				<externalSettings/>
+				<extensions>
+					<extension id="com.iar.msp430.toolchain.UBROFMSP430" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="com.iar.cdt.errorParser.com.iar.cdt.errorParser.ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactExtension="d43" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" cleanCommand="rm -rf" description="" id="iar.wtdx.msp430.toolchain.project.exe.configuration.release.1022858196" name="Release" parent="iar.wtdx.msp430.toolchain.project.exe.configuration.release">
+					<folderInfo id="iar.wtdx.msp430.toolchain.project.exe.configuration.release.1022858196." name="/" resourcePath="">
+						<toolChain id="iar.wtdx.msp430.toolchain.project.exe.configuration.release.toolChain.1485670756" name="IAR Toolchain for MSP430" superClass="iar.wtdx.msp430.toolchain.project.exe.configuration.release.toolChain">
+							<option id="iar.wtdx.msp430.toolchain.option.OGChip::deviceSelect.1655022556" superClass="iar.wtdx.msp430.toolchain.option.OGChip::deviceSelect" value="MSP430FR5949&#9;MSP430FR5949" valueType="string"/>
+							<targetPlatform binaryParser="com.iar.msp430.toolchain.UBROFMSP430" id="iar.wtdx.msp430.toolchain.targetPlatform.372950547" isAbstract="false" name="IAR MSP430 Target platform (UBROF)" osList="win32,linux" superClass="iar.wtdx.msp430.toolchain.targetPlatform"/>
+							<builder buildPath="${workspace_loc:/LoadCell}/Release" id="iar.wtdx.msp430.toolchain.builder.1420635175" managedBuildOn="true" name="CDT Internal Builder.Release" superClass="iar.wtdx.msp430.toolchain.builder"/>
+							<tool id="iar.wtdx.msp430.toolchain.compiler.692804756" name="IAR MSP430 C/C++ Compiler" superClass="iar.wtdx.msp430.toolchain.compiler">
+								<option defaultValue="iar.wtdx.msp430.toolchain.option.OCCOptimization_razor::dRadios.OCCOptimization_razor::kHigh" id="iar.wtdx.msp430.toolchain.option.OCCOptimization_razor::dRadios.192773245" superClass="iar.wtdx.msp430.toolchain.option.OCCOptimization_razor::dRadios" valueType="enumerated"/>
+								<option defaultValue="OCCOptimization_razor::kComSubElim,1,1;OCCOptimization_razor::kLoopUnroll,1,1;OCCOptimization_razor::kFuncInline,1,1;OCCOptimization_razor::kCodeMotion,1,1;OCCOptimization_razor::kTBAA,1,1;" id="iar.wtdx.msp430.toolchain.option.OCCOptimization_razor::dCList.1432351761" superClass="iar.wtdx.msp430.toolchain.option.OCCOptimization_razor::dCList" valueType="string"/>
+								<option defaultValue="false" id="iar.wtdx.msp430.toolchain.option.OCCDebugInfo::dCheck.1687112529" superClass="iar.wtdx.msp430.toolchain.option.OCCDebugInfo::dCheck" valueType="boolean"/>
+								<option id="iar.wtdx.msp430.toolchain.option.OCCDefines::dEdit.1372001118" superClass="iar.wtdx.msp430.toolchain.option.OCCDefines::dEdit"/>
+								<option id="iar.wtdx.msp430.toolchain.option.OADefines::descriptor.1448710831" superClass="iar.wtdx.msp430.toolchain.option.OADefines::descriptor"/>
+								<inputType id="iar.wtdx.msp430.toolchain.compiler.c.inputType.78200536" name="IAR C Compiler Input Type (MSP430)" superClass="iar.wtdx.msp430.toolchain.compiler.c.inputType"/>
+							</tool>
+							<tool id="iar.wtdx.msp430.toolchain.assembler.1173484786" name="IAR MSP430 Assembler" superClass="iar.wtdx.msp430.toolchain.assembler">
+								<option defaultValue="false" id="iar.wtdx.msp430.toolchain.option.OADebug::debug.489977062" superClass="iar.wtdx.msp430.toolchain.option.OADebug::debug" valueType="boolean"/>
+								<inputType id="iar.wtdx.msp430.toolchain.assembler.inputType.208617200" name="IAR MSP430 Assembler input type (s43)" superClass="iar.wtdx.msp430.toolchain.assembler.inputType"/>
+							</tool>
+							<tool id="iar.wtdx.msp430.toolchain.linker.1622884256" name="IAR MSP430 Xlink linker" superClass="iar.wtdx.msp430.toolchain.linker">
+								<option defaultValue="iar.wtdx.msp430.toolchain.option.OHXCom::OXNewDebugInfo::dRadio.OHXCom::OXNewDebugInfo::what::kOther" id="iar.wtdx.msp430.toolchain.option.OHXCom::OXNewDebugInfo::dRadio.902548215" superClass="iar.wtdx.msp430.toolchain.option.OHXCom::OXNewDebugInfo::dRadio" valueType="enumerated"/>
+								<inputType id="iar.wtdx.msp430.toolchain.linker.objectInputType.977318691" name="IAR MSP430 Linker Input Type (r43)" superClass="iar.wtdx.msp430.toolchain.linker.objectInputType">
+									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
+									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
+								</inputType>
+							</tool>
+							<tool id="iar.wtdx.msp430.toolchain.archiver.1251885510" name="IAR MSP430 Archvier" superClass="iar.wtdx.msp430.toolchain.archiver"/>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="LoadCell.iar.wtdx.msp430.toolchain.project.exe.2044618909" name="Executable" projectType="iar.wtdx.msp430.toolchain.project.exe"/>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+</cproject>
