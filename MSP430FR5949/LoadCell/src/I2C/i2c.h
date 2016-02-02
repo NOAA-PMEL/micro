@@ -30,7 +30,7 @@
 *						STANDARD LIBRARIES
 ************************************************************************/
 #include <stdint.h>
-#include "../includes.h"
+//#include "../includes.h"
 
 #ifndef PMEL
 #include "../test/MSP430FR5969.h"
@@ -55,8 +55,8 @@
 #define I2C_TX_BUFFER_LENGTH	(2)
 #define I2C_RX_BUFFER_LENGTH	(6)
 // 
-#define BAUDRATE_PASS	(1)
-#define BAUDRATE_FAIL	(0)
+#define BAUDRATE_PASS	(0)
+#define BAUDRATE_FAIL	(1)
 
 
 // BAUD RATES

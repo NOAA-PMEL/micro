@@ -22,7 +22,7 @@
 *							HEADER FILES
 ************************************************************************/
 #include <stdint.h>
-#include "../inc/msp430fr5969.h"
+#include "../test/msp430fr5969.h"
 #include "buffers.h"
 /************************************************************************
 *						STANDARD LIBRARIES
