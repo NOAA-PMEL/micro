@@ -31,11 +31,16 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
-#ifdef _MSP430FR5969_
+#include "../inc/includes.h"
+
+#ifndef PMEL
+#include "../test/msp430fr5969.h"
+#else
 #include <msp430fr5969.h>
 #endif
 
-#include "../includes.h"
+
+
 
 
 
