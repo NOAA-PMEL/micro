@@ -1,6 +1,6 @@
 #include "unity.h"
 #include "buffer_f.h"
-#include "../inc/msp430fr5969.h"
+#include "../test/msp430fr5969.h"
 
 
 void setUp(void)
