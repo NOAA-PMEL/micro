@@ -1,102 +1,26 @@
+/** @file console.h
+ *  @brief Console functions
+ *
+ *  @author Matt Casari, matthew.casari@noaa.org
+ *  @date 2/3/2016
+ *  @version 0.0.1
+ *
+ *  @copyright National Oceanic and Atmospheric Administration
+ *  @copyright Pacific Marine Environmental Lab
+ *  @copyright Environmental Development Division
+ *
+ *	@note Tested on MSP430FR5969
+ *	@note
+ *
+ *	@todo
+ *	@todo
+ *
+ *  @bug  No known bugs
+ */
+
+
+
 #include "console.h"
-
-
-#define LENGTH_OF(x)        ( sizeof(x)/sizeof(x[0]) )
-#define UART_A1             (1)
-
-void CONSOLE_State_Main(void);
-void CONSOLE_State_ManualCalibration(void);
-void CONSOLE_State_CalibrationMode(void);
-void CONSOLE_State_CalibrationInput(void);
-
-void CONSOLE_DisplayState_Main(void);
-void CONSOLE_DisplayState_CalibrationMode(void);
-void CONSOLE_DisplayState_CalibrationInput(void);
-void CONSOLE_DisplayState_ManualCalibrationInput(uint8_t line, float value);
-void CONSOLE_DisplayState_CalibrationPoints(void);
-
-uint8_t CONSOLE_ReadChar(void);
-void CONSOLE_ReadInputFloat(uint8_t *rxChars,uint8_t length);
-void CONSOLE_ReadString(uint8_t *str, uint8_t length);
-
-uint8_t UART_ClearChar(void);
-uint8_t UART_WriteChar(uint8_t value, uint8_t Port);
-uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port);
-
-
-typedef struct SystemValues {
-    float slope;
-    float intercept;
-}SystemValues_t;
-
-typedef enum mode {
-    Display,
-    Read,
-    Continue,
-    Exit
-} modes_t;
-
-typedef enum state {
-    Main,
-    Calibration,
-    ManualCal,
-    DisplayCal,
-    DisplayMetadata,
-    UpdateSN,
-    Sample
-} state_t;
-
-typedef struct console {
-    modes_t mode;
-    state_t state;
-    state_t previousState;
-    uint8_t inputChar;
-    uint16_t SerialNumber;
-}console_t;
-
-
-// Initialize structures
-console_t console;          // Console State
-SystemValues_t ActiveSys;   // Normal running system values
-SystemValues_t FRAMSys;     // structures saved to FRAM
-
-int main()
-{
-    // Set Console States
-    console.state = Calibration;
-    console.previousState = Main;
-    console.SerialNumber = 7600;
-
-    // Set System States
-    FRAMSys.slope = 4.2;
-    FRAMSys.intercept = 38.3;
-
-    ActiveSys = FRAMSys;
-
-    uint8_t rxChar = 0;
-
-    printf("Hello, World!\n");
-
-
-
-    // Main
-    CONSOLE_State_Main();
-
-    // Calibration Mode
-    //CONSOLE_State_CalibrationMode();
-
-
-
-    printf("\n\n");
-
-    // Manual Cal
-    //CONSOLE_State_ManualCalibration();
-
-
-
-    return 0;
-}
-
 
 uint8_t UART_ClearChar(void)
 {

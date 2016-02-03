@@ -44,6 +44,7 @@
 #include "./Hardware/lowlevel.h"
 #include "./I2C/i2c.h"
 #include "./Keller/PAxLD.h"
+#include "./console/console.h"
 //#include "./Analog/analog.h"
 
 /************************************************************************
