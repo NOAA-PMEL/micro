@@ -100,43 +100,26 @@ void test_Buffer_Get_should_ReturnErrorIfCalledWhenEmpty(void)
 
 void test_Buffer_Put_should_ReturnErrorIfCalledWhenFull(void)
 {
-//	CircularBufferC_s tBuffer;
-//	BufferC_Clear(&tBuffer);
-//
-//    int i;
-//    char Expected[BUFFER_C_SIZE];
-//    char Actual[BUFFER_C_SIZE];
-//
-//    for(i=0;i<BUFFER_C_SIZE;i++)
-//    {
-//        Expected[i] = 'a';
-//        //Actual[i] = BufferC_Put(&tBuffer, 'a');
-//        TEST_ASSERT_EQUAL(0,BufferC_Put(&tBuffer,'a'));
-//
-//        //TEST_ASSERT_EQUAL(Expected[i],Actual[i]);
-//    }
-//
-//    TEST_ASSERT_EQUAL_HEX8_ARRAY(tBuffer.buffer,Expected,BUFFER_C_SIZE);
-//
-////    TEST_ASSERT_EQUAL_HEX8_ARRAY(Expected,Actual,BUFFER_C_SIZE);
-//    TEST_ASSERT_EQUAL(BUFFER_ERROR_FULL,BufferC_Put(&tBuffer, 0x10));
-
-
-    CircularBufferC_s tBuffer;
+	CircularBufferC_s tBuffer;
 	BufferC_Clear(&tBuffer);
 
-	int i;
-	int Expected[BUFFER_C_SIZE];
-	int Actual[BUFFER_C_SIZE];
+    int i;
+    char Expected[BUFFER_C_SIZE];
+    char Actual[BUFFER_C_SIZE];
 
-	for(i=0;i<BUFFER_C_SIZE;i++)
-	{
-		Expected[i] = 0;
-		Actual[i] = BufferC_Put(&tBuffer, i);
-	}
+    for(i=0;i<BUFFER_C_SIZE;i++)
+    {
+        Expected[i] = 'a';
+        //Actual[i] = BufferC_Put(&tBuffer, 'a');
+        TEST_ASSERT_EQUAL(0,BufferC_Put(&tBuffer,'a'));
 
-	TEST_ASSERT_EQUAL_INT_ARRAY(Expected,Actual,BUFFER_C_SIZE);
-	TEST_ASSERT_EQUAL(BUFFER_ERROR_FULL,BufferC_Put(&tBuffer, 0x10));
+        //TEST_ASSERT_EQUAL(Expected[i],Actual[i]);
+    }
+
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(tBuffer.buffer,Expected,BUFFER_C_SIZE);
+
+//    TEST_ASSERT_EQUAL_HEX8_ARRAY(Expected,Actual,BUFFER_C_SIZE);
+//    TEST_ASSERT_EQUAL(BUFFER_ERROR_FULL,BufferC_Put(&tBuffer, 0x10));
 }
 
 //

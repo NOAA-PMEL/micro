@@ -41,7 +41,7 @@
 #define BUFFER32_SIZE				(255)
 #define BUFFER_F_SIZE				(255)
 #define BUFFER_D_SIZE				(255)
-#define BUFFER_C_SIZE				(1023)
+#define BUFFER_C_SIZE				(255)
 
 #define ACTUAL_BUFFER8_SIZE			(BUFFER8_SIZE + 1)
 #define ACTUAL_BUFFER16_SIZE		(BUFFER16_SIZE + 1)
