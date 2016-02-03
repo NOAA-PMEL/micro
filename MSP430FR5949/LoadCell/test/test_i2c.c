@@ -1,5 +1,6 @@
 #include "unity.h"
 #include "i2c.h"
+#include "gpio.h"
 
 void setUp(void)
 {

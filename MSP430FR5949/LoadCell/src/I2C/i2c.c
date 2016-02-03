@@ -49,7 +49,7 @@ void I2CInit(void)
 	UCB0CTLW0 &= ~UCSWRST;					// Release from Reset
 
 	// Set interrupt on STOP and RECEIVE
-    UCB0IE = UCSTPIE | UCRXIE;
+    UCB0IE = UCSTPIE | UCRXIE0;
 	return;
 }
 
@@ -59,10 +59,10 @@ void I2CClose(void)
 	UCB0CTLW0 |= UCSWRST;			// Hold I2C in reset
 	P1SEL1 &= ~(BIT6 | BIT7);		// Make P1.6 & P1.7 GPIO
 	// Set P1.6 & P1.7 as output LOW
-	GpioSetOutputPins(GPIO_PORTP1,GPIO_PIN6);
-	GpioSetOutputPins(GPIO_PORTP1,GPIO_PIN7);
-	GpioSetOutputLow(GPIO_PORTP1, GPIO_PIN6);
-	GpioSetOutputLow(GPIO_PORTP1, GPIO_PIN7);
+	GPIO_SetPinAsOutput(GPIO_PORTP1,6);
+	GPIO_SetPinAsOutput(GPIO_PORTP1,7);
+	GPIO_ClearPin(GPIO_PORTP1, 6);
+	GPIO_ClearPin(GPIO_PORTP1, 7);
 }
 
 /***********************************************************************/
@@ -86,12 +86,13 @@ uint8_t I2CRead(  uint16_t slaveAddress,uint8_t length )
 /***********************************************************************/
 void I2CWrite( uint16_t slaveAddress, uint16_t *value, uint8_t length )
 {
+	uint8_t i= 0;
 	
 	UCB0I2CSA = slaveAddress;			// Set slave address
 	UCB0TBCNT = length;					// Set byte count before Stop bit
 	UCB0CTLW0 |= UCTR + UCTXSTT;		// Set Transmit + Start bit
 
-	for(uint8_t i=0;i<length;i++)
+	for(i=0;i<length;i++)
 	{
 		UCB0TXBUF = value[i];				// Set Tx buffer
         __delay_cycles(500);
