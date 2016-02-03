@@ -1,5 +1,8 @@
 #include "unity.h"
 #include "PAxLD.h"
+#include "i2c.h"
+#include "gpio.h"
+
 
 void setUp(void)
 {
