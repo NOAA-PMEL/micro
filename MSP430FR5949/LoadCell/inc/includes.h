@@ -28,17 +28,23 @@
 #include <string.h>
 #include <stdlib.h>
 #include <float.h>
+
+#ifndef PMEL
+#include "../test/msp430fr5969.h"
+#else
 #include <msp430fr5969.h>		// Device Specific Header File
+#endif
+
 /************************************************************************
 *							HEADER FILES
 ************************************************************************/
 #include "./GPIO/gpio.h"		// GPIO Header file
-#include "./Timer/timer.h"
+//#include "./Timer/timer.h"
 #include "./UART/uart.h"
 #include "./Hardware/lowlevel.h"
 #include "./I2C/i2c.h"
 #include "./Keller/PAxLD.h"
-#include "./Analog/analog.h"
+//#include "./Analog/analog.h"
 
 /************************************************************************
 *							CONSTANTS
@@ -69,14 +75,14 @@
 
 // LED 1 Macros
 #define LED1_PORT					(GPIO_PORTP4)
-#define LED1_PIN					(GPIO_PIN6)
+#define LED1_PIN					(6)
 #define LED1_INIT()					(GpioSetOutputPins(LED1_PORT,LED1_PIN))
 #define LED1_OFF()					(GpioSetOutputLow(LED1_PORT,LED1_PIN))
 #define LED1_ON()					(GpioSetOutputHigh(LED1_PORT,LED1_PIN))
 #define LED1_TOGGLE()	      		(GpioTogglePin(LED1_PORT,LED1_PIN))
 // LED 2 Macros
 #define LED2_PORT					(GPIO_PORTP1)
-#define LED2_PIN					(GPIO_PIN0)
+#define LED2_PIN					(0)
 #define LED2_INIT()					(GpioSetOutputPins(LED2_PORT,LED2_PIN))
 #define LED2_OFF()					(GpioSetOutputLow(LED2_PORT,LED2_PIN))
 #define LED2_ON()					(GpioSetOutputHigh(LED2_PORT,LED2_PIN))
@@ -87,25 +93,25 @@
 
 // Location of input pin of the PAXLD Sensor EOC pin
 #define PAXLD_SENSOR0_EOC_PORT		(GPIO_PORTP1)
-#define PAXLD_SENSOR0_EOC_PIN		(GPIO_PIN2)
+#define PAXLD_SENSOR0_EOC_PIN		(2)
 
 #define PAXLD_SENSOR1_EOC_PORT		(GPIO_PORTP3)
-#define PAXLD_SENSOR1_EOC_PIN		(GPIO_PIN4)
+#define PAXLD_SENSOR1_EOC_PIN		(4)
 
 #define PAXLD_SENSOR2_EOC_PORT		(GPIO_PORTP1)
-#define PAXLD_SENSOR2_EOC_PIN		(GPIO_PIN5)
+#define PAXLD_SENSOR2_EOC_PIN		(5)
 
 #define PAXLD_SENSOR3_EOC_PORT		(GPIO_PORTP3)
-#define PAXLD_SENSOR3_EOC_PIN		(GPIO_PIN5)
+#define PAXLD_SENSOR3_EOC_PIN		(5)
 
 #define PAXLD_SENSOR4_EOC_PORT		(GPIO_PORTP1)
-#define PAXLD_SENSOR4_EOC_PIN		(GPIO_PIN4)
+#define PAXLD_SENSOR4_EOC_PIN		(4)
 
 #define PAXLD_SENSOR5_EOC_PORT		(GPIO_PORTP3)
-#define PAXLD_SENSOR5_EOC_PIN		(GPIO_PIN6)
+#define PAXLD_SENSOR5_EOC_PIN		(6)
 
 #define PAXLD_SENSOR6_EOC_PORT		(GPIO_PORTP1)
-#define PAXLD_SENSOR6_EOC_PIN		(GPIO_PIN3)
+#define PAXLD_SENSOR6_EOC_PIN		(3)
 
 
 
@@ -149,7 +155,7 @@
 
 // Define PAXLD Power FET Pin
 #define FET_PORT					(GPIO_PORTP3)
-#define FET_PIN						(GPIO_PIN0)
+#define FET_PIN						(0)
 #define FET_INIT()					(GpioSetOutputPins(FET_PORT,FET_PIN))
 #define FET_OFF()					(GpioSetOutputHigh(FET_PORT,FET_PIN))
 #define FET_ON()					(GpioSetOutputLow(FET_PORT,FET_PIN))
@@ -196,6 +202,7 @@ typedef struct{
 /************************************************************************
 *							GLOBAL VARIABLES
 ************************************************************************/
+#ifdef PMEL
 extern volatile FLAGS TimerFlags;
 extern volatile uint8_t msTimeoutCounter;
 extern const uint8_t sensorAddress[NUM_SENSORS];
@@ -203,4 +210,6 @@ extern const uint8_t sensorEOCPort[NUM_SENSORS];
 extern const uint16_t sensorEOCPin[NUM_SENSORS];
 extern PAXLDSensor_t pxSensor[NUM_SENSORS];
 extern volatile uint8_t sensorCount;
+#endif
+
 #endif
