@@ -169,6 +169,14 @@ uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port)
 	UART_WriteChar('\n',Port);
 	return UART_OK;
 }
+
+void UART_ClearChar(uint8_t Port)
+{
+	char temp[] = "\033[2J";
+
+	UART_Write(&temp[0], LENGTH_OF(temp), Port);
+    return;
+}
 /************************************************************************
 *					STATIC FUNCTIONS
 ************************************************************************/

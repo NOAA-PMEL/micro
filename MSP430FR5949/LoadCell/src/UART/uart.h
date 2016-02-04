@@ -133,5 +133,15 @@ uint8_t UART_WriteChar(uint8_t value, uint8_t Port);
  *  @return none
  */
 uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port);
+
+/** @brief Write ASCII clear char to UART
+ *
+ *	Writes the ASCII clear char to the specified port
+ *
+ *  @param Port UART Port to write to
+ *
+ *  @return none
+ */
+void UART_ClearChar(uint8_t Port);
 #endif
 
