@@ -28,7 +28,7 @@
 #include <stdint.h>
 
 #ifndef PMEL
-#include "../test/msp430fr5969.h"
+#include "../../test/msp430fr5969.h"
 #endif
 /************************************************************************
 *							MACROS

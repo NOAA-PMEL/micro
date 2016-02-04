@@ -16,6 +16,7 @@
 #ifndef INCLUDES_H
 #define INCLUDES_H
 
+
 /*****************************  DEBUG  *********************************/
 #define DEBUG 	(true)
 
@@ -38,13 +39,14 @@
 /************************************************************************
 *							HEADER FILES
 ************************************************************************/
-#include "./GPIO/gpio.h"		// GPIO Header file
+#include "../src/GPIO/gpio.h"		// GPIO Header file
 //#include "./Timer/timer.h"
-#include "./UART/uart.h"
-#include "./Hardware/lowlevel.h"
-#include "./I2C/i2c.h"
-#include "./Keller/PAxLD.h"
-#include "./console/console.h"
+#include "../src/UART/uart.h"
+#include "../src/Hardware/lowlevel.h"
+#include "../src/I2C/i2c.h"
+#include "../src/Keller/PAxLD.h"
+#include "../src/console/console.h"
+#include "../src/buffer/buffers.h"
 //#include "./Analog/analog.h"
 
 /************************************************************************
@@ -61,6 +63,8 @@
 /************************************************************************
 *							MACROS
 ************************************************************************/
+#include LENGTH_OF(x)				(sizeof(x[0])/sizeof(x))
+
 // I2C bus being used (only on on the MSP430FR5969)
 #define I2C_B0
 

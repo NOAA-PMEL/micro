@@ -21,11 +21,20 @@
 /************************************************************************
 *							HEADER FILES
 ************************************************************************/
+#include "../../inc/includes.h"
 #ifndef PMEL
-#include "../test/msp430fr5969.h"
+#include "../../test/msp430fr5969.h"
 #else
 #include <msp430fr5969.h>
 #endif
+
+
+#include "buffer8.h"
+#include "buffer16.h"
+#include "buffer32.h"
+#include "buffer_c.h"
+#include "buffer_d.h"
+#include "buffer_f.h"
 
 //#include "../inc/includes.h"
 

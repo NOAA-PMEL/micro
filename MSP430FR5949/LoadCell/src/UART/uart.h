@@ -21,8 +21,9 @@
 /************************************************************************
 *							HEADER FILES
 ************************************************************************/
+#include "../../inc/includes.h"
 #ifndef PMEL
-#include "../test/msp430fr5969.h"
+#include "../../test/msp430fr5969.h"
 #else
 #include <msp430fr5969.h>
 #endif

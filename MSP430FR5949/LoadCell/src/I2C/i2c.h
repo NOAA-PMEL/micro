@@ -30,11 +30,11 @@
 *						STANDARD LIBRARIES
 ************************************************************************/
 #include <stdint.h>
-#include "../inc/includes.h"
+#include "../../inc/includes.h"
 
 #ifndef PMEL
-#include "../test/MSP430FR5969.h"
-#include "../src/gpio/gpio.h"
+#include "../../test/MSP430FR5969.h"
+#include "../../src/gpio/gpio.h"
 #else
 #include <msp430fr5969.h>
 #endif
