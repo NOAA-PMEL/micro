@@ -1,20 +1,9 @@
-10:38:04,022 [main] INFO com.iar.ide.common.ewpath.EwPathManager  - Path to EW stage not found for provider iar.sdkprovider.msp430. Requesting a settings dialog to be displayed...
-10:38:11,544 [main] ERROR com.iar.ide.common.ewpath.EwPathManager  - Path to EW has not been specified for provider iar.sdkprovider.msp430. The C-SPY plugins will not function properly.
-10:38:11,544 [main] FATAL com.iar.cdt.project.utils.AbstractSdkProvider  - The directory pointed by iar.toolchain.msp430.sdkLocation does not exist. The toolchain binaries will not be found.
-10:38:11,568 [main] INFO com.iar.ide.common.ewpath.EwPathManager  - Path to EW stage not found for provider iar.sdkprovider.msp430. Requesting a settings dialog to be displayed...
-10:38:13,070 [main] ERROR com.iar.ide.common.ewpath.EwPathManager  - Path to EW has not been specified for provider iar.sdkprovider.msp430. The C-SPY plugins will not function properly.
-10:38:13,070 [main] FATAL com.iar.cdt.project.utils.AbstractSdkProvider  - The directory pointed by iar.toolchain.msp430.sdkLocation does not exist. The toolchain binaries will not be found.
-10:38:13,077 [main] INFO com.iar.ide.common.ewpath.EwPathManager  - Path to EW stage not found for provider iar.sdkprovider.msp430. Requesting a settings dialog to be displayed...
-10:38:14,114 [main] ERROR com.iar.ide.common.ewpath.EwPathManager  - Path to EW has not been specified for provider iar.sdkprovider.msp430. The C-SPY plugins will not function properly.
-10:38:14,115 [main] FATAL com.iar.cdt.project.utils.AbstractSdkProvider  - The directory pointed by iar.toolchain.msp430.sdkLocation does not exist. The toolchain binaries will not be found.
-10:38:14,116 [main] INFO com.iar.ide.common.ewpath.EwPathManager  - Path to EW stage not found for provider iar.sdkprovider.msp430. Requesting a settings dialog to be displayed...
-10:38:14,636 [main] ERROR com.iar.ide.common.ewpath.EwPathManager  - Path to EW has not been specified for provider iar.sdkprovider.msp430. The C-SPY plugins will not function properly.
-10:38:14,636 [main] FATAL com.iar.cdt.project.utils.AbstractSdkProvider  - The directory pointed by iar.toolchain.msp430.sdkLocation does not exist. The toolchain binaries will not be found.
-10:38:14,702 [Worker-10] INFO com.iar.ide.common.ewpath.EwPathManager  - Path to EW stage not found for provider iar.sdkprovider.msp430. Requesting a settings dialog to be displayed...
-10:38:14,716 [main] INFO com.iar.ide.common.ewpath.EwPathManager  - Path to EW stage not found for provider iar.sdkprovider.msp430. Requesting a settings dialog to be displayed...
-10:38:15,430 [main] ERROR com.iar.ide.common.ewpath.EwPathManager  - Path to EW has not been specified for provider iar.sdkprovider.msp430. The C-SPY plugins will not function properly.
-10:38:15,431 [main] FATAL com.iar.cdt.project.utils.AbstractSdkProvider  - The directory pointed by iar.toolchain.msp430.sdkLocation does not exist. The toolchain binaries will not be found.
-10:38:15,435 [Worker-10] ERROR com.iar.ide.common.ewpath.EwPathManager  - Path to EW has not been specified for provider iar.sdkprovider.msp430. The C-SPY plugins will not function properly.
-10:38:15,435 [Worker-10] FATAL com.iar.cdt.project.utils.AbstractSdkProvider  - The directory pointed by iar.toolchain.msp430.sdkLocation does not exist. The toolchain binaries will not be found.
-10:38:15,439 [Worker-10] ERROR com.iar.ide.common  - Cannot find device configurations folder (\430\config\devices) ()
-11:10:13,430 [Worker-28] INFO com.iar.cdt.generic.toolchain.info.SdkToolchainInfo  - Using toolchain at C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\430\bin, version 6.30.2.940
+13:51:47,418 [main] INFO com.iar.ide.common.ewpath.EwPathManager  - Path to EW stage not found for provider iar.sdkprovider.msp430. Requesting a settings dialog to be displayed...
+13:51:53,207 [main] ERROR com.iar.ide.common.ewpath.EwPathManager  - Path to EW has not been specified for provider iar.sdkprovider.msp430. The C-SPY plugins will not function properly.
+13:51:53,207 [main] FATAL com.iar.cdt.project.utils.AbstractSdkProvider  - The directory pointed by iar.toolchain.msp430.sdkLocation does not exist. The toolchain binaries will not be found.
+13:51:53,207 [main] INFO com.iar.ide.common.ewpath.EwPathManager  - Path to EW stage not found for provider iar.sdkprovider.msp430. Requesting a settings dialog to be displayed...
+13:51:53,722 [main] ERROR com.iar.ide.common.ewpath.EwPathManager  - Path to EW has not been specified for provider iar.sdkprovider.msp430. The C-SPY plugins will not function properly.
+13:51:53,722 [main] FATAL com.iar.cdt.project.utils.AbstractSdkProvider  - The directory pointed by iar.toolchain.msp430.sdkLocation does not exist. The toolchain binaries will not be found.
+13:51:53,738 [main] INFO com.iar.ide.common.ewpath.EwPathManager  - Path to EW stage not found for provider iar.sdkprovider.msp430. Requesting a settings dialog to be displayed...
+13:52:03,347 [main] INFO com.iar.ide.common.ewpath.EwPathManager  - The path to EW has now been set to: C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2 for provider iar.sdkprovider.msp430
+13:52:03,425 [main] INFO com.iar.cdt.generic.toolchain.info.SdkToolchainInfo  - Using toolchain at C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\430\bin, version 6.30.2.940

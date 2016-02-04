@@ -40,13 +40,14 @@
 *							HEADER FILES
 ************************************************************************/
 #include "../src/GPIO/gpio.h"		// GPIO Header file
-//#include "./Timer/timer.h"
+#include "../src/Timer/timer.h"
 #include "../src/UART/uart.h"
 #include "../src/Hardware/lowlevel.h"
 #include "../src/I2C/i2c.h"
 #include "../src/Keller/PAxLD.h"
 #include "../src/console/console.h"
-#include "../src/buffer/buffers.h"
+//#include "../src/buffer/buffers.h"
+
 //#include "./Analog/analog.h"
 
 /************************************************************************
@@ -63,7 +64,7 @@
 /************************************************************************
 *							MACROS
 ************************************************************************/
-#include LENGTH_OF(x)				(sizeof(x[0])/sizeof(x))
+#define LENGTH_OF(x)				(sizeof(x[0])/sizeof(x))
 
 // I2C bus being used (only on on the MSP430FR5969)
 #define I2C_B0
@@ -81,17 +82,17 @@
 // LED 1 Macros
 #define LED1_PORT					(GPIO_PORTP4)
 #define LED1_PIN					(6)
-#define LED1_INIT()					(GpioSetOutputPins(LED1_PORT,LED1_PIN))
-#define LED1_OFF()					(GpioSetOutputLow(LED1_PORT,LED1_PIN))
-#define LED1_ON()					(GpioSetOutputHigh(LED1_PORT,LED1_PIN))
-#define LED1_TOGGLE()	      		(GpioTogglePin(LED1_PORT,LED1_PIN))
+#define LED1_INIT()					(GPIO_SetPinAsOutput(LED1_PORT,LED1_PIN))
+#define LED1_OFF()					(GPIO_ClearPin(LED1_PORT,LED1_PIN))
+#define LED1_ON()					(GPIO_SetPin(LED1_PORT,LED1_PIN))
+#define LED1_TOGGLE()	      		(GPIO_TogglePin(LED1_PORT,LED1_PIN))
 // LED 2 Macros
 #define LED2_PORT					(GPIO_PORTP1)
 #define LED2_PIN					(0)
-#define LED2_INIT()					(GpioSetOutputPins(LED2_PORT,LED2_PIN))
-#define LED2_OFF()					(GpioSetOutputLow(LED2_PORT,LED2_PIN))
-#define LED2_ON()					(GpioSetOutputHigh(LED2_PORT,LED2_PIN))
-#define LED2_TOGGLE()	      		(GpioTogglePin(LED2_PORT,LED2_PIN))
+#define LED2_INIT()					(GPIO_SetPinAsOutput(LED2_PORT,LED2_PIN))
+#define LED2_OFF()					(GPIO_ClearPin(LED2_PORT,LED2_PIN))
+#define LED2_ON()					(GPIO_SetPin(LED2_PORT,LED2_PIN))
+#define LED2_TOGGLE()	      		(GPIO_TogglePin(LED2_PORT,LED2_PIN))
 
 #endif
 
@@ -161,10 +162,10 @@
 // Define PAXLD Power FET Pin
 #define FET_PORT					(GPIO_PORTP3)
 #define FET_PIN						(0)
-#define FET_INIT()					(GpioSetOutputPins(FET_PORT,FET_PIN))
-#define FET_OFF()					(GpioSetOutputHigh(FET_PORT,FET_PIN))
-#define FET_ON()					(GpioSetOutputLow(FET_PORT,FET_PIN))
-#define FET_TOGGLE()				(GpioTogglePin(FET_PORT,FET_PIN))
+#define FET_INIT()					(GPIO_SetPinAsOutput(FET_PORT,FET_PIN))
+#define FET_OFF()					(GPIO_SetPin(FET_PORT,FET_PIN))
+#define FET_ON()					(GPIO_ClearPin(FET_PORT,FET_PIN))
+#define FET_TOGGLE()				(GPIO_TogglePin(FET_PORT,FET_PIN))
 
 // Number of PAXLD sensors attached to the I2C Bus
 #define NUM_SENSORS					(7)
@@ -204,12 +205,43 @@ typedef struct{
 	};
 }FLAGS;
 
+typedef struct SystemValues {
+    float slope;
+    float intercept;
+}SystemValues_t;
+
+typedef enum mode {
+    Display,
+    Read,
+    Continue,
+    Exit
+} modes_t;
+
+typedef enum state {
+    Main,
+    Calibration,
+    ManualCal,
+    DisplayCal,
+    DisplayMetadata,
+    UpdateSN,
+    Sample
+} state_t;
+
+typedef struct console {
+    modes_t mode;
+    state_t state;
+    state_t previousState;
+    uint8_t inputChar;
+    uint16_t SerialNumber;
+}console_t;
 /************************************************************************
 *							GLOBAL VARIABLES
 ************************************************************************/
+extern volatile uint32_t msTimeoutCounter;
+extern console_t console;
 #ifdef PMEL
 extern volatile FLAGS TimerFlags;
-extern volatile uint8_t msTimeoutCounter;
+
 extern const uint8_t sensorAddress[NUM_SENSORS];
 extern const uint8_t sensorEOCPort[NUM_SENSORS];
 extern const uint16_t sensorEOCPin[NUM_SENSORS];

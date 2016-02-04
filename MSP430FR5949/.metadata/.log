@@ -5569,3 +5569,57 @@ java.lang.NullPointerException
 	at com.iar.wtdx.runtime.mbs.MBSUtils.invokeAllBehaviors(MBSUtils.java:373)
 	at com.iar.wtdx.runtime.mbs.WtdxProjectListener$1.run(WtdxProjectListener.java:106)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.iar.wtdx.runtime 4 0 2016-02-04 12:43:54.225
+!MESSAGE Cannot initialize options
+!STACK 0
+java.lang.NullPointerException
+	at com.iar.cdt.msp430.toolchain.MSP430Utils.getCurrentDeviceInfoAttribute(MSP430Utils.java:58)
+	at com.iar.cdt.msp430.toolchain.statics.OhGeneral.oGCore430X_Is430XCore(OhGeneral.java:40)
+	at com.iar.cdt.msp430.toolchain.statics.OhGeneral.getLibraryBaseName(OhGeneral.java:165)
+	at com.iar.cdt.msp430.toolchain.behaviors.OGRuntimeLibrary_libraryFileBehavior.update(OGRuntimeLibrary_libraryFileBehavior.java:172)
+	at com.iar.wtdx.runtime.mbs.MBSUtils.updateMBSOption(MBSUtils.java:239)
+	at com.iar.wtdx.runtime.mbs.MBSUtils.updateMBSOption(MBSUtils.java:756)
+	at com.iar.wtdx.runtime.mbs.MBSUtils.invokeAllBehaviors(MBSUtils.java:373)
+	at com.iar.wtdx.runtime.mbs.WtdxProjectListener$1.run(WtdxProjectListener.java:106)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SESSION 2016-02-04 13:51:41.419 -----------------------------------------------
+eclipse.buildId=4.5.1.M20150904-0015
+java.version=1.8.0_60
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.cpp.product
+
+!ENTRY org.eclipse.core.resources 2 10035 2016-02-04 13:51:44.016
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY org.eclipse.emf.ecore 2 0 2016-02-04 13:51:44.187
+!MESSAGE Both 'com.iar.importer.core' and 'com.iar.importer.core' register a package for 'http://www.iar.com/ewsample.xsd'
+
+!ENTRY org.eclipse.ui 2 0 2016-02-04 13:52:05.649
+!MESSAGE The 'org.eclipse.ui.startup' extension from 'net.sourceforge.sunshade.bsf' does not provide a 'class' attribute.
+This usage is deprecated and a 'class' attribute should be provided.
+The release after Mars (4.5) will no longer support the deprecated usage!
+
+!ENTRY org.eclipse.ui 2 0 2016-02-04 13:52:05.694
+!MESSAGE The 'org.eclipse.ui.startup' extension from 'net.sourceforge.sunshade.filedrag' does not provide a 'class' attribute.
+This usage is deprecated and a 'class' attribute should be provided.
+The release after Mars (4.5) will no longer support the deprecated usage!
+
+!ENTRY net.sourceforge.sunshade.filedrag.FileDragPlugin 2 2 2016-02-04 13:52:05.697
+!MESSAGE A DropTarget already exists on eclipse window, trying to add FileDrag listener to it.
+
+!ENTRY org.eclipse.egit.ui 2 0 2016-02-04 14:29:37.222
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Casari'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.core.resources 4 77 2016-02-04 14:30:32.416
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2016-02-04 14:30:32.416
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2016-02-04 14:30:32.416
+!MESSAGE C:\Users\Casari\version-control\PMEL\micro\MSP430FR5949 overlaps the workspace location: C:\Users\Casari\version-control\PMEL\micro\MSP430FR5949

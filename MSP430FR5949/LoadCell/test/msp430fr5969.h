@@ -416,4 +416,377 @@ REGISTER P1IE;
 REGISTER P2IE;
 REGISTER P3IE;
 REGISTER P4IE;
+
+
+
+
+/******************** Timers ***********************************/
+//************************************************************
+//* Timer0_A3
+//************************************************************/
+//#define __MSP430_HAS_T0A3__           /* Definition to show that Module is available */
+//#define __MSP430_BASEADDRESS_T0A3__ 0x0340
+//#define TIMER_A0_BASE __MSP430_BASEADDRESS_T0A3__
+
+REGISTER TA0CTL;
+REGISTER TA0CCTL0;
+REGISTER TA0CTTL1;
+REGISTER TA0CTTL2;
+REGISTER TA0R;
+REGISTER TA0CCR0;
+REGISTER TA0CCR1;
+REGISTER TA0IV;
+REGISTER TA0EX0;
+
+//#define  TA0CTL_                (0x0340u)  /* Timer0_A3 Control */
+//DEFW(    TA0CTL               , TA0CTL_)
+//#define  TA0CCTL0_              (0x0342u)  /* Timer0_A3 Capture/Compare Control 0 */
+//DEFW(    TA0CCTL0             , TA0CCTL0_)
+//#define  TA0CCTL1_              (0x0344u)  /* Timer0_A3 Capture/Compare Control 1 */
+//DEFW(    TA0CCTL1             , TA0CCTL1_)
+//#define  TA0CCTL2_              (0x0346u)  /* Timer0_A3 Capture/Compare Control 2 */
+//DEFW(    TA0CCTL2             , TA0CCTL2_)
+//#define  TA0R_                  (0x0350u)  /* Timer0_A3 */
+//DEFW(    TA0R                 , TA0R_)
+//#define  TA0CCR0_               (0x0352u)  /* Timer0_A3 Capture/Compare 0 */
+//DEFW(    TA0CCR0              , TA0CCR0_)
+//#define  TA0CCR1_               (0x0354u)  /* Timer0_A3 Capture/Compare 1 */
+//DEFW(    TA0CCR1              , TA0CCR1_)
+//#define  TA0CCR2_               (0x0356u)  /* Timer0_A3 Capture/Compare 2 */
+//DEFW(    TA0CCR2              , TA0CCR2_)
+//#define  TA0IV_                 (0x036Eu)  /* Timer0_A3 Interrupt Vector Word */
+//DEFW(    TA0IV                , TA0IV_)
+//#define  TA0EX0_                (0x0360u)  /* Timer0_A3 Expansion Register 0 */
+//DEFW(    TA0EX0               , TA0EX0_)
+
+/* TAxCTL Control Bits */
+#define TASSEL1             (0x0200u)  /* Timer A clock source select 1 */
+#define TASSEL0             (0x0100u)  /* Timer A clock source select 0 */
+#define ID1                 (0x0080u)  /* Timer A clock input divider 1 */
+#define ID0                 (0x0040u)  /* Timer A clock input divider 0 */
+#define MC1                 (0x0020u)  /* Timer A mode control 1 */
+#define MC0                 (0x0010u)  /* Timer A mode control 0 */
+#define TACLR               (0x0004u)  /* Timer A counter clear */
+#define TAIE                (0x0002u)  /* Timer A counter interrupt enable */
+#define TAIFG               (0x0001u)  /* Timer A counter interrupt flag */
+
+#define MC_0                (0*0x10u)  /* Timer A mode control: 0 - Stop */
+#define MC_1                (1*0x10u)  /* Timer A mode control: 1 - Up to CCR0 */
+#define MC_2                (2*0x10u)  /* Timer A mode control: 2 - Continuous up */
+#define MC_3                (3*0x10u)  /* Timer A mode control: 3 - Up/Down */
+#define ID_0                (0*0x40u)  /* Timer A input divider: 0 - /1 */
+#define ID_1                (1*0x40u)  /* Timer A input divider: 1 - /2 */
+#define ID_2                (2*0x40u)  /* Timer A input divider: 2 - /4 */
+#define ID_3                (3*0x40u)  /* Timer A input divider: 3 - /8 */
+#define TASSEL_0            (0*0x100u) /* Timer A clock source select: 0 - TACLK */
+#define TASSEL_1            (1*0x100u) /* Timer A clock source select: 1 - ACLK  */
+#define TASSEL_2            (2*0x100u) /* Timer A clock source select: 2 - SMCLK */
+#define TASSEL_3            (3*0x100u) /* Timer A clock source select: 3 - INCLK */
+#define MC__STOP            (0*0x10u)  /* Timer A mode control: 0 - Stop */
+#define MC__UP              (1*0x10u)  /* Timer A mode control: 1 - Up to CCR0 */
+#define MC__CONTINUOUS      (2*0x10u)  /* Timer A mode control: 2 - Continuous up */
+#define MC__CONTINOUS       (2*0x10u)  /* Legacy define */
+#define MC__UPDOWN          (3*0x10u)  /* Timer A mode control: 3 - Up/Down */
+#define ID__1               (0*0x40u)  /* Timer A input divider: 0 - /1 */
+#define ID__2               (1*0x40u)  /* Timer A input divider: 1 - /2 */
+#define ID__4               (2*0x40u)  /* Timer A input divider: 2 - /4 */
+#define ID__8               (3*0x40u)  /* Timer A input divider: 3 - /8 */
+#define TASSEL__TACLK       (0*0x100u) /* Timer A clock source select: 0 - TACLK */
+#define TASSEL__ACLK        (1*0x100u) /* Timer A clock source select: 1 - ACLK  */
+#define TASSEL__SMCLK       (2*0x100u) /* Timer A clock source select: 2 - SMCLK */
+#define TASSEL__INCLK       (3*0x100u) /* Timer A clock source select: 3 - INCLK */
+
+/* TAxCCTLx Control Bits */
+#define CM1                 (0x8000u)  /* Capture mode 1 */
+#define CM0                 (0x4000u)  /* Capture mode 0 */
+#define CCIS1               (0x2000u)  /* Capture input select 1 */
+#define CCIS0               (0x1000u)  /* Capture input select 0 */
+#define SCS                 (0x0800u)  /* Capture sychronize */
+#define SCCI                (0x0400u)  /* Latched capture signal (read) */
+#define CAP                 (0x0100u)  /* Capture mode: 1 /Compare mode : 0 */
+#define OUTMOD2             (0x0080u)  /* Output mode 2 */
+#define OUTMOD1             (0x0040u)  /* Output mode 1 */
+#define OUTMOD0             (0x0020u)  /* Output mode 0 */
+#define CCIE                (0x0010u)  /* Capture/compare interrupt enable */
+#define CCI                 (0x0008u)  /* Capture input signal (read) */
+#define OUT                 (0x0004u)  /* PWM Output signal if output mode 0 */
+#define COV                 (0x0002u)  /* Capture/compare overflow flag */
+#define CCIFG               (0x0001u)  /* Capture/compare interrupt flag */
+
+#define OUTMOD_0            (0*0x20u)  /* PWM output mode: 0 - output only */
+#define OUTMOD_1            (1*0x20u)  /* PWM output mode: 1 - set */
+#define OUTMOD_2            (2*0x20u)  /* PWM output mode: 2 - PWM toggle/reset */
+#define OUTMOD_3            (3*0x20u)  /* PWM output mode: 3 - PWM set/reset */
+#define OUTMOD_4            (4*0x20u)  /* PWM output mode: 4 - toggle */
+#define OUTMOD_5            (5*0x20u)  /* PWM output mode: 5 - Reset */
+#define OUTMOD_6            (6*0x20u)  /* PWM output mode: 6 - PWM toggle/set */
+#define OUTMOD_7            (7*0x20u)  /* PWM output mode: 7 - PWM reset/set */
+#define CCIS_0              (0*0x1000u) /* Capture input select: 0 - CCIxA */
+#define CCIS_1              (1*0x1000u) /* Capture input select: 1 - CCIxB */
+#define CCIS_2              (2*0x1000u) /* Capture input select: 2 - GND */
+#define CCIS_3              (3*0x1000u) /* Capture input select: 3 - Vcc */
+#define CM_0                (0*0x4000u) /* Capture mode: 0 - disabled */
+#define CM_1                (1*0x4000u) /* Capture mode: 1 - pos. edge */
+#define CM_2                (2*0x4000u) /* Capture mode: 1 - neg. edge */
+#define CM_3                (3*0x4000u) /* Capture mode: 1 - both edges */
+
+/* TAxEX0 Control Bits */
+#define TAIDEX0             (0x0001u)  /* Timer A Input divider expansion Bit: 0 */
+#define TAIDEX1             (0x0002u)  /* Timer A Input divider expansion Bit: 1 */
+#define TAIDEX2             (0x0004u)  /* Timer A Input divider expansion Bit: 2 */
+
+#define TAIDEX_0            (0*0x0001u) /* Timer A Input divider expansion : /1 */
+#define TAIDEX_1            (1*0x0001u) /* Timer A Input divider expansion : /2 */
+#define TAIDEX_2            (2*0x0001u) /* Timer A Input divider expansion : /3 */
+#define TAIDEX_3            (3*0x0001u) /* Timer A Input divider expansion : /4 */
+#define TAIDEX_4            (4*0x0001u) /* Timer A Input divider expansion : /5 */
+#define TAIDEX_5            (5*0x0001u) /* Timer A Input divider expansion : /6 */
+#define TAIDEX_6            (6*0x0001u) /* Timer A Input divider expansion : /7 */
+#define TAIDEX_7            (7*0x0001u) /* Timer A Input divider expansion : /8 */
+
+/* T0A3IV Definitions */
+#define TA0IV_NONE          (0x0000u)    /* No Interrupt pending */
+#define TA0IV_TACCR1        (0x0002u)    /* TA0CCR1_CCIFG */
+#define TA0IV_TACCR2        (0x0004u)    /* TA0CCR2_CCIFG */
+#define TA0IV_3             (0x0006u)    /* Reserved */
+#define TA0IV_4             (0x0008u)    /* Reserved */
+#define TA0IV_5             (0x000Au)    /* Reserved */
+#define TA0IV_6             (0x000Cu)    /* Reserved */
+#define TA0IV_TAIFG         (0x000Eu)    /* TA0IFG */
+
+/* Legacy Defines */
+#define TA0IV_TA0CCR1       (0x0002u)    /* TA0CCR1_CCIFG */
+#define TA0IV_TA0CCR2       (0x0004u)    /* TA0CCR2_CCIFG */
+#define TA0IV_TA0IFG        (0x000Eu)    /* TA0IFG */
+
+/************************************************************
+* Timer1_A3
+************************************************************/
+
+
+REGISTER TA1CTL;
+REGISTER TA1CCTL0;
+REGISTER TA1CTTL1;
+REGISTER TA1CTTL2;
+REGISTER TA1R;
+REGISTER TA1CCR0;
+REGISTER TA1CCR1;
+REGISTER TA1IV;
+REGISTER TA1EX0;
+
+
+
+/* Bits are already defined within the Timer0_Ax */
+
+/* TA1IV Definitions */
+#define TA1IV_NONE          (0x0000u)    /* No Interrupt pending */
+#define TA1IV_TACCR1        (0x0002u)    /* TA1CCR1_CCIFG */
+#define TA1IV_TACCR2        (0x0004u)    /* TA1CCR2_CCIFG */
+#define TA1IV_3             (0x0006u)    /* Reserved */
+#define TA1IV_4             (0x0008u)    /* Reserved */
+#define TA1IV_5             (0x000Au)    /* Reserved */
+#define TA1IV_6             (0x000Cu)    /* Reserved */
+#define TA1IV_TAIFG         (0x000Eu)    /* TA1IFG */
+
+/* Legacy Defines */
+#define TA1IV_TA1CCR1      (0x0002u)    /* TA1CCR1_CCIFG */
+#define TA1IV_TA1CCR2      (0x0004u)    /* TA1CCR2_CCIFG */
+#define TA1IV_TA1IFG       (0x000Eu)    /* TA1IFG */
+
+/************************************************************
+* Timer2_A2
+************************************************************/
+REGISTER TA2CTL;
+REGISTER TA2CCTL0;
+REGISTER TA2CTTL1;
+REGISTER TA2CTTL2;
+REGISTER TA2R;
+REGISTER TA2CCR0;
+REGISTER TA2CCR1;
+REGISTER TA2IV;
+REGISTER TA2EX0;
+
+/* Bits are already defined within the Timer0_Ax */
+
+/* TA2IV Definitions */
+#define TA2IV_NONE          (0x0000u)    /* No Interrupt pending */
+#define TA2IV_TACCR1        (0x0002u)    /* TA2CCR1_CCIFG */
+#define TA2IV_3             (0x0006u)    /* Reserved */
+#define TA2IV_4             (0x0008u)    /* Reserved */
+#define TA2IV_5             (0x000Au)    /* Reserved */
+#define TA2IV_6             (0x000Cu)    /* Reserved */
+#define TA2IV_TAIFG         (0x000Eu)    /* TA2IFG */
+
+/* Legacy Defines */
+#define TA2IV_TA2CCR1      (0x0002u)    /* TA2CCR1_CCIFG */
+#define TA2IV_TA2IFG       (0x000Eu)    /* TA2IFG */
+
+/************************************************************
+* Timer3_A2
+************************************************************/
+
+REGISTER TA3CTL;
+REGISTER TA3CCTL0;
+REGISTER TA3CTTL1;
+REGISTER TA3CTTL2;
+REGISTER TA3R;
+REGISTER TA3CCR0;
+REGISTER TA3CCR1;
+REGISTER TA3IV;
+REGISTER TA3EX0;
+
+
+
+/* Bits are already defined within the Timer0_Ax */
+
+/* TA3IV Definitions */
+#define TA3IV_NONE          (0x0000u)    /* No Interrupt pending */
+#define TA3IV_TACCR1        (0x0002u)    /* TA3CCR1_CCIFG */
+#define TA3IV_3             (0x0006u)    /* Reserved */
+#define TA3IV_4             (0x0008u)    /* Reserved */
+#define TA3IV_5             (0x000Au)    /* Reserved */
+#define TA3IV_6             (0x000Cu)    /* Reserved */
+#define TA3IV_TAIFG         (0x000Eu)    /* TA3IFG */
+
+/* Legacy Defines */
+#define TA3IV_TA3CCR1      (0x0002u)    /* TA3CCR1_CCIFG */
+#define TA3IV_TA3IFG       (0x000Eu)    /* TA3IFG */
+
+/************************************************************
+* Timer0_B7
+************************************************************/
+
+REGISTER TB0CTL;
+REGISTER TB0CCTL0;
+REGISTER TB0CTTL1;
+REGISTER TB0CTTL2;
+REGISTER TB0R;
+REGISTER TB0CCR0;
+REGISTER TB0CCR1;
+REGISTER TB0IV;
+REGISTER TB0EX0;
+
+/* Legacy Type Definitions for TimerB */
+#define TBCTL                TB0CTL    /* Timer0_B7 Control */
+#define TBCCTL0              TB0CCTL0  /* Timer0_B7 Capture/Compare Control 0 */
+#define TBCCTL1              TB0CCTL1  /* Timer0_B7 Capture/Compare Control 1 */
+#define TBCCTL2              TB0CCTL2  /* Timer0_B7 Capture/Compare Control 2 */
+#define TBCCTL3              TB0CCTL3  /* Timer0_B7 Capture/Compare Control 3 */
+#define TBCCTL4              TB0CCTL4  /* Timer0_B7 Capture/Compare Control 4 */
+#define TBCCTL5              TB0CCTL5  /* Timer0_B7 Capture/Compare Control 5 */
+#define TBCCTL6              TB0CCTL6  /* Timer0_B7 Capture/Compare Control 6 */
+#define TBR                  TB0R      /* Timer0_B7 */
+#define TBCCR0               TB0CCR0   /* Timer0_B7 Capture/Compare 0 */
+#define TBCCR1               TB0CCR1   /* Timer0_B7 Capture/Compare 1 */
+#define TBCCR2               TB0CCR2   /* Timer0_B7 Capture/Compare 2 */
+#define TBCCR3               TB0CCR3   /* Timer0_B7 Capture/Compare 3 */
+#define TBCCR4               TB0CCR4   /* Timer0_B7 Capture/Compare 4 */
+#define TBCCR5               TB0CCR5   /* Timer0_B7 Capture/Compare 5 */
+#define TBCCR6               TB0CCR6   /* Timer0_B7 Capture/Compare 6 */
+#define TBEX0                TB0EX0    /* Timer0_B7 Expansion Register 0 */
+#define TBIV                 TB0IV     /* Timer0_B7 Interrupt Vector Word */
+#define TIMERB1_VECTOR       TIMER0_B1_VECTOR /* Timer0_B7 CC1-6, TB */
+#define TIMERB0_VECTOR       TIMER0_B0_VECTOR /* Timer0_B7 CC0 */
+
+/* TBxCTL Control Bits */
+#define TBCLGRP1            (0x4000u)  /* Timer0_B7 Compare latch load group 1 */
+#define TBCLGRP0            (0x2000u)  /* Timer0_B7 Compare latch load group 0 */
+#define CNTL1               (0x1000u)  /* Counter lenght 1 */
+#define CNTL0               (0x0800u)  /* Counter lenght 0 */
+#define TBSSEL1             (0x0200u)  /* Clock source 1 */
+#define TBSSEL0             (0x0100u)  /* Clock source 0 */
+#define TBCLR               (0x0004u)  /* Timer0_B7 counter clear */
+#define TBIE                (0x0002u)  /* Timer0_B7 interrupt enable */
+#define TBIFG               (0x0001u)  /* Timer0_B7 interrupt flag */
+
+#define SHR1                (0x4000u)  /* Timer0_B7 Compare latch load group 1 */
+#define SHR0                (0x2000u)  /* Timer0_B7 Compare latch load group 0 */
+
+#define TBSSEL_0            (0*0x0100u)  /* Clock Source: TBCLK */
+#define TBSSEL_1            (1*0x0100u)  /* Clock Source: ACLK  */
+#define TBSSEL_2            (2*0x0100u)  /* Clock Source: SMCLK */
+#define TBSSEL_3            (3*0x0100u)  /* Clock Source: INCLK */
+#define CNTL_0              (0*0x0800u)  /* Counter lenght: 16 bit */
+#define CNTL_1              (1*0x0800u)  /* Counter lenght: 12 bit */
+#define CNTL_2              (2*0x0800u)  /* Counter lenght: 10 bit */
+#define CNTL_3              (3*0x0800u)  /* Counter lenght:  8 bit */
+#define SHR_0               (0*0x2000u)  /* Timer0_B7 Group: 0 - individually */
+#define SHR_1               (1*0x2000u)  /* Timer0_B7 Group: 1 - 3 groups (1-2, 3-4, 5-6) */
+#define SHR_2               (2*0x2000u)  /* Timer0_B7 Group: 2 - 2 groups (1-3, 4-6)*/
+#define SHR_3               (3*0x2000u)  /* Timer0_B7 Group: 3 - 1 group (all) */
+#define TBCLGRP_0           (0*0x2000u)  /* Timer0_B7 Group: 0 - individually */
+#define TBCLGRP_1           (1*0x2000u)  /* Timer0_B7 Group: 1 - 3 groups (1-2, 3-4, 5-6) */
+#define TBCLGRP_2           (2*0x2000u)  /* Timer0_B7 Group: 2 - 2 groups (1-3, 4-6)*/
+#define TBCLGRP_3           (3*0x2000u)  /* Timer0_B7 Group: 3 - 1 group (all) */
+#define TBSSEL__TBCLK       (0*0x100u) /* Timer0_B7 clock source select: 0 - TBCLK */
+#define TBSSEL__TACLK       (0*0x100u) /* Timer0_B7 clock source select: 0 - TBCLK (legacy) */
+#define TBSSEL__ACLK        (1*0x100u) /* Timer0_B7 clock source select: 1 - ACLK  */
+#define TBSSEL__SMCLK       (2*0x100u) /* Timer0_B7 clock source select: 2 - SMCLK */
+#define TBSSEL__INCLK       (3*0x100u) /* Timer0_B7 clock source select: 3 - INCLK */
+#define CNTL__16            (0*0x0800u)  /* Counter lenght: 16 bit */
+#define CNTL__12            (1*0x0800u)  /* Counter lenght: 12 bit */
+#define CNTL__10            (2*0x0800u)  /* Counter lenght: 10 bit */
+#define CNTL__8             (3*0x0800u)  /* Counter lenght:  8 bit */
+
+/* Additional Timer B Control Register bits are defined in Timer A */
+/* TBxCCTLx Control Bits */
+#define CLLD1               (0x0400u)  /* Compare latch load source 1 */
+#define CLLD0               (0x0200u)  /* Compare latch load source 0 */
+
+#define SLSHR1              (0x0400u)  /* Compare latch load source 1 */
+#define SLSHR0              (0x0200u)  /* Compare latch load source 0 */
+
+#define SLSHR_0             (0*0x0200u) /* Compare latch load sourec : 0 - immediate */
+#define SLSHR_1             (1*0x0200u) /* Compare latch load sourec : 1 - TBR counts to 0 */
+#define SLSHR_2             (2*0x0200u) /* Compare latch load sourec : 2 - up/down */
+#define SLSHR_3             (3*0x0200u) /* Compare latch load sourec : 3 - TBR counts to TBCTL0 */
+
+#define CLLD_0              (0*0x0200u) /* Compare latch load sourec : 0 - immediate */
+#define CLLD_1              (1*0x0200u) /* Compare latch load sourec : 1 - TBR counts to 0 */
+#define CLLD_2              (2*0x0200u) /* Compare latch load sourec : 2 - up/down */
+#define CLLD_3              (3*0x0200u) /* Compare latch load sourec : 3 - TBR counts to TBCTL0 */
+
+/* TBxEX0 Control Bits */
+#define TBIDEX0             (0x0001u)   /* Timer0_B7 Input divider expansion Bit: 0 */
+#define TBIDEX1             (0x0002u)   /* Timer0_B7 Input divider expansion Bit: 1 */
+#define TBIDEX2             (0x0004u)   /* Timer0_B7 Input divider expansion Bit: 2 */
+
+#define TBIDEX_0            (0*0x0001u) /* Timer0_B7 Input divider expansion : /1 */
+#define TBIDEX_1            (1*0x0001u) /* Timer0_B7 Input divider expansion : /2 */
+#define TBIDEX_2            (2*0x0001u) /* Timer0_B7 Input divider expansion : /3 */
+#define TBIDEX_3            (3*0x0001u) /* Timer0_B7 Input divider expansion : /4 */
+#define TBIDEX_4            (4*0x0001u) /* Timer0_B7 Input divider expansion : /5 */
+#define TBIDEX_5            (5*0x0001u) /* Timer0_B7 Input divider expansion : /6 */
+#define TBIDEX_6            (6*0x0001u) /* Timer0_B7 Input divider expansion : /7 */
+#define TBIDEX_7            (7*0x0001u) /* Timer0_B7 Input divider expansion : /8 */
+#define TBIDEX__1           (0*0x0001u) /* Timer0_B7 Input divider expansion : /1 */
+#define TBIDEX__2           (1*0x0001u) /* Timer0_B7 Input divider expansion : /2 */
+#define TBIDEX__3           (2*0x0001u) /* Timer0_B7 Input divider expansion : /3 */
+#define TBIDEX__4           (3*0x0001u) /* Timer0_B7 Input divider expansion : /4 */
+#define TBIDEX__5           (4*0x0001u) /* Timer0_B7 Input divider expansion : /5 */
+#define TBIDEX__6           (5*0x0001u) /* Timer0_B7 Input divider expansion : /6 */
+#define TBIDEX__7           (6*0x0001u) /* Timer0_B7 Input divider expansion : /7 */
+#define TBIDEX__8           (7*0x0001u) /* Timer0_B7 Input divider expansion : /8 */
+
+/* TB0IV Definitions */
+#define TB0IV_NONE          (0x0000u)    /* No Interrupt pending */
+#define TB0IV_TBCCR1        (0x0002u)    /* TB0CCR1_CCIFG */
+#define TB0IV_TBCCR2        (0x0004u)    /* TB0CCR2_CCIFG */
+#define TB0IV_TBCCR3        (0x0006u)    /* TB0CCR3_CCIFG */
+#define TB0IV_TBCCR4        (0x0008u)    /* TB0CCR4_CCIFG */
+#define TB0IV_TBCCR5        (0x000Au)    /* TB0CCR5_CCIFG */
+#define TB0IV_TBCCR6        (0x000Cu)    /* TB0CCR6_CCIFG */
+#define TB0IV_TBIFG         (0x000Eu)    /* TB0IFG */
+
+/* Legacy Defines */
+#define TB0IV_TB0CCR1       (0x0002u)    /* TB0CCR1_CCIFG */
+#define TB0IV_TB0CCR2       (0x0004u)    /* TB0CCR2_CCIFG */
+#define TB0IV_TB0CCR3       (0x0006u)    /* TB0CCR3_CCIFG */
+#define TB0IV_TB0CCR4       (0x0008u)    /* TB0CCR4_CCIFG */
+#define TB0IV_TB0CCR5       (0x000Au)    /* TB0CCR5_CCIFG */
+#define TB0IV_TB0CCR6       (0x000Cu)    /* TB0CCR6_CCIFG */
+#define TB0IV_TB0IFG        (0x000Eu)    /* TB0IFG */
+
+
+
 #endif

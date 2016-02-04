@@ -2001,9 +2001,6 @@
         <name>$PROJ_DIR$\src\buffer\buffer_f.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\src\buffer\buffers.c</name>
-      </file>
-      <file>
         <name>$PROJ_DIR$\src\buffer\buffers.h</name>
       </file>
     </group>
@@ -2057,6 +2054,9 @@
       <file>
         <name>$PROJ_DIR$\src\UART\uart.h</name>
       </file>
+    </group>
+    <group>
+      <name>Timer</name>
     </group>
     <group>
       <name>UART</name>

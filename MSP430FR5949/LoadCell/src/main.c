@@ -28,7 +28,8 @@ console_t console;          // Console State
 SystemValues_t ActiveSys;   // Normal running system values
 SystemValues_t FRAMSys;     // structures saved to FRAM
 
-
+// Timeout Counters
+//uint32_t msTimeoutCounter = 0;
 /************************************************************************
 *						MAIN
 ************************************************************************/
@@ -46,7 +47,6 @@ int main()
 
     ActiveSys = FRAMSys;
 
-    uint8_t rxChar = 0;
 
     printf("Hello, World!\n");
 

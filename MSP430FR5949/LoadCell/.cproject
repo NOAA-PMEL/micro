@@ -556,4 +556,32 @@
 			<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cxxSource" language="com.iar.cdt.msp430.toolchain.IARcpp"/>
 		</project-mappings>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets>
+			<target name="test delta" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>rake</buildCommand>
+				<buildArguments/>
+				<buildTarget>cmd /c test:delta</buildTarget>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+			<target name="Test this" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>cmd</buildCommand>
+				<buildArguments>/c rake test:{resource_name}</buildArguments>
+				<buildTarget>Test this</buildTarget>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+			<target name="LS" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>cmd</buildCommand>
+				<buildArguments>/c ls</buildArguments>
+				<buildTarget>LS</buildTarget>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+		</buildTargets>
+	</storageModule>
 </cproject>

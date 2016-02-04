@@ -62,7 +62,7 @@
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\lib\dlib\dl430fn.r43</state>
+          <state>$TOOLKIT_DIR$\lib\dlib\dl430xlsfn.r43</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -105,11 +105,11 @@
         </option>
         <option>
           <name>GStackSize2</name>
-          <state>80</state>
+          <state>160</state>
         </option>
         <option>
           <name>GHeapSize2</name>
-          <state>80</state>
+          <state>160</state>
         </option>
         <option>
           <name>RadioDataModelType</name>
@@ -804,7 +804,7 @@
         </option>
         <option>
           <name>XclFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\lnk430F149.xcl</state>
+          <state>$TOOLKIT_DIR$\config\linker\lnk430fr5949.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -932,7 +932,7 @@
         </option>
         <option>
           <name>ExtraOutputFile</name>
-          <state>templproj.a43</state>
+          <state>LoadCell.a43</state>
         </option>
         <option>
           <name>ExtraOutputFormat</name>
@@ -2260,6 +2260,9 @@
     <name>src</name>
     <group>
       <name>buffer</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
       <file>
         <name>$PROJ_DIR$\src\buffer\buffer16.c</name>
       </file>
@@ -2295,9 +2298,6 @@
       </file>
       <file>
         <name>$PROJ_DIR$\src\buffer\buffer_f.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\src\buffer\buffers.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\src\buffer\buffers.h</name>
@@ -2353,6 +2353,9 @@
       <file>
         <name>$PROJ_DIR$\src\UART\uart.h</name>
       </file>
+    </group>
+    <group>
+      <name>Timer</name>
     </group>
     <group>
       <name>UART</name>

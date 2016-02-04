@@ -19,35 +19,35 @@
 /************************************************************************
 *							CONSTANTS
 ************************************************************************/
-typedef struct SystemValues {
-    float slope;
-    float intercept;
-}SystemValues_t;
+//typedef struct SystemValues {
+//    float slope;
+//    float intercept;
+//}SystemValues_t;
+//
+//typedef enum mode {
+//    Display,
+//    Read,
+//    Continue,
+//    Exit
+//} modes_t;
+//
+//typedef enum state {
+//    Main,
+//    Calibration,
+//    ManualCal,
+//    DisplayCal,
+//    DisplayMetadata,
+//    UpdateSN,
+//    Sample
+//} state_t;
 
-typedef enum mode {
-    Display,
-    Read,
-    Continue,
-    Exit
-} modes_t;
-
-typedef enum state {
-    Main,
-    Calibration,
-    ManualCal,
-    DisplayCal,
-    DisplayMetadata,
-    UpdateSN,
-    Sample
-} state_t;
-
-typedef struct console {
-    modes_t mode;
-    state_t state;
-    state_t previousState;
-    uint8_t inputChar;
-    uint16_t SerialNumber;
-}console_t;
+//typedef struct console {
+//    modes_t mode;
+//    state_t state;
+//    state_t previousState;
+//    uint8_t inputChar;
+//    uint16_t SerialNumber;
+//}console_t;
 
 
 /************************************************************************

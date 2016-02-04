@@ -22,29 +22,29 @@
 
 #include "console.h"
 
-uint8_t UART_ClearChar(void)
-{
-    printf("\033[2J");
-}
-
-uint8_t UART_WriteChar(uint8_t value, uint8_t Port)
-{
-    //putchar((char) value);
-
-    printf("\033[2J");
-
-    return 1;
-}
-
-uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port)
-{
-    char temp[64] = {0};
-
-    printf(value);
-
-
-    return 1;
-}
+//uint8_t UART_ClearChar(void)
+//{
+//    printf("\033[2J");
+//}
+//
+//uint8_t UART_WriteChar(uint8_t value, uint8_t Port)
+//{
+//    //putchar((char) value);
+//
+//    printf("\033[2J");
+//
+//    return 1;
+//}
+//
+//uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port)
+//{
+//    char temp[64] = {0};
+//
+//    printf(value);
+//
+//
+//    return 1;
+//}
 
 
 
@@ -61,7 +61,7 @@ uint8_t CONSOLE_ReadChar(void)
 
 void CONSOLE_ReadString(uint8_t *str, uint8_t length)
 {
-    uint8_t rxChar = 0;
+
     uint8_t counter = 0;
     uint8_t endFlag = 0;
 
@@ -88,9 +88,16 @@ void CONSOLE_ReadString(uint8_t *str, uint8_t length)
 
 void CONSOLE_DisplayState_Main(void)
 {
-    uint8_t temp[16] = {0};
-
+    char temp[16] = {0};
+    uint8_t temp1[16] = {0};
+    uint8_t i = 0;
+    
     sprintf(temp,"%d\n",console.SerialNumber);
+    for(i=0;i<16;i++)
+    {
+      temp1[i] = (uint8_t) temp[i];
+    }
+    
     uint8_t splash[] = "*********** MAIN *************\n\n";
     uint8_t line0[] = "SERIAL #";
 	uint8_t line1[] = "1 - Calibration Mode\n";
@@ -103,7 +110,7 @@ void CONSOLE_DisplayState_Main(void)
     //UART_ClearChar();
     UART_Write(&splash[0],LENGTH_OF(splash),UART_A1);
 	UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
-	UART_Write(&temp[0],LENGTH_OF(temp),UART_A1);
+	UART_Write(&temp1[0],LENGTH_OF(temp),UART_A1);
 	UART_Write(&line1[0],LENGTH_OF(line1),UART_A1);
 	UART_Write(&line2[0],LENGTH_OF(line0),UART_A1);
 	UART_Write(&line3[0],LENGTH_OF(line1),UART_A1);
@@ -153,8 +160,10 @@ void CONSOLE_DisplayState_ManualCalibrationInput(uint8_t line, float value)
 	uint8_t line1[] = "Slope = ";
 	uint8_t line2[] = "Enter INTERCEPT (xxx.y): ";
 	uint8_t line3[] = "Intercept = ";
-	uint8_t temp[16] = "";
-
+	char temp[16] = "";
+    uint8_t temp1[16] = "";
+    uint8_t i = 0;
+    
 	// check valid input conditions
 	if(line > 3)
 	{
@@ -165,7 +174,11 @@ void CONSOLE_DisplayState_ManualCalibrationInput(uint8_t line, float value)
 	{
 		sprintf(temp,"%3.1f",value);
 	}
-
+  
+    for(i=0;i<16;i++)
+    {
+      temp1[i] = (uint8_t) temp[i];
+    }
 	switch(line)
 	{
 		case 0:
@@ -173,14 +186,14 @@ void CONSOLE_DisplayState_ManualCalibrationInput(uint8_t line, float value)
 			break;
 		case 1:
             UART_Write(&line1[0],LENGTH_OF(line1),UART_A1);
-            UART_Write(&temp[0],LENGTH_OF(temp),UART_A1);
+            UART_Write(&temp1[0],LENGTH_OF(temp),UART_A1);
 			break;
 		case 2:
             UART_Write(&line2[0],LENGTH_OF(line2),UART_A1);
 			break;
 		case 3:
             UART_Write(&line3[0],LENGTH_OF(line3),UART_A1);
-            UART_Write(&temp[0],LENGTH_OF(temp),UART_A1);
+            UART_Write(&temp1[0],LENGTH_OF(temp),UART_A1);
 			break;
 		default:
 			return;
@@ -237,11 +250,11 @@ void CONSOLE_ReadInputFloat(uint8_t *rxChars,uint8_t length)
 
 void CONSOLE_State_ManualCalibration(void)
 {
-    uint8_t rxChars[8] = {0};
-    uint8_t rxChar;
+    char rxChars[8] = {0};
+
     float rxChar_f;
-    uint8_t counter = 0;
-    uint8_t i = 0;
+
+
 
     CONSOLE_ReadChar();
 
@@ -340,7 +353,7 @@ void CONSOLE_State_Main(void)
                 console.inputChar = CONSOLE_ReadChar();
                 if(console.inputChar >= 10)
                 {
-                    UART_ClearChar();
+                    UART_ClearChar(UART_A1);
                     console.mode = Display;
                 }
                 break;
@@ -355,7 +368,8 @@ void CONSOLE_State_Main(void)
 
 void CONSOLE_State_CalibrationMode(void)
 {
-    while(1)
+  uint8_t FinishedFlag = false;
+    while(FinishedFlag == false)
     {
         switch(console.mode)
         {
@@ -403,7 +417,7 @@ void CONSOLE_State_CalibrationMode(void)
                 break;
             default:
                 console.inputChar = 'Q';
-                return;
+                FinishedFlag = true;
                 break;
 
         }
@@ -417,16 +431,16 @@ void CONSOLE_DisplayState_CalibrationPoints(void)
 
 	uint8_t line0[] = "Slope = ";
 	uint8_t line1[] = "Intercept = ";
-	uint8_t temp[16] = "";
+	//uint8_t temp[16] = "";
 
 
-	sprintf(temp,"%3.3f\n",ActiveSys.slope);
+	//sprintf(temp,"%3.3f\n",ActiveSys.slope);
 	UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
-	UART_Write(&temp[0],LENGTH_OF(temp),UART_A1);
-
-	sprintf(temp,"%3.3f\n",ActiveSys.intercept);
+//	UART_Write(&temp[0],LENGTH_OF(temp),UART_A1);
+//
+//	sprintf(temp,"%3.3f\n",ActiveSys.intercept);
 	UART_Write(&line1[0],LENGTH_OF(line0),UART_A1);
-	UART_Write(&temp[0],LENGTH_OF(temp),UART_A1);
+//	UART_Write(&temp[0],LENGTH_OF(temp),UART_A1);
 
 	return;
 }
