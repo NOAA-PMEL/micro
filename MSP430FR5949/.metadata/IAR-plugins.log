@@ -1,9 +1,18 @@
-13:51:47,418 [main] INFO com.iar.ide.common.ewpath.EwPathManager  - Path to EW stage not found for provider iar.sdkprovider.msp430. Requesting a settings dialog to be displayed...
-13:51:53,207 [main] ERROR com.iar.ide.common.ewpath.EwPathManager  - Path to EW has not been specified for provider iar.sdkprovider.msp430. The C-SPY plugins will not function properly.
-13:51:53,207 [main] FATAL com.iar.cdt.project.utils.AbstractSdkProvider  - The directory pointed by iar.toolchain.msp430.sdkLocation does not exist. The toolchain binaries will not be found.
-13:51:53,207 [main] INFO com.iar.ide.common.ewpath.EwPathManager  - Path to EW stage not found for provider iar.sdkprovider.msp430. Requesting a settings dialog to be displayed...
-13:51:53,722 [main] ERROR com.iar.ide.common.ewpath.EwPathManager  - Path to EW has not been specified for provider iar.sdkprovider.msp430. The C-SPY plugins will not function properly.
-13:51:53,722 [main] FATAL com.iar.cdt.project.utils.AbstractSdkProvider  - The directory pointed by iar.toolchain.msp430.sdkLocation does not exist. The toolchain binaries will not be found.
-13:51:53,738 [main] INFO com.iar.ide.common.ewpath.EwPathManager  - Path to EW stage not found for provider iar.sdkprovider.msp430. Requesting a settings dialog to be displayed...
-13:52:03,347 [main] INFO com.iar.ide.common.ewpath.EwPathManager  - The path to EW has now been set to: C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2 for provider iar.sdkprovider.msp430
-13:52:03,425 [main] INFO com.iar.cdt.generic.toolchain.info.SdkToolchainInfo  - Using toolchain at C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\430\bin, version 6.30.2.940
+14:59:27,106 [main] INFO com.iar.cdt.generic.toolchain.info.SdkToolchainInfo  - Using toolchain at C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\430\bin, version 6.30.2.940
+15:00:32,133 [main] ERROR com.iar.cstat.CStatProvider  - Could not obtain ISdkProvider from object: P/LoadCell
+15:00:32,196 [main] ERROR com.iar.cstat.CStatProvider  - Could not obtain ISdkProvider from object: P/LoadCell
+15:00:32,824 [main] ERROR com.iar.cstat.CStatProvider  - Could not obtain ISdkProvider from object: P/LoadCell
+15:00:32,826 [main] ERROR com.iar.cstat.CStatProvider  - Could not obtain ISdkProvider from object: P/LoadCell
+15:00:32,826 [main] ERROR com.iar.cstat.CStatProvider  - Could not obtain ISdkProvider from object: P/LoadCell
+15:00:32,826 [main] ERROR com.iar.cstat.CStatProvider  - Could not obtain ISdkProvider from object: P/LoadCell
+15:00:32,900 [main] ERROR com.iar.cstat.CStatProvider  - Could not obtain ISdkProvider from object: P/LoadCell
+15:00:35,352 [main] ERROR com.iar.cstat.CStatProvider  - Could not obtain ISdkProvider from object: P/LoadCell
+15:01:12,864 [ModalContext] ERROR com.iar.wtdx.runtime  - An error occurred while computing command line arguments for MBS option: iar.wtdx.msp430.toolchain.option.OIProcessor::descriptor.864199762 (null)
+15:01:12,900 [ModalContext] ERROR com.iar.wtdx.runtime  - An error occurred while computing command line arguments for MBS option: iar.wtdx.msp430.toolchain.option.OIProcessor::descriptor.864199762 (null)
+15:01:13,020 [ModalContext] ERROR com.iar.wtdx.runtime  - An error occurred while computing command line arguments for MBS option: iar.wtdx.msp430.toolchain.option.OIProcessor::descriptor.1220137644 (null)
+15:01:13,050 [ModalContext] ERROR com.iar.wtdx.runtime  - An error occurred while computing command line arguments for MBS option: iar.wtdx.msp430.toolchain.option.OIProcessor::descriptor.1220137644 (null)
+15:01:13,096 [ModalContext] ERROR com.iar.importer.cdt  - Link target does not exist: C:/Users/Casari/version-control/PMEL/micro/MSP430FR5949/LoadCell_V0/main.c ()
+15:01:13,191 [ModalContext] ERROR com.iar.wtdx.runtime  - An error occurred while computing command line arguments for MBS option: iar.wtdx.msp430.toolchain.option.OIProcessor::descriptor.479038726 (null)
+15:01:13,217 [ModalContext] ERROR com.iar.wtdx.runtime  - An error occurred while computing command line arguments for MBS option: iar.wtdx.msp430.toolchain.option.OIProcessor::descriptor.479038726 (null)
+15:01:13,254 [ModalContext] INFO com.iar.importer.core.IarBuildInfoSupport  - Skipping build step as requested by the toolchain mapper.
+15:01:13,254 [ModalContext] INFO com.iar.importer.core.IarBuildInfoSupport  - Skipping build step as requested by the toolchain mapper.

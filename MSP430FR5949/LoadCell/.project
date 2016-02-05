@@ -22,5 +22,33 @@
 		<nature>org.eclipse.cdt.core.cnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>GPIO/gpio.c</name>
+			<type>1</type>
+			<location>C:/Users/Casari/version-control/PMEL/micro/MSP430FR5949/LoadCell_V0/src/GPIO/gpio.c</location>
+		</link>
+		<link>
+			<name>GPIO/gpio.h</name>
+			<type>1</type>
+			<location>C:/Users/Casari/version-control/PMEL/micro/MSP430FR5949/LoadCell_V0/src/GPIO/gpio.h</location>
+		</link>
+		<link>
+			<name>UART/uart.c</name>
+			<type>1</type>
+			<location>C:/Users/Casari/version-control/PMEL/micro/MSP430FR5949/LoadCell_V0/src/UART/uart.c</location>
+		</link>
+		<link>
+			<name>UART/uart.h</name>
+			<type>1</type>
+			<location>C:/Users/Casari/version-control/PMEL/micro/MSP430FR5949/LoadCell_V0/src/UART/uart.h</location>
+		</link>
+		<link>
+			<name>inc/includes.h</name>
+			<type>1</type>
+			<location>C:/Users/Casari/version-control/PMEL/micro/MSP430FR5949/LoadCell_V0/inc/includes.h</location>
+		</link>
+	</linkedResources>
 </projectDescription>

@@ -17,5 +17,9 @@
 		</list>
 	</section>
 	<section name="ImportExportAction">
+		<item value="com.iar.importer.ui.wizard.ImportWizard" key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID"/>
+		<list key="ImportExportPage.STORE_EXPANDED_IMPORT_CATEGORIES">
+			<item value="com.iar.ide.common.ui.importwizard.category"/>
+		</list>
 	</section>
 </section>
