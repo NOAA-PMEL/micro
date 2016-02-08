@@ -52,11 +52,11 @@ uint8_t GPIO_Init(void)
 	P2REN = 0;
 	P3REN = 0;
 	P4REN = 0;
-//
-//	P1IN = 0;
-//	P2IN = 0;
-//	P3IN = 0;
-//	P4IN = 0;
+
+	P1IN = 0;
+	P2IN = 0;
+	P3IN = 0;
+	P4IN = 0;
 
 	return (GPIO_OK);
 }
@@ -149,7 +149,8 @@ uint8_t GPIO_SetPin(uint8_t Port, uint8_t Pin)
 			P2OUT |= ( BIT_TO_MASK(Pin));// & P2DIR );
 			break;
 		case GPIO_PORTP3:
-			P3OUT |= ( BIT_TO_MASK(Pin));// & P3DIR );
+			//P3OUT |= ( BIT_TO_MASK(Pin));// & P3DIR );
+            P3OUT |= 0x40;
 			break;
 		case GPIO_PORTP4:
 			P4OUT |= ( BIT_TO_MASK(Pin));// & P4DIR );

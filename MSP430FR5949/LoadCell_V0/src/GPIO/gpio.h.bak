@@ -27,11 +27,11 @@
 ************************************************************************/
 #include <stdint.h>
 #include "../../inc/includes.h"
-
+#include <msp430fr5949.h>
 #ifdef PMEL
 #include <msp430fr5949.h>
 #else
-#include "../../test/msp430fr5969.h"
+//#include "../../test/msp430fr5969.h"
 #endif
 /************************************************************************
 *							MACROS
