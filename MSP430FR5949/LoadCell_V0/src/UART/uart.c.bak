@@ -572,7 +572,7 @@ __interrupt void USCI_A0_ISR(void)
 		case USCI_NONE:
 			break;
 		case USCI_UART_UCRXIFG:
-			//SystemState = BUFFER_RECEIVE;
+			SystemState = BUFFER_RECEIVE;
 			__bis_SR_register(GIE);
 			break;
 		case USCI_UART_UCTXIFG:
