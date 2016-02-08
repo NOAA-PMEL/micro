@@ -76,22 +76,19 @@
 /*******************************  MAIN  **********************************/
 int main(void) {
 
-    WDTCTL = WDTPW | WDTHOLD;		// pause watchdog
+    // Pause the watchdog
+    WDTCTL = WDTPW | WDTHOLD;		
 
-    //Configure the GPIO
+    // Set All GPIO settings to 0
     GPIO_Init();        // Sets all Outputs Low and regs to 0
-//    P3OUT = 0;
-//    P3DIR = 0x40;
-    
-//
-      FET_OFF();
-      FET_INIT();
 
-      
+    // Configure the 
+    FET_OFF();
+    FET_INIT();
+
     // Unlock GPIO
     PM5CTL0 &= ~LOCKLPM5;		// Needs to be done after config GPIO & Pins!
 
-    
     // Start the Clock
     CSCTL0_H = CSKEY >> 8;                    // Unlock CS registers
     CSCTL1 = DCOFSEL_6;                       // Set DCO to 8MHz
@@ -103,9 +100,7 @@ int main(void) {
     __delay_cycles(DELAY);
 
 
-
-    //P3OUT = 0x40;
-   
+    // Turn the Keller ON
     FET_ON();
 
     // Set interrupts
@@ -131,5 +126,3 @@ int main(void) {
 
 
 
-/*****************************  INTERRUPTS  ********************************/
-/*******************************  UART A1  *********************************/
