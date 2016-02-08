@@ -62,7 +62,7 @@
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\lib\dlib\dl430fn.r43</state>
+          <state>$TOOLKIT_DIR$\lib\dlib\dl430xlsfn.r43</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -105,11 +105,11 @@
         </option>
         <option>
           <name>GStackSize2</name>
-          <state>80</state>
+          <state>160</state>
         </option>
         <option>
           <name>GHeapSize2</name>
-          <state>80</state>
+          <state>160</state>
         </option>
         <option>
           <name>RadioDataModelType</name>
@@ -390,7 +390,9 @@
         </option>
         <option>
           <name>newCCIncludePaths</name>
-          <state></state>
+          <state>C:\Users\Casari\version-control\PMEL\micro\MSP430FR5949\LoadCell_V0</state>
+          <state>C:\Users\Casari\version-control\PMEL\micro\MSP430FR5949\LoadCell_V0</state>
+          <state>C:\Users\Casari\version-control\PMEL\micro\MSP430FR5949\LoadCell_V0</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -804,7 +806,7 @@
         </option>
         <option>
           <name>XclFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\lnk430F149.xcl</state>
+          <state>$TOOLKIT_DIR$\config\linker\lnk430fr5949.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -932,7 +934,7 @@
         </option>
         <option>
           <name>ExtraOutputFile</name>
-          <state>templproj.a43</state>
+          <state>LoadCell.a43</state>
         </option>
         <option>
           <name>ExtraOutputFormat</name>
@@ -1097,7 +1099,11 @@
         <debug>1</debug>
         <option>
           <name>CUTest</name>
-          <state>###Uninitialized###</state>
+          <state>-I$TOOLKIT_DIR$\inc</state>
+          <state>-@$TOOLKIT_DIR$\bin\iar.cmd</state>
+          <state>-@$PROJ_DIR$\source.txt</state>
+          <state>-@$PROJ_DIR$\include.txt</state>
+          <state>--preinclude=$PROJ_DIR$\IAR_ULPAdvisor_Defs.h</state>
         </option>
         <option>
           <name>ULPRules</name>
@@ -1110,7 +1116,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state></state>
+          <state>$PROJ_FNAME$.ulp</state>
         </option>
         <option>
           <name>ULPStatus</name>
@@ -2247,32 +2253,53 @@
     </settings>
   </configuration>
   <group>
-    <name>GPIO</name>
-    <file>
-      <name>$PROJ_DIR$\src\GPIO\gpio.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\GPIO\gpio.h</name>
-    </file>
-  </group>
-  <group>
     <name>inc</name>
     <file>
       <name>$PROJ_DIR$\inc\includes.h</name>
     </file>
   </group>
   <group>
-    <name>UART</name>
+    <name>src</name>
+    <group>
+      <name>GPIO</name>
+      <file>
+        <name>$PROJ_DIR$\src\GPIO\gpio.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\GPIO\gpio.h</name>
+      </file>
+    </group>
+    <group>
+      <name>UART</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
+      <file>
+        <name>$PROJ_DIR$\src\UART\uart.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\UART\uart.h</name>
+      </file>
+    </group>
     <file>
-      <name>$PROJ_DIR$\src\UART\uart.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\UART\uart.h</name>
+      <name>$PROJ_DIR$\main.c</name>
     </file>
   </group>
-  <file>
-    <name>$PROJ_DIR$\main.c</name>
-  </file>
+  <group>
+    <name>test</name>
+    <excluded>
+      <configuration>Debug</configuration>
+    </excluded>
+    <file>
+      <name>$PROJ_DIR$\test\msp430fr5969.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\test\test_gpio.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\test\test_uart.c</name>
+    </file>
+  </group>
 </project>
 
 
