@@ -75,52 +75,69 @@
 
 /*******************************  MAIN  **********************************/
 int main(void) {
+  char sendChar = 'A';
+  
+  // Pause the watchdog
+  WDTCTL = WDTPW | WDTHOLD;		
 
-    // Pause the watchdog
-    WDTCTL = WDTPW | WDTHOLD;		
+  // Set All GPIO settings to 0
+  GPIO_Init();        // Sets all Outputs Low and regs to 0
 
-    // Set All GPIO settings to 0
-    GPIO_Init();        // Sets all Outputs Low and regs to 0
+  // Configure the FET driving power to the Keller Sensor
+  FET_OFF();
+  FET_INIT();
 
-    // Configure the 
-    FET_OFF();
-    FET_INIT();
+    // Configure GPIO
+  P2SEL1 |= BIT0 | BIT1;                    // USCI_A0 UART operation
+  P2SEL0 &= ~(BIT0 | BIT1);
 
-    // Unlock GPIO
-    PM5CTL0 &= ~LOCKLPM5;		// Needs to be done after config GPIO & Pins!
+  // Unlock GPIO
+  PM5CTL0 &= ~LOCKLPM5;		// Needs to be done after config GPIO & Pins!
 
-    // Start the Clock
-    CSCTL0_H = CSKEY >> 8;                    // Unlock CS registers
-    CSCTL1 = DCOFSEL_6;                       // Set DCO to 8MHz
-    CSCTL2 = SELA__VLOCLK | SELS__DCOCLK | SELM__DCOCLK;  // Set SMCLK = MCLK = DCO
-                                            // ACLK = VLOCLK
-    CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;     // set all dividers
-    CSCTL0_H = 0;                             // Lock CS registers
-    
-    __delay_cycles(DELAY);
+  // Start the Clock
+  CSCTL0_H = CSKEY >> 8;                    // Unlock CS registers
+  CSCTL1 = DCOFSEL_6;                       // Set DCO to 8MHz
+  CSCTL2 = SELA__VLOCLK | SELS__DCOCLK | SELM__DCOCLK;  // Set SMCLK = MCLK = DCO
+                                          // ACLK = VLOCLK
+  CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;     // set all dividers
+  CSCTL0_H = 0;                             // Lock CS registers
+
+  
+    // Configure the UART
+  //UART_Init(UART_A1,UART_BAUD_2400,CLK_8000000,UART_CLK_ACLK);
+  UCA1CTLW0 = UCSWRST;                      // Put eUSCI in reset
+  UCA1CTLW0 |= UCSSEL__SMCLK;               // CLK = SMCLK
+  UCA1BR0 = 52;                             // 8000000/16/9600
+  UCA1BR1 = 0x00;
+  UCA1MCTLW |= UCOS16 | UCBRF_1;
+  UCA1CTLW0 &= ~UCSWRST;                    // Initialize eUSCI
+  UCA1IE |= UCRXIE;                         // Enable USCI_A0 RX interrupt
+  __delay_cycles(DELAY);
 
 
-    // Turn the Keller ON
-    FET_ON();
+  // Turn the Keller ON
+  FET_ON();
+  
+  
+  // Set interrupts
+  __bis_SR_register(GIE);
+  __no_operation();                         // For debugger
 
-    // Set interrupts
-    __bis_SR_register(GIE);
-    __no_operation();                         // For debugger
+
+
+  __delay_cycles(5000);
 
 
 
-   __delay_cycles(5000);
-    
-   
- 
-    // Main loop
-    for(;;)
-    {
+  // Main loop
+  for(;;)
+  {
+    //UART_WriteChar(sendChar,UART_A1);
+    UCA1TXBUF = sendChar;
+    FET_TOGGLE();
+    __delay_cycles(5000);
       
-      FET_TOGGLE();
-      __delay_cycles(5000);
-        
-    }
+  }
 }
 
 
