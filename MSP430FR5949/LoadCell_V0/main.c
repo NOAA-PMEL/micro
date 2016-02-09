@@ -88,8 +88,8 @@ int main(void) {
   FET_INIT();
 
     // Configure GPIO
-  P2SEL1 |= BIT0 | BIT1;                    // USCI_A0 UART operation
-  P2SEL0 &= ~(BIT0 | BIT1);
+  P2SEL1 |= BIT5 | BIT6;                    // USCI_A0 UART operation
+  P2SEL0 &= ~(BIT5 | BIT6);
 
   // Unlock GPIO
   PM5CTL0 &= ~LOCKLPM5;		// Needs to be done after config GPIO & Pins!
@@ -104,15 +104,8 @@ int main(void) {
 
   
     // Configure the UART
-  //UART_Init(UART_A1,UART_BAUD_2400,CLK_8000000,UART_CLK_ACLK);
-  UCA1CTLW0 = UCSWRST;                      // Put eUSCI in reset
-  UCA1CTLW0 |= UCSSEL__SMCLK;               // CLK = SMCLK
-  UCA1BR0 = 52;                             // 8000000/16/9600
-  UCA1BR1 = 0x00;
-  UCA1MCTLW |= UCOS16 | UCBRF_1;
-  UCA1CTLW0 &= ~UCSWRST;                    // Initialize eUSCI
-  UCA1IE |= UCRXIE;                         // Enable USCI_A0 RX interrupt
-  __delay_cycles(DELAY);
+  UART_Init(UART_A1,UART_BAUD_9600,CLK_8000000,UART_CLK_SMCLK);
+
 
 
   // Turn the Keller ON
