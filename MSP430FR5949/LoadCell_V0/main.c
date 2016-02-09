@@ -95,17 +95,25 @@ int main(void) {
   PM5CTL0 &= ~LOCKLPM5;		// Needs to be done after config GPIO & Pins!
 
   // Start the Clock
-  CSCTL0_H = CSKEY >> 8;                    // Unlock CS registers
-  CSCTL1 = DCOFSEL_6;                       // Set DCO to 8MHz
-  CSCTL2 = SELA__VLOCLK | SELS__DCOCLK | SELM__DCOCLK;  // Set SMCLK = MCLK = DCO
-                                          // ACLK = VLOCLK
-  CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;     // set all dividers
-  CSCTL0_H = 0;                             // Lock CS registers
+//  CSCTL0_H = CSKEY >> 8;                    // Unlock CS registers
+//  CSCTL1 = DCOFSEL_6;                       // Set DCO to 8MHz
+//  CSCTL2 = SELA__VLOCLK | SELS__DCOCLK | SELM__DCOCLK;  // Set SMCLK = MCLK = DCO
+//                                          // ACLK = VLOCLK
+//  CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;     // set all dividers
+//  CSCTL0_H = 0;                             // Lock CS registers
 
   
+  CSCTL0_H = CSKEY >> 8;                    // Unlock CS registers
+  CSCTL1 = 0;                       // Set DCO to 8MHz
+  CSCTL2 = SELA__LFXTCLK | SELS__LFXTCLK | SELM__LFXTCLK;  // Set SMCLK = MCLK = DCO
+                                          // ACLK = VLOCLK
+  CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;     // set all dividers
+  CSCTL4 = LFXTOFF | VLOOFF | LFXTDRIVE_3;
+  CSCTL0_H = 0;                             // Lock CS registers
+  
     // Configure the UART
-  UART_Init(UART_A1,UART_BAUD_9600,CLK_8000000,UART_CLK_SMCLK);
-
+  //UART_Init(UART_A1,UART_BAUD_9600,CLK_8000000,UART_CLK_SMCLK);
+  UART_Init(UART_A1,UART_BAUD_9600,CLK_32768,UART_CLK_SMCLK);
 
 
   // Turn the Keller ON
@@ -127,7 +135,7 @@ int main(void) {
   {
     //UART_WriteChar(sendChar,UART_A1);
     UCA1TXBUF = sendChar;
-    FET_TOGGLE();
+    
     __delay_cycles(5000);
       
   }

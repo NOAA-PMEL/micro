@@ -198,25 +198,25 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 				case UART_BAUD_1200:
 					osval = 0x01;
 					*UCBRx = 1;
-					ucbrf = 11;
+					ucbrf = UCBRF_11;
 					ucbrs = 0x25;
 					break;
 				case UART_BAUD_2400:
 					osval = 0x00;
 					*UCBRx = 13;
-					ucbrf = 0;
+					ucbrf = UCBRF_0;
 					ucbrs = 0xB6;
 					break;
 				case UART_BAUD_4800:
 					osval = 0x00;
 					*UCBRx = 6;
-					ucbrf = 0;
+					ucbrf = UCBRF_0;
 					ucbrs = 0xEE;
 					break;
 				case UART_BAUD_9600:
 					osval = 0x00u;
 					*UCBRx = 3;
-					ucbrf = 0;
+					ucbrf = UCBRF_0;
 					ucbrs = 0x92;
 					break;
 				default:
@@ -599,6 +599,8 @@ __interrupt void USCI_A1_ISR(void)
 		case USCI_NONE:
 			break;
 		case USCI_UART_UCRXIFG:
+          UCA1TXBUF = UCA1RXBUF;
+          FET_TOGGLE();
 			break;
 		case USCI_UART_UCTXIFG:
 			break;

@@ -72,11 +72,11 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 	{
 		case UART_A0:
 			UCA0CTLW0 = UCSWRST;
-			UCA0CTLW1 |= UCSSEL__ACLK;
+			UCA0CTLW0 |= UCSSEL__ACLK;
 			break;
 		case UART_A1:
 			UCA1CTLW0 = UCSWRST;
-			UCA1CTLW1 |= UCSSEL__ACLK;
+			UCA1CTLW0 |= UCSSEL__SMCLK;
 			break;
 		default:
 			break;
@@ -104,6 +104,8 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 		}
 	}
 
+    UCA1CTLW0 &= ~UCSWRST;                    // Take UART out of reset
+    UCA1IE |= UCRXIE;                         // Enable USCI_A0 RX interrupt
 
 	return UART_OK;
 }
@@ -392,11 +394,12 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 		case CLK_8000000:
 			switch( baudRate){
 				case UART_BAUD_9600:
-					osval = 1;
+					osval = UCOS16;
 					*UCBRx = 52;
-					ucbrf = 1;
+					ucbrf = UCBRF_1;
 					ucbrs = 0x49;
-					break;
+					//ucbrs = 0;
+                    break;
 				case UART_BAUD_19200:
 					osval = 1;
 					*UCBRx = 26;
@@ -445,10 +448,10 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 
 	}
 
-	ucbrf = (ucbrf << 4);
+    // Shift the UCBR second byte to left by 8 bits for register
 	ucbrs = (ucbrs << 8);
 
-
+    // Clear and populate the Modulation Control Register
 	*MCTLWReg = 0x0000;
 	*MCTLWReg = ucbrf | ucbrs | osval;
 	if(response == BAUDRATE_FAIL)
@@ -458,6 +461,8 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 			return BAUDRATE_FAIL;
 		}
 	}
+    
+
 	return BAUDRATE_OK;
 
 }
@@ -572,7 +577,7 @@ __interrupt void USCI_A0_ISR(void)
 		case USCI_NONE:
 			break;
 		case USCI_UART_UCRXIFG:
-			SystemState = BUFFER_RECEIVE;
+			//SystemState = BUFFER_RECEIVE;
 			__bis_SR_register(GIE);
 			break;
 		case USCI_UART_UCTXIFG:
@@ -594,6 +599,8 @@ __interrupt void USCI_A1_ISR(void)
 		case USCI_NONE:
 			break;
 		case USCI_UART_UCRXIFG:
+          UCA1TXBUF = UCA1RXBUF;
+          FET_TOGGLE();
 			break;
 		case USCI_UART_UCTXIFG:
 			break;
