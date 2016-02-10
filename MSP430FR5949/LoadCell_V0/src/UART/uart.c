@@ -138,7 +138,7 @@ uint8_t UART_WriteChar(uint8_t value, uint8_t Port)
 			UCA0TXBUF = (uint16_t) value;
 			break;
 		case UART_A1:
-			UCA1TXBUF = (uint16_t) value;
+			UCA1TXBUF = value;
 			break;
 		default:
 			return UART_FAIL;
