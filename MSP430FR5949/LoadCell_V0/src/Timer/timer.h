@@ -73,7 +73,7 @@
  *
  *  @return none
  */
-void TimerAInit ( void );
+void TIMER_A0_Init ( void );
 
 /** @brief Initialize Timer B
  *
@@ -83,7 +83,7 @@ void TimerAInit ( void );
  *
  *  @return none
  */
-void TimerBInit ( void );
+void TIMER_A1_Init ( void );
 
 /** @brief TimerB X milli-second timer
  *
@@ -95,7 +95,7 @@ void TimerBInit ( void );
  *
  *  @todo This function is restricts processor until complete, should be rethought
  */
-void TimerBms( uint16_t length );
+void TIMER_B_MilliSecond( uint16_t length );
 
 /************************************************************************
 *							STRUCTURES
