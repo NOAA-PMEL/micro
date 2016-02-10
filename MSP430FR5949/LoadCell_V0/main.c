@@ -53,20 +53,37 @@
  */
 
 #define PMEL            // For compiling outside of Unity/Ceedling
-
+#define VERSION     ("0.0.1")
 /*****************************  Includes  *********************************/
 #include "./inc/includes.h"
 
 /************************ Function Prototypes *****************************/
 
+/***********************  Constants (In FRAM)  *****************************/
+const uint8_t sensorAddress = 0x40;
+const uint8_t sensorEOCPort = 3;
+const uint8_t sensorEOCPin = 7;
+
 /*************************  Global variables  *****************************/
+// Variables
+volatile uint8_t sampleCount = 0;
+volatile uint8_t errorCounter = 0;
+volatile double pressure = 0.0;
 
+// Structures
+PAXLDSensor_t pxSensor;
 
+// Character Arrays
+char sendData[128];
 
+// Counters
+volatile uint8_t TimeoutCounter_1 = 0;
+volatile uint8_t TimeoutCounter_2 = 0;
 
 /*******************************  MAIN  **********************************/
 int main(void) {
-  char sendChar = 'A';
+  char sendChar = 'C';
+  uint8_t splashVer[32] = "v0.0.1\r\n";
   
   // Pause the watchdog
   WDTCTL = WDTPW | WDTHOLD;		
@@ -74,7 +91,13 @@ int main(void) {
 	
   // Set All GPIO settings to 0
   GPIO_Init();        // Sets all Outputs Low and regs to 0
+  
+  // Set up the PAxLD Input Pin
+  GPIO_ClearPin(sensorEOCPort, sensorEOCPin);
+  GPIO_SetPinAsInput(sensorEOCPort, sensorEOCPin);
+  GPIO_AttachInputInterrupt(sensorEOCPort,sensorEOCPin,GPIO_EDGE_HIGH_TO_LOW);
 
+  
   // Configure the FET driving power to the Keller Sensor
   FET_OFF();
   FET_INIT();
@@ -114,27 +137,30 @@ int main(void) {
   // Turn the Keller ON
   FET_ON();
   
-  // Initialize the timer
-  TimerAInit();
+  // Initialize the timer for 1 Second
+  //TIMER_A1_Init();
+  //TIMER_A0_Init();
   
-  
+
   // Set interrupts
+  P3IFG &= ~BIT7;
+  
   __bis_SR_register(GIE);
   __no_operation();                         // For debugger
 
-
-
-  __delay_cycles(5000);
-
-
-
+  // Write Splash Screen
+  for(uint8_t i=0;i<32;i++)
+  {
+    UART_WriteChar(splashVer[i],UART_A1);
+  }
+ 
   // Main loop
   for(;;)
   {
     //UART_WriteChar(sendChar,UART_A1);
-    UCA1TXBUF = sendChar;
-    
-    __delay_cycles(5000);
+    //UCA1TXBUF = sendChar;
+
+    //__delay_cycles(500000);
       
   }
 }

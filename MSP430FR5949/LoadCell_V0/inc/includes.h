@@ -95,16 +95,13 @@
 
 
 // Interrupt mapping
-#define INT_P1_2                    (pxSensor[0].dataAvailableFlag = true)
-#define INT_P3_4                    (pxSensor[1].dataAvailableFlag = true)
-#define INT_P1_5                    (pxSensor[2].dataAvailableFlag = true)
-#define INT_P3_5                    (pxSensor[3].dataAvailableFlag = true)
-#define INT_P1_4                    (pxSensor[4].dataAvailableFlag = true)
-#define INT_P3_6                    (pxSensor[5].dataAvailableFlag = true)
-#define INT_P1_3                    (pxSensor[6].dataAvailableFlag = true)
 
 #define INT_P1_0                    (__no_operation())
 #define INT_P1_1                    (__no_operation())
+#define INT_P1_2                    (__no_operation())
+#define INT_P1_3                    (__no_operation())
+#define INT_P1_4                    (__no_operation())
+#define INT_P1_5                    (__no_operation())
 #define INT_P1_6                    (__no_operation())
 #define INT_P1_7                    (__no_operation())
 
@@ -121,6 +118,9 @@
 #define INT_P3_1                    (__no_operation())
 #define INT_P3_2                    (__no_operation())
 #define INT_P3_3                    (__no_operation())
+#define INT_P3_4                    (__no_operation())
+#define INT_P3_5                    (__no_operation())
+#define INT_P3_6                    (__no_operation())
 #define INT_P3_7                    (__no_operation())
 
 #define INT_P4_0                    (__no_operation())
