@@ -19,13 +19,17 @@
 /************************************************************************
 *						STANDARD LIBRARIES
 ************************************************************************/
+#include <stdio.h>
 #include <stdint.h>
-#include "../../inc/includes.h"
+#include <math.h>
+#include <string.h>
+#include <stdlib.h>
+#include <float.h>
 
-#ifdef PMEL
-#include <msp430fr5949.h>
-#else
+#ifndef PMEL
 #include "../../test/msp430fr5969.h"
+#else
+#include <msp430fr5969.h>		// Device Specific Header File
 #endif
 /************************************************************************
 *							HEADER FILES

@@ -91,6 +91,15 @@ int main(void) {
   P2SEL1 |= BIT5 | BIT6;                    // USCI_A0 UART operation
   P2SEL0 &= ~(BIT5 | BIT6);
 
+  // LFXIN
+  PJSEL1 &= ~BIT4;
+  PJSEL0 |= BIT4;
+  
+  // LFXOUT
+  //PJSEL1 &= ~BIT5;
+  //PJSEL0 |= BIT5;
+  
+  
   // Unlock GPIO
   PM5CTL0 &= ~LOCKLPM5;		// Needs to be done after config GPIO & Pins!
 
@@ -108,16 +117,25 @@ int main(void) {
   CSCTL2 = SELA__LFXTCLK | SELS__LFXTCLK | SELM__LFXTCLK;  // Set SMCLK = MCLK = DCO
                                           // ACLK = VLOCLK
   CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;     // set all dividers
-  CSCTL4 = LFXTOFF | VLOOFF | LFXTDRIVE_3;
+  CSCTL4 =  VLOOFF | LFXTDRIVE_0;
+  CSCTL4 &= ~LFXTOFF;
+  do
+  {
+    CSCTL5 &= ~LFXTOFFG;
+    SFRIFG1 &= ~OFIFG;
+  }while(SFRIFG1 & OFIFG);
+  
   CSCTL0_H = 0;                             // Lock CS registers
   
     // Configure the UART
-  //UART_Init(UART_A1,UART_BAUD_9600,CLK_8000000,UART_CLK_SMCLK);
   UART_Init(UART_A1,UART_BAUD_9600,CLK_32768,UART_CLK_SMCLK);
 
-
+	
   // Turn the Keller ON
   FET_ON();
+  
+  // Initialize the timer
+  TimerAInit();
   
   
   // Set interrupts
