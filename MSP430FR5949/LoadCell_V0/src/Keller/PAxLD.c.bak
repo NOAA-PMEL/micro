@@ -55,8 +55,8 @@ void PAxLDInit(PAXLD_t *sensor, uint8_t address, uint8_t port, uint16_t pin)
 	sensor->eocPin = pin;
 
 	// Attach Interrupt to EOC Pin
+	//GpioAttachInputInterrupt(sensor->eocPort,sensor->eocPin,GPIO_EDGE_LOW_TO_HIGH);
 	GPIO_AttachInputInterrupt(sensor->eocPort, sensor->eocPin,GPIO_EDGE_LOW_TO_HIGH);
-	
 	// Retreive data from memory
 	sensor->dataIndex = 0;
 	PAxLDRequestScaleValues(sensor);

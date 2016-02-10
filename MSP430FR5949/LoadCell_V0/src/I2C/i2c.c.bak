@@ -62,7 +62,7 @@ void I2CClose(void)
 	GPIO_SetPinAsOutput(1,6);
 	GPIO_SetPinAsOutput(1,7);
 	GPIO_ClearPin(1, 6);
-	GPIO_ClearPin(1, 7);
+	GpioSetOutputLow(GPIO_PORTP1, GPIO_PIN7);
 }
 
 /***********************************************************************/
