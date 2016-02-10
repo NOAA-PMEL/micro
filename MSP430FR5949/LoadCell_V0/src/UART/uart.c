@@ -599,8 +599,8 @@ __interrupt void USCI_A1_ISR(void)
 		case USCI_NONE:
 			break;
 		case USCI_UART_UCRXIFG:
-          UCA1TXBUF = UCA1RXBUF;
-          FET_TOGGLE();
+          //UCA1TXBUF = UCA1RXBUF;
+          //FET_TOGGLE();
 			break;
 		case USCI_UART_UCTXIFG:
 			break;
