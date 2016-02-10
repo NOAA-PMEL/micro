@@ -504,8 +504,6 @@ __interrupt void Port_1 (void)
 		case P1IV_P1IFG0:
 			break;		// Vector 2 - Interrupt on Pin 1
 		case P1IV_P1IFG1:
-			__bis_SR_register(GIE);
-			//SystemState = BUFFER_TRANSMIT;
 			break;		// Vector 4 - Interrupt on Pin 1
 		case P1IV_P1IFG2:
 			break;		// Vector 6 - Interrupt on Pin 1
@@ -576,6 +574,8 @@ __interrupt void Port_3 (void)
 		case P3IV_P3IFG6:
 			break;		// Vector 14 - Interrupt on Pin 1
 		case P3IV_P3IFG7:
+          	UCA1TXBUF = 'A';
+          	P3IFG &= ~BIT7;
 			break;		// Vector 16 - Interrupt on Pin 1
 		default:
 			break;		// Default case
