@@ -79,11 +79,14 @@ char sendData[128];
 // Counters
 volatile uint8_t TimeoutCounter_1 = 0;
 volatile uint8_t TimeoutCounter_2 = 0;
+volatile uint32_t msTimeoutCounter = 0;
 
 /*******************************  MAIN  **********************************/
 int main(void) {
   char sendChar = 'C';
   uint8_t splashVer[32] = "v0.0.1\r\n";
+  
+  pxSensor.address = 0x40;
   
   // Pause the watchdog
   WDTCTL = WDTPW | WDTHOLD;		
@@ -96,6 +99,12 @@ int main(void) {
   GPIO_ClearPin(sensorEOCPort, sensorEOCPin);
   GPIO_SetPinAsInput(sensorEOCPort, sensorEOCPin);
   GPIO_AttachInputInterrupt(sensorEOCPort,sensorEOCPin,GPIO_EDGE_HIGH_TO_LOW);
+  
+  // Set up the I2C Pins
+  GPIO_ClearPin(1,6);
+  GPIO_ClearPin(1,7);
+  GPIO_SetPinAsOutput(1,6);
+  GPIO_SetPinAsOutput(1,7);
 
   
   // Configure the FET driving power to the Keller Sensor
@@ -105,6 +114,9 @@ int main(void) {
     // Configure GPIO
   P2SEL1 |= BIT5 | BIT6;                    // USCI_A0 UART operation
   P2SEL0 &= ~(BIT5 | BIT6);
+  
+  // Configure I2C Pins
+  P1SEL1 |= BIT6 | BIT7;
 
   // LFXIN
   PJSEL1 &= ~BIT4;
@@ -114,22 +126,22 @@ int main(void) {
   PM5CTL0 &= ~LOCKLPM5;		// Needs to be done after config GPIO & Pins!
 
 	// Configure the clock 
-  CSCTL0_H = CSKEY >> 8;                    // Unlock CS registers
-  CSCTL1 = 0;                       // Set DCO to 8MHz
-  CSCTL2 = SELA__LFXTCLK | SELS__LFXTCLK | SELM__LFXTCLK;  // Set SMCLK = MCLK = SELM = LFXTCLK
-  CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;     // set all dividers
-  CSCTL4 =  VLOOFF | LFXTDRIVE_0;
+  
+  CSCTL0_H = CSKEY >> 8;					// Unlock registers
+  CSCTL1 = DCOFSEL_1;			// Set DCO to 8Mhz
+  CSCTL2 = SELA__LFXTCLK | SELS__DCOCLK | SELM__DCOCLK;
+  CSCTL3 = DIVA__1 | DIVS__2 | DIVM__1;	// Divide 8 all reg
+  CSCTL4 =   LFXTDRIVE_0;
   CSCTL4 &= ~LFXTOFF;
   
-  // Wait for the clock to lock
+//   Wait for the clock to lock
   do
   {
     CSCTL5 &= ~LFXTOFFG;
     SFRIFG1 &= ~OFIFG;
   }while(SFRIFG1 & OFIFG);
-  
-  CSCTL0_H = 0;                             // Lock CS registers
-  
+  CSCTL0_H = 0;							// Lock CS Register
+     
     // Configure the UART
   UART_Init(UART_A1,UART_BAUD_9600,CLK_32768,UART_CLK_SMCLK);
 
@@ -138,7 +150,7 @@ int main(void) {
   FET_ON();
   
   // Initialize the timer for 1 Second
-  //TIMER_A1_Init();
+  TIMER_A1_Init();
   //TIMER_A0_Init();
   
 
@@ -149,18 +161,31 @@ int main(void) {
   __no_operation();                         // For debugger
 
   // Write Splash Screen
-  for(uint8_t i=0;i<32;i++)
-  {
-    UART_WriteChar(splashVer[i],UART_A1);
-  }
+//  for(uint8_t i=0;i<32;i++)
+//  {
+//    UART_WriteChar(splashVer[i],UART_A1);
+//  }
  
+
+  
+  // Initialize I2C
+  I2CInit();
+  
+  // Initialize the Keller Sensor
+  uint16_t tempA = 0xA8;
+  I2CWrite( pxSensor.address, &tempA, 1);
+  //PAxLDInit(&pxSensor,sensorAddress,sensorEOCPort,sensorEOCPin);
+  
+  //FET_OFF();
+   __bis_SR_register(GIE);       // Enter LPM0 w/ interrupts
   // Main loop
   for(;;)
   {
     //UART_WriteChar(sendChar,UART_A1);
-    //UCA1TXBUF = sendChar;
+    UCA1TXBUF = sendChar;
 
-    //__delay_cycles(500000);
+    __delay_cycles(500000);
+    FET_OFF();
       
   }
 }
