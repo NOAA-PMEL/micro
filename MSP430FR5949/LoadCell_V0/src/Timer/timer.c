@@ -92,27 +92,10 @@ __interrupt void TIMER0_A1_ISR(void)
 #pragma vector=TIMER1_A0_VECTOR
 __interrupt void TIMER1_A0_ISR(void)
 {
-   FET_TOGGLE();
+   msTimeoutCounter += 10;
 }
 
-//#pragma vector=TIMER0_A1_VECTOR
-//__interrupt void TIMER0_A1_ISR(void)
-//{
-//  switch(__even_in_range(TA1IV, TA1IV_TAIFG))
-//  {
-//    case TA1IV_NONE:   break;               // No interrupt
-//    case TA1IV_TACCR1: break;               // CCR1 not used
-//    case TA1IV_TACCR2: break;               // CCR2 not used
-//    case TA1IV_3:      break;               // reserved
-//    case TA1IV_4:      break;               // reserved
-//    case TA1IV_5:      break;               // reserved
-//    case TA1IV_6:      break;               // reserved
-//    case TA1IV_TAIFG:                       // overflow
-//
-//      break;
-//    default: break;
-//  }
-//}
+
 
 
 #endif

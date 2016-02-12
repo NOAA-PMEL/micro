@@ -76,7 +76,7 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 			break;
 		case UART_A1:
 			UCA1CTLW0 = UCSWRST;
-			UCA1CTLW0 |= UCSSEL__SMCLK;
+			UCA1CTLW0 |= UCSSEL__ACLK;
 			break;
 		default:
 			break;

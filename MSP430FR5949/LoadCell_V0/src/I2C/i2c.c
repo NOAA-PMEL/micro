@@ -111,5 +111,44 @@ void I2CWrite( uint16_t slaveAddress, uint16_t *value, uint8_t length )
 *					INTERRUPT VECTOR
 ************************************************************************/
 
+/*****************************  INTERRUPTS  ********************************/
+#pragma vector = USCI_B0_VECTOR
+__interrupt void USCI_B0_ISR(void)
+{
 
+    switch(__even_in_range(UCB0IV, USCI_I2C_UCBIT9IFG))
+      {
+        case USCI_NONE:
+            break;         // Vector 0: No interrupts
+        case USCI_I2C_UCALIFG:
+            break;         // Vector 2: ALIFG
+        case USCI_I2C_UCNACKIFG:                // Vector 4: NACKIFG
+            break;
+        case USCI_I2C_UCSTTIFG:
+            break;         // Vector 6: STTIFG
+        case USCI_I2C_UCSTPIFG:
+            break;         // Vector 8: STPIFG
+        case USCI_I2C_UCRXIFG3:
+            break;         // Vector 10: RXIFG3
+        case USCI_I2C_UCTXIFG3:
+            break;         // Vector 12: TXIFG3
+        case USCI_I2C_UCRXIFG2:
+            break;         // Vector 14: RXIFG2
+        case USCI_I2C_UCTXIFG2:
+            break;         // Vector 16: TXIFG2
+        case USCI_I2C_UCRXIFG1:
+            break;         // Vector 18: RXIFG1
+        case USCI_I2C_UCTXIFG1:
+            break;         // Vector 20: TXIFG1
+        case USCI_I2C_UCRXIFG0:
+            pxSensor.data[pxSensor.dataIndex] = UCB0RXBUF;
+            pxSensor.dataIndex++;
+            break;         // Vector 22: RXIFG0
+        case USCI_I2C_UCTXIFG0:                 // Vector 24: TXIFG0
+          break;
+        default:
+            break;
+      }
+
+}
 

@@ -195,12 +195,12 @@ typedef struct console {
 /************************************************************************
 *							GLOBAL VARIABLES
 ************************************************************************/
-extern volatile uint32_t msTimeoutCounter;
+
 extern console_t console;
 #ifdef PMEL
 extern volatile FLAGS TimerFlags;
-
-
+extern PAXLDSensor_t pxSensor;
+extern volatile uint32_t msTimeoutCounter;
 #endif
 
 #endif
