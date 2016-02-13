@@ -41,11 +41,12 @@ void TIMER_A0_Init ( void )
 void TIMER_A1_Init ( void )
 {
 
-	// Set up for 1mS using 32768Hz Crystal
-	TA0CCR0 =33;
-  TA0CTL = TASSEL__ACLK | MC__UP | TACLR | TAIE; // ACLK, contmode, clear TAR
+  // Set up for 1mS using 32768Hz Crystal
+  TA1CCR0 =33;
+  TA1CTL = TASSEL__ACLK | MC__UP;
+  TA1CCTL0 = CCIE;
 
-	return;
+  return;
 }
 
 /************************************************************************/
@@ -69,8 +70,8 @@ void TIMER_B_MilliSecond( uint16_t length )
 #ifdef PMEL
 
 
-#pragma vector=TIMER0_A0_VECTOR
-__interrupt void TIMER0_A0_ISR(void)
+#pragma vector=TIMER0_A1_VECTOR
+__interrupt void TIMER0_A1_ISR(void)
 {
   switch(__even_in_range(TA0IV, TA0IV_TAIFG))
   {
@@ -88,23 +89,13 @@ __interrupt void TIMER0_A0_ISR(void)
 }
 
 
-#pragma vector=TIMER0_A1_VECTOR
-__interrupt void TIMER0_A1_ISR(void)
+#pragma vector=TIMER1_A0_VECTOR
+__interrupt void TIMER1_A0_ISR(void)
 {
-  switch(__even_in_range(TA0IV, TA0IV_TAIFG))
-  {
-    case TA1IV_NONE:   break;               // No interrupt
-    case TA1IV_TACCR1: break;               // CCR1 not used
-    case TA1IV_TACCR2: break;               // CCR2 not used
-    case TA1IV_3:      break;               // reserved
-    case TA1IV_4:      break;               // reserved
-    case TA1IV_5:      break;               // reserved
-    case TA1IV_6:      break;               // reserved
-    case TA1IV_TAIFG:                       // overflow
-      break;
-    default: break;
-  }
+   msTimeoutCounter += 10;
 }
+
+
 
 
 #endif

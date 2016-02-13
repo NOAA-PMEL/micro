@@ -92,7 +92,9 @@ __interrupt void TIMER0_A1_ISR(void)
 #pragma vector=TIMER1_A0_VECTOR
 __interrupt void TIMER1_A0_ISR(void)
 {
-   msTimeoutCounter += 10;
+
+   msTimeoutCounter += 1;
+   ms2TimeoutCounter += 1;
 }
 
 

@@ -160,6 +160,7 @@ uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port)
 		if(value[i] != 0x00)
 		{
 			UART_WriteChar(value[i],Port);
+            __delay_cycles(5000);
 		}
 		else
 		{
@@ -168,7 +169,9 @@ uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port)
 	}
 
 	UART_WriteChar('\r',Port);
+    __delay_cycles(5000);
 	UART_WriteChar('\n',Port);
+    __delay_cycles(5000);
 	return UART_OK;
 }
 /************************************************************************

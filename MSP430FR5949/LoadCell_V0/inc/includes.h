@@ -201,6 +201,7 @@ extern console_t console;
 extern volatile FLAGS TimerFlags;
 extern PAXLDSensor_t pxSensor;
 extern volatile uint32_t msTimeoutCounter;
+extern volatile uint32_t ms2TimeoutCounter;
 #endif
 
 #endif

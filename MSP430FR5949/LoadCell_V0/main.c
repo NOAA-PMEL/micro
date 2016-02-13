@@ -58,9 +58,10 @@
 #include "./inc/includes.h"
 
 /************************ Function Prototypes *****************************/
-
+void sensorRead(PAXLD_t *sensor);
+void sensorProcessData(PAXLD_t *sensor);
 /***********************  Constants (In FRAM)  *****************************/
-const uint8_t sensorAddress = 0x40;
+const uint8_t sensorAddress = 0x46;
 const uint8_t sensorEOCPort = 3;
 const uint8_t sensorEOCPin = 7;
 
@@ -80,13 +81,16 @@ char sendData[128];
 volatile uint8_t TimeoutCounter_1 = 0;
 volatile uint8_t TimeoutCounter_2 = 0;
 volatile uint32_t msTimeoutCounter = 0;
+volatile uint32_t ms2TimeoutCounter = 0;
 
 /*******************************  MAIN  **********************************/
 int main(void) {
   char sendChar = 'C';
+  char sendString[32] = {0};
+  uint8_t sendVal[32]= {0};
   uint8_t splashVer[32] = "v0.0.1\r\n";
   
-  pxSensor.address = 0x40;
+  pxSensor.address = 0x46;
   
   // Pause the watchdog
   WDTCTL = WDTPW | WDTHOLD;		
@@ -125,8 +129,12 @@ int main(void) {
   // Unlock GPIO
   PM5CTL0 &= ~LOCKLPM5;		// Needs to be done after config GPIO & Pins!
 
-	// Configure the clock 
-  
+  // Configure the clock 
+  // DCO running at 1MHz
+  // ACLK running on LFXT 32768Hz
+  // SMCLK running on DCOCLK, 500MHz
+  // MCLK running on DCOCLK, 1MHz
+  // LFXT Driver on low power
   CSCTL0_H = CSKEY >> 8;					// Unlock registers
   CSCTL1 = DCOFSEL_1;			// Set DCO to 8Mhz
   CSCTL2 = SELA__LFXTCLK | SELS__DCOCLK | SELM__DCOCLK;
@@ -165,31 +173,92 @@ int main(void) {
 //  {
 //    UART_WriteChar(splashVer[i],UART_A1);
 //  }
- 
 
-  
   // Initialize I2C
   I2CInit();
   
   // Initialize the Keller Sensor
   uint16_t tempA = 0xA8;
   I2CWrite( pxSensor.address, &tempA, 1);
-  //PAxLDInit(&pxSensor,sensorAddress,sensorEOCPort,sensorEOCPin);
+  PAxLDInit(&pxSensor,sensorAddress,sensorEOCPort,sensorEOCPin);
   
   //FET_OFF();
    __bis_SR_register(GIE);       // Enter LPM0 w/ interrupts
   // Main loop
   for(;;)
   {
+    // Transmit some junk on the UART
     //UART_WriteChar(sendChar,UART_A1);
-    UCA1TXBUF = sendChar;
-
-    __delay_cycles(500000);
+    
+    
+    // Request data from sensor
+    PAxLDRequestDataOnInterrupt(&pxSensor);
+    
+    // Read the sensors
+    sensorRead(&pxSensor);
+    
+    // Process sensor data
+    sensorProcessData(&pxSensor);
     FET_OFF();
-      
+    sprintf(sendString,"%02.2f",pxSensor.pressure);
+    memcpy(sendVal,sendString,32);
+    __delay_cycles(500000);
+    UART_Write(&sendVal[0],32,UART_A1);
+    for(uint8_t i=0;i<32;i++)
+    {
+      sendVal[i] = 0;
+      sendString[i] = 0;
+    }
+    FET_ON();
+    __delay_cycles(500000);  
   }
 }
 
+
+void sensorRead(PAXLD_t *sensor)
+{
+
+  ms2TimeoutCounter = 0;
+  while(sensor->dataAvailableFlag != true && ms2TimeoutCounter < 15);
+  if(sensor->dataAvailableFlag != true)
+  {
+      sensor->badDataCount++;
+  }
+  else
+  {
+      PAxLDRequestDataRead(&sensor[0], 5);
+      sensor->badDataCount = 0;
+  }
+
+}
+
+
+/** @brief Request data from PAxLD sensor on I2C Interrupts
+ *
+ *  writes to PAxLD sensor with a request for the sensor
+ *  to return the data.  Uses I2C STOP and RX interrupts
+ *
+ *  @param *sensor Sensor data structure
+ *
+ *  @return Void
+ */
+void sensorProcessData(PAXLD_t *sensor)
+{
+
+  ms2TimeoutCounter = 0;
+  while((sensor->dataIndex < 5) && ms2TimeoutCounter < 15);
+  {
+     if((sensor->dataIndex < 5))
+     {
+         sensor->pressure = -999.9;
+     }
+     else
+     {
+         PAxLDProcessReceivedData(&sensor[0]);
+     }
+  }
+
+}
 
 
 

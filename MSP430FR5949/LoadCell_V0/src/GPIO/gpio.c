@@ -574,7 +574,7 @@ __interrupt void Port_3 (void)
 		case P3IV_P3IFG6:
 			break;		// Vector 14 - Interrupt on Pin 1
 		case P3IV_P3IFG7:
-          	UCA1TXBUF = 'A';
+          	pxSensor.dataAvailableFlag = true;
           	P3IFG &= ~BIT7;
 			break;		// Vector 16 - Interrupt on Pin 1
 		default:
