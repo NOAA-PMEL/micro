@@ -85,6 +85,13 @@ volatile uint32_t ms2TimeoutCounter = 0;
 
 /*******************************  MAIN  **********************************/
 int main(void) {
+  
+  float Pressures[32] = {0};
+  float PressureMean = 0;
+  float PressureMax = 0;
+  float PressureMin = 0;
+  float PressureSTD = 0;
+  
   char sendChar = 'C';
   char sendString[32] = {0};
   uint8_t sendVal[32]= {0};
@@ -189,18 +196,27 @@ int main(void) {
   {
     // Transmit some junk on the UART
     //UART_WriteChar(sendChar,UART_A1);
-    
-    
-    // Request data from sensor
-    PAxLDRequestDataOnInterrupt(&pxSensor);
+    for(uint8_t i=0;i<32;i++)
+    {
+      // Request data from sensor
+      PAxLDRequestDataOnInterrupt(&pxSensor);
     
     // Read the sensors
-    sensorRead(&pxSensor);
+      sensorRead(&pxSensor);
     
     // Process sensor data
-    sensorProcessData(&pxSensor);
+      sensorProcessData(&pxSensor);
+      Pressures[i] = pxSensor.pressure;
+      
+    }
     FET_OFF();
-    sprintf(sendString,"%02.2f",pxSensor.pressure);
+    
+    STATS_CalculateMean(&Pressures[0],LENGTH_OF(Pressures),&PressureMean);
+    STATS_ComputeSTD(&Pressures[0],LENGTH_OF(Pressures),PressureMean,&PressureSTD);
+    STATS_FindMax(&Pressures[0],LENGTH_OF(Pressures),&PressureMax);
+    STATS_FindMin(&Pressures[0],LENGTH_OF(Pressures),&PressureMin);
+    
+    sprintf(sendString,"%3.2f,%3.4f,%3.2f,%3.2f\n",PressureMean,PressureSTD,PressureMax,PressureMin);
     memcpy(sendVal,sendString,32);
     __delay_cycles(500000);
     UART_Write(&sendVal[0],32,UART_A1);
