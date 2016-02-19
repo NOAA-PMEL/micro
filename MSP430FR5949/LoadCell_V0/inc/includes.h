@@ -44,7 +44,7 @@
 #include "../src/Timer/timer.h" 		// Timer Driver Header file
 #include "../src/I2C/i2c.h"					// I2C Driver Header file
 #include "../src/Keller/PAxLD.h"		// Keller PAxLD Sensor Driver Header file
-
+#include "../src/Stats/statistics.h"    // Statistics functions
 //#include "./Analog/analog.h"
 
 /************************************************************************
@@ -62,7 +62,7 @@
 *							MACROS
 ************************************************************************/
 // Generic functions
-#define LENGTH_OF(x)				(sizeof(x[0])/sizeof(x))
+#define LENGTH_OF(x)				(sizeof(x)/sizeof(x[0]))
 #define BIT_TO_MASK(a) 			 ( 1u << (a) )
 
 
