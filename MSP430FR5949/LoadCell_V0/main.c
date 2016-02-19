@@ -91,6 +91,8 @@ int main(void) {
   float PressureMax = 0;
   float PressureMin = 0;
   float PressureSTD = 0;
+  float Temperatures[32] = {0};
+  float TemperatureMean = 0;
   
   char sendChar = 'C';
   char sendString[32] = {0};
@@ -207,16 +209,20 @@ int main(void) {
     // Process sensor data
       sensorProcessData(&pxSensor);
       Pressures[i] = pxSensor.pressure;
-      
+      Temperatures[i] = pxSensor.temperature;
     }
     FET_OFF();
     
+    // Run Stats on the pressures
     STATS_CalculateMean(&Pressures[0],LENGTH_OF(Pressures),&PressureMean);
     STATS_ComputeSTD(&Pressures[0],LENGTH_OF(Pressures),PressureMean,&PressureSTD);
     STATS_FindMax(&Pressures[0],LENGTH_OF(Pressures),&PressureMax);
     STATS_FindMin(&Pressures[0],LENGTH_OF(Pressures),&PressureMin);
     
-    sprintf(sendString,"%3.2f,%3.4f,%3.2f,%3.2f\n",PressureMean,PressureSTD,PressureMax,PressureMin);
+    // Find mean of the temperature for reporting
+    STATS_CalculateMean(&Temperatures[0],LENGTH_OF(Temperatures),&TemperatureMean);
+    
+    sprintf(sendString,"%3.2f,%3.4f,%3.2f,%3.2f,%3.1f\n",PressureMean,PressureSTD,PressureMax,PressureMin,TemperatureMean);
     memcpy(sendVal,sendString,32);
     __delay_cycles(500000);
     UART_Write(&sendVal[0],32,UART_A1);
