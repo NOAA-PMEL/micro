@@ -38,10 +38,11 @@
 ************************************************************************/
 #include <stdint.h>
 #include <math.h>
-#include <float.h>
+//#include <float.h>
+
+#include "../../inc/includes.h"
 
 #ifdef PMEL
-#include "../../inc/includes.h"
 #include <msp430fr5949.h>
 #else
 #include "../../test/msp430fr5969.h"
