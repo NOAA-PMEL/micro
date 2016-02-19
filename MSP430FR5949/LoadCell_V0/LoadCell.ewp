@@ -2288,6 +2288,15 @@
       </file>
     </group>
     <group>
+      <name>Stats</name>
+      <file>
+        <name>$PROJ_DIR$\src\Stats\statistics.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\Stats\statistics.h</name>
+      </file>
+    </group>
+    <group>
       <name>Timer</name>
       <file>
         <name>$PROJ_DIR$\src\Timer\timer.c</name>
@@ -2319,6 +2328,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\test\test_gpio.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\test\test_statistics.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\test\test_uart.c</name>
