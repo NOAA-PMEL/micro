@@ -92,7 +92,7 @@
 #define NUM_KELLER_SENSORS	(1)
 // Number of samples to average over
 #define NUM_SAMPLES (5)
-
+#define NUMBER_OF_SAMPLES       (32)
 
 // Interrupt mapping
 
@@ -175,23 +175,30 @@ typedef enum mode {
     Exit
 } modes_t;
 
-typedef enum state {
-    Main,
-    Calibration,
-    ManualCal,
-    DisplayCal,
-    DisplayMetadata,
-    UpdateSN,
-    Sample
-} state_t;
+//typedef enum state {
+//    Main,
+//    Calibration,
+//    ManualCal,
+//    DisplayCal,
+//    DisplayMetadata,
+//    UpdateSN,
+//    Sample
+//} state_t;
 
 typedef struct console {
     modes_t mode;
-    state_t state;
-    state_t previousState;
+//    state_t state;
+//    state_t previousState;
     uint8_t inputChar;
     uint16_t SerialNumber;
 }console_t;
+
+typedef enum SysState {
+  Sample,
+  Compute,
+  Transmit,
+  Console
+} SystemState_t;
 /************************************************************************
 *							GLOBAL VARIABLES
 ************************************************************************/
@@ -202,6 +209,8 @@ extern volatile FLAGS TimerFlags;
 extern PAXLDSensor_t pxSensor;
 extern volatile uint32_t msTimeoutCounter;
 extern volatile uint32_t ms2TimeoutCounter;
+extern volatile uint32_t sampleTimer;
+
 #endif
 
 #endif

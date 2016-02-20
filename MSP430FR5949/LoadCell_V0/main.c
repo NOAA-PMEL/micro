@@ -60,6 +60,10 @@
 /************************ Function Prototypes *****************************/
 void sensorRead(PAXLD_t *sensor);
 void sensorProcessData(PAXLD_t *sensor);
+void STATE_Sample(void);
+void STATE_Console(void);
+void STATE_Compute(void);
+void STATE_Transmit(void);
 /***********************  Constants (In FRAM)  *****************************/
 const uint8_t sensorAddress = 0x46;
 const uint8_t sensorEOCPort = 3;
@@ -67,12 +71,23 @@ const uint8_t sensorEOCPin = 7;
 
 /*************************  Global variables  *****************************/
 // Variables
-volatile uint8_t sampleCount = 0;
+volatile uint16_t sampleCount = 0;
+volatile uint32_t sampleTimer = 0;
 volatile uint8_t errorCounter = 0;
 volatile double pressure = 0.0;
 
+float Pressures[NUMBER_OF_SAMPLES] = {0};
+float PressureMean = 0;
+float PressureMax = 0;
+float PressureMin = 0;
+float PressureSTD = 0;
+float Temperatures[NUMBER_OF_SAMPLES] = {0};
+float TemperatureMean = 0;
 // Structures
 PAXLDSensor_t pxSensor;
+
+// Enum types
+SystemState_t SystemState;
 
 // Character Arrays
 char sendData[128];
@@ -86,17 +101,10 @@ volatile uint32_t ms2TimeoutCounter = 0;
 /*******************************  MAIN  **********************************/
 int main(void) {
   
-  float Pressures[32] = {0};
-  float PressureMean = 0;
-  float PressureMax = 0;
-  float PressureMin = 0;
-  float PressureSTD = 0;
-  float Temperatures[32] = {0};
-  float TemperatureMean = 0;
+
   
   char sendChar = 'C';
-  char sendString[32] = {0};
-  uint8_t sendVal[32]= {0};
+  
   uint8_t splashVer[32] = "v0.0.1\r\n";
   
   pxSensor.address = 0x46;
@@ -191,29 +199,82 @@ int main(void) {
   I2CWrite( pxSensor.address, &tempA, 1);
   PAxLDInit(&pxSensor,sensorAddress,sensorEOCPort,sensorEOCPin);
   
-  //FET_OFF();
+  // Set interrupts
    __bis_SR_register(GIE);       // Enter LPM0 w/ interrupts
+   
+  // Reset sample timer
+   sampleTimer = 1000;
+   
+   // Set the startup State
+   SystemState = Sample;
+   
   // Main loop
   for(;;)
   {
-    // Transmit some junk on the UART
-    //UART_WriteChar(sendChar,UART_A1);
-    for(uint8_t i=0;i<32;i++)
+    switch(SystemState)
     {
-      // Request data from sensor
-      PAxLDRequestDataOnInterrupt(&pxSensor);
+      case Sample:
+//        if(sampleCount >= 16) //sampleTimer >= 1000)
+//        {
+//          STATE_Sample();
+//          sampleTimer = 0;
+//        }
+        STATE_Sample();
+        if(++sampleCount >= NUMBER_OF_SAMPLES)
+        {
+          SystemState = Compute;
+        }
+        break;
+      case Compute:
+          STATE_Compute();
+          sampleCount = 0;
+          SystemState = Transmit;
+        break;
+      case Transmit:
+        STATE_Transmit();
+        SystemState = Sample;
+        break;
+      case Console:
+        
+        break;
+      default:
+        break;
+      
+    }
+    
+    //FET_OFF();
+    
+   
+    
+    
+    //FET_ON();
+    //__delay_cycles(500000);  
+  }
+}
+
+
+void STATE_Sample(void)
+{
+    // Request data from sensor
+    PAxLDRequestDataOnInterrupt(&pxSensor);
     
     // Read the sensors
-      sensorRead(&pxSensor);
+    sensorRead(&pxSensor);
     
     // Process sensor data
-      sensorProcessData(&pxSensor);
-      Pressures[i] = pxSensor.pressure;
-      Temperatures[i] = pxSensor.temperature;
-    }
-    FET_OFF();
-    
-    // Run Stats on the pressures
+    sensorProcessData(&pxSensor);
+    Pressures[sampleCount] = pxSensor.pressure;
+    Temperatures[sampleCount] = pxSensor.temperature;
+ 
+//    if(++sampleCount >= NUMBER_OF_SAMPLES)
+//    {
+//      sampleCount = 0;
+//    }  
+}
+
+void STATE_Compute(void)
+{
+   // Run Stats on the pressures
     STATS_CalculateMean(&Pressures[0],LENGTH_OF(Pressures),&PressureMean);
     STATS_ComputeSTD(&Pressures[0],LENGTH_OF(Pressures),PressureMean,&PressureSTD);
     STATS_FindMax(&Pressures[0],LENGTH_OF(Pressures),&PressureMax);
@@ -221,21 +282,30 @@ int main(void) {
     
     // Find mean of the temperature for reporting
     STATS_CalculateMean(&Temperatures[0],LENGTH_OF(Temperatures),&TemperatureMean);
-    
-    sprintf(sendString,"%3.2f,%3.4f,%3.2f,%3.2f,%3.1f\n",PressureMean,PressureSTD,PressureMax,PressureMin,TemperatureMean);
-    memcpy(sendVal,sendString,32);
-    __delay_cycles(500000);
-    UART_Write(&sendVal[0],32,UART_A1);
-    for(uint8_t i=0;i<32;i++)
-    {
-      sendVal[i] = 0;
-      sendString[i] = 0;
-    }
-    FET_ON();
-    __delay_cycles(500000);  
-  }
+  
 }
 
+void STATE_Transmit(void)
+{
+	char sendString[32] = {0};
+  uint8_t sendVal[32]= {0};
+  
+  sprintf(sendString,"%3.2f,%3.4f,%3.2f,%3.2f,%3.1f\n",PressureMean,PressureSTD,PressureMax,PressureMin,TemperatureMean);
+  memcpy(sendVal,sendString,32);
+  __delay_cycles(500000);
+  UART_Write(&sendVal[0],32,UART_A1);
+  for(uint8_t i=0;i<32;i++)
+  {
+    sendVal[i] = 0;
+    sendString[i] = 0;
+  }
+}
+void STATE_Console(void)
+{
+  
+  
+  
+}
 
 void sensorRead(PAXLD_t *sensor)
 {

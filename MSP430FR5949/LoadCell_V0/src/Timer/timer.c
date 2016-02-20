@@ -95,6 +95,7 @@ __interrupt void TIMER1_A0_ISR(void)
 
    msTimeoutCounter += 1;
    ms2TimeoutCounter += 1;
+   sampleTimer++;
 }
 
 
