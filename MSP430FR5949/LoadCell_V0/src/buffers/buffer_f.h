@@ -22,6 +22,7 @@
 *							HEADER FILES
 ************************************************************************/
 #include <stdint.h>
+
 #include "buffers.h"
 
 #ifndef PMEL
@@ -37,8 +38,17 @@
 *							MACROS
 ************************************************************************/
 
+#define BUFFER_F_SIZE				(64)
+#define ACTUAL_BUFFER_F_SIZE		(BUFFER_F_SIZE + 1)
 
-
+#ifndef BUFFER_ERROR_EMPTY
+#define BUFFER_ERROR_EMPTY			(1)
+#define BUFFER_ERROR_FULL			(2)
+#define BUFFER_NOT_FULL				(0)
+#define BUFFER_NOT_EMPTY			(BUFFER_NOT_FULL)
+#define BUFFER_IS_EMPTY				(1)
+#define BUFFER_IS_FULL				(2)
+#endif
 
 typedef struct _CircularBufferF_s
 {

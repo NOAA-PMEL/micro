@@ -76,15 +76,18 @@ volatile uint32_t sampleTimer = 0;
 volatile uint8_t errorCounter = 0;
 volatile double pressure = 0.0;
 
-float Pressures[NUMBER_OF_SAMPLES] = {0};
+float Pressures[BUFFER_F_SIZE] = {0};
 float PressureMean = 0;
 float PressureMax = 0;
 float PressureMin = 0;
 float PressureSTD = 0;
-float Temperatures[NUMBER_OF_SAMPLES] = {0};
+float Temperatures[BUFFER_F_SIZE] = {0};
 float TemperatureMean = 0;
+
 // Structures
 PAXLDSensor_t pxSensor;
+CircularBufferF_s PressureDataBuffer;
+CircularBufferF_s TemperatureDataBuffer;
 
 // Enum types
 SystemState_t SystemState;
@@ -165,7 +168,6 @@ int main(void) {
     // Configure the UART
   UART_Init(UART_A1,UART_BAUD_9600,CLK_32768,UART_CLK_SMCLK);
 
-	
   // Turn the Keller ON
   FET_ON();
   
@@ -173,18 +175,11 @@ int main(void) {
   TIMER_A1_Init();
   //TIMER_A0_Init();
   
-
   // Set interrupts
   P3IFG &= ~BIT7;
   
   __bis_SR_register(GIE);
   __no_operation();                         // For debugger
-
-  // Write Splash Screen
-//  for(uint8_t i=0;i<32;i++)
-//  {
-//    UART_WriteChar(splashVer[i],UART_A1);
-//  }
 
   // Initialize I2C
   I2CInit();
@@ -198,7 +193,11 @@ int main(void) {
    __bis_SR_register(GIE);       // Enter LPM0 w/ interrupts
    
   // Reset sample timer
-   sampleTimer = 1000;
+  sampleTimer = 1000;
+   
+  // Clear the data buffer
+  BufferF_Clear(&PressureDataBuffer);
+  BufferF_Clear(&TemperatureDataBuffer);
    
    // Set the startup State
    SystemState = Sample;
@@ -218,11 +217,11 @@ int main(void) {
 				{
 					sampleTimer = 0;
         	STATE_Sample();
-	        if(++sampleCount >= NUMBER_OF_SAMPLES)
-	        {
-	          //SystemState = Compute;
-              sampleCount = 0;
-	        }
+//	        if(BufferF_IsFull(&PressureDataBuffer))
+//	        {
+//	          SystemState = Compute;
+//            sampleCount = 0;
+//	        }
 	      }
         break;
       case Compute:
@@ -267,26 +266,48 @@ void STATE_Sample(void)
     
     // Process sensor data
     sensorProcessData(&pxSensor);
-    Pressures[sampleCount] = pxSensor.pressure;
-    Temperatures[sampleCount] = pxSensor.temperature;
+    //Pressures[sampleCount] = pxSensor.pressure;
+    BufferF_Put(&PressureDataBuffer,pxSensor.pressure);
+    BufferF_Put(&TemperatureDataBuffer,pxSensor.temperature);
  
-//    if(++sampleCount >= NUMBER_OF_SAMPLES)
-//    {
-//      sampleCount = 0;
-//    }  
 }
 
 void STATE_Compute(void)
 {
-   // Run Stats on the pressures
-    STATS_CalculateMean(&Pressures[0],LENGTH_OF(Pressures),&PressureMean);
-    STATS_ComputeSTD(&Pressures[0],LENGTH_OF(Pressures),PressureMean,&PressureSTD);
-    STATS_FindMax(&Pressures[0],LENGTH_OF(Pressures),&PressureMax);
-    STATS_FindMin(&Pressures[0],LENGTH_OF(Pressures),&PressureMin);
+  	
+    // Retreive Pressures from Buffer
+    sampleCount = 0;
+    while(BufferF_IsEmpty(&PressureDataBuffer) == BUFFER_NOT_EMPTY)
+    {
+    	BufferF_Get(&PressureDataBuffer,&Pressures[sampleCount++]);
+    }
+    
+    
+     // Run Stats on the pressures
+    STATS_CalculateMean(&Pressures[0],sampleCount,&PressureMean);
+    STATS_ComputeSTD(&Pressures[0],sampleCount,PressureMean,&PressureSTD);
+    STATS_FindMax(&Pressures[0],sampleCount,&PressureMax);
+    STATS_FindMin(&Pressures[0],sampleCount,&PressureMin);
+
+		// Retreive Temperatures from buffer
+		sampleCount = 0;
+    while(BufferF_IsEmpty(&TemperatureDataBuffer) == BUFFER_NOT_EMPTY)
+    {
+    	BufferF_Get(&TemperatureDataBuffer,&Temperatures[sampleCount++]);
+    }
+    
+    // Clear the buffers
+    BufferF_Clear(&PressureDataBuffer);
+    BufferF_Clear(&TemperatureDataBuffer);
     
     // Find mean of the temperature for reporting
-    STATS_CalculateMean(&Temperatures[0],LENGTH_OF(Temperatures),&TemperatureMean);
+    STATS_CalculateMean(&Temperatures[0],sampleCount,&TemperatureMean);
   
+  	for(uint16_t i = 0;i<BUFFER_F_SIZE;i++)
+  	{
+  		Pressures[i] = 0;
+  		Temperatures[i] = 0;
+  	}
 }
 
 void STATE_Transmit(void)

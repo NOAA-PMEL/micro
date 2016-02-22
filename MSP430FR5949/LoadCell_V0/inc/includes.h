@@ -45,6 +45,9 @@
 #include "../src/I2C/i2c.h"					// I2C Driver Header file
 #include "../src/Keller/PAxLD.h"		// Keller PAxLD Sensor Driver Header file
 #include "../src/Stats/statistics.h"    // Statistics functions
+//#include "../src/buffers/buffers.h"
+//#include "../src/buffers/buffer_c.h"
+#include "../src/buffers/buffer_f.h"
 //#include "./Analog/analog.h"
 
 /************************************************************************

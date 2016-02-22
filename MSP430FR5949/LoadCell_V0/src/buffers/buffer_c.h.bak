@@ -45,7 +45,7 @@
 
 typedef struct _CircularBufferC_s
 {
-	char buffer[255];
+	char buffer[BUFFER_C_SIZE];
 	uint16_t size;
 	uint16_t read;
 	uint16_t write;
