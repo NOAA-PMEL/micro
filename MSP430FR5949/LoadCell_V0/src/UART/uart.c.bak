@@ -76,7 +76,7 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 			break;
 		case UART_A1:
 			UCA1CTLW0 = UCSWRST;
-			UCA1CTLW0 |= UCSSEL__SMCLK;
+			UCA1CTLW0 |= UCSSEL__ACLK;
 			break;
 		default:
 			break;
@@ -138,7 +138,7 @@ uint8_t UART_WriteChar(uint8_t value, uint8_t Port)
 			UCA0TXBUF = (uint16_t) value;
 			break;
 		case UART_A1:
-			UCA1TXBUF = (uint16_t) value;
+			UCA1TXBUF = value;
 			break;
 		default:
 			return UART_FAIL;
@@ -160,6 +160,7 @@ uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port)
 		if(value[i] != 0x00)
 		{
 			UART_WriteChar(value[i],Port);
+            __delay_cycles(5000);
 		}
 		else
 		{
@@ -168,7 +169,9 @@ uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port)
 	}
 
 	UART_WriteChar('\r',Port);
+    __delay_cycles(5000);
 	UART_WriteChar('\n',Port);
+    __delay_cycles(5000);
 	return UART_OK;
 }
 /************************************************************************
@@ -198,25 +201,25 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 				case UART_BAUD_1200:
 					osval = 0x01;
 					*UCBRx = 1;
-					ucbrf = 11;
+					ucbrf = UCBRF_11;
 					ucbrs = 0x25;
 					break;
 				case UART_BAUD_2400:
 					osval = 0x00;
 					*UCBRx = 13;
-					ucbrf = 0;
+					ucbrf = UCBRF_0;
 					ucbrs = 0xB6;
 					break;
 				case UART_BAUD_4800:
 					osval = 0x00;
 					*UCBRx = 6;
-					ucbrf = 0;
+					ucbrf = UCBRF_0;
 					ucbrs = 0xEE;
 					break;
 				case UART_BAUD_9600:
 					osval = 0x00u;
 					*UCBRx = 3;
-					ucbrf = 0;
+					ucbrf = UCBRF_0;
 					ucbrs = 0x92;
 					break;
 				default:
@@ -599,8 +602,13 @@ __interrupt void USCI_A1_ISR(void)
 		case USCI_NONE:
 			break;
 		case USCI_UART_UCRXIFG:
-          UCA1TXBUF = UCA1RXBUF;
-          FET_TOGGLE();
+          if( UCA1RXBUF =='D' || UCA1RXBUF == 'd')
+					{
+						UCA1TXBUF = 'D';
+						SystemState = Compute;
+					}
+					
+          //FET_TOGGLE();
 			break;
 		case USCI_UART_UCTXIFG:
 			break;

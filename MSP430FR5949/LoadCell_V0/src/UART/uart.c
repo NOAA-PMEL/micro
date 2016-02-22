@@ -581,7 +581,7 @@ __interrupt void USCI_A0_ISR(void)
 			break;
 		case USCI_UART_UCRXIFG:
 			//SystemState = BUFFER_RECEIVE;
-			__bis_SR_register(GIE);
+			//__bis_SR_register(GIE);
 			break;
 		case USCI_UART_UCTXIFG:
 			break;
@@ -602,7 +602,12 @@ __interrupt void USCI_A1_ISR(void)
 		case USCI_NONE:
 			break;
 		case USCI_UART_UCRXIFG:
-          //UCA1TXBUF = UCA1RXBUF;
+          if( UCA1RXBUF =='D' || UCA1RXBUF == 'd')
+					{
+						//UCA1TXBUF = 'D';
+						SystemState = Compute;
+					}
+					
           //FET_TOGGLE();
 			break;
 		case USCI_UART_UCTXIFG:

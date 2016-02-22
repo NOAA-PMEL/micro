@@ -210,7 +210,7 @@ extern PAXLDSensor_t pxSensor;
 extern volatile uint32_t msTimeoutCounter;
 extern volatile uint32_t ms2TimeoutCounter;
 extern volatile uint32_t sampleTimer;
-
+extern SystemState_t SystemState;
 #endif
 
 #endif

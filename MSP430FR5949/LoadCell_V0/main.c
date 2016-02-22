@@ -101,12 +101,7 @@ volatile uint32_t ms2TimeoutCounter = 0;
 /*******************************  MAIN  **********************************/
 int main(void) {
   
-
-  
-  char sendChar = 'C';
-  
-  uint8_t splashVer[32] = "v0.0.1\r\n";
-  
+  // Set the sensor I2C address -> Change for production
   pxSensor.address = 0x46;
   
   // Pause the watchdog
@@ -225,18 +220,23 @@ int main(void) {
         	STATE_Sample();
 	        if(++sampleCount >= NUMBER_OF_SAMPLES)
 	        {
-	          SystemState = Compute;
+	          //SystemState = Compute;
+              sampleCount = 0;
 	        }
 	      }
         break;
       case Compute:
+      	FET_OFF();
           STATE_Compute();
           sampleCount = 0;
           SystemState = Transmit;
         break;
       case Transmit:
         STATE_Transmit();
+        FET_ON();
         SystemState = Sample;
+        sampleCount = 0;
+        sampleTimer = 0;
         break;
       case Console:
         
@@ -291,14 +291,14 @@ void STATE_Compute(void)
 
 void STATE_Transmit(void)
 {
-	char sendString[32] = {0};
-  uint8_t sendVal[32]= {0};
+	char sendString[64] = {0};
+  uint8_t sendVal[64]= {0};
   
   sprintf(sendString,"%3.2f,%3.4f,%3.2f,%3.2f,%3.1f\n",PressureMean,PressureSTD,PressureMax,PressureMin,TemperatureMean);
-  memcpy(sendVal,sendString,32);
+  memcpy(sendVal,sendString,64);
   __delay_cycles(500000);
-  UART_Write(&sendVal[0],32,UART_A1);
-  for(uint8_t i=0;i<32;i++)
+  UART_Write(&sendVal[0],64,UART_A1);
+  for(uint8_t i=0;i<64;i++)
   {
     sendVal[i] = 0;
     sendString[i] = 0;
@@ -322,7 +322,9 @@ void sensorRead(PAXLD_t *sensor)
   }
   else
   {
+  		UCA1IE &= ~UCRXIE;
       PAxLDRequestDataRead(&sensor[0], 5);
+      UCA1IE |= UCRXIE;
       sensor->badDataCount = 0;
   }
 
