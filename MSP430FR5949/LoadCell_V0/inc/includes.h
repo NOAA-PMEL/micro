@@ -92,7 +92,7 @@
 #define NUM_KELLER_SENSORS	(1)
 // Number of samples to average over
 #define NUM_SAMPLES (5)
-#define NUMBER_OF_SAMPLES       (32)
+#define NUMBER_OF_SAMPLES       (5)
 
 // Interrupt mapping
 

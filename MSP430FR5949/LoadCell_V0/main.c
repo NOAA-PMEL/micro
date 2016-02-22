@@ -22,7 +22,7 @@
  * 
  *	@todo watchdog is not setup
  *	@todo Add console
- *	@todo sprintf is taking too long to be useful
+ *	
  *	@todo remove __delay_cycles() and replace with timer call
  */
 
@@ -219,11 +219,15 @@ int main(void) {
 //          STATE_Sample();
 //          sampleTimer = 0;
 //        }
-        STATE_Sample();
-        if(++sampleCount >= NUMBER_OF_SAMPLES)
-        {
-          SystemState = Compute;
-        }
+				if(sampleTimer > 200)
+				{
+					sampleTimer = 0;
+        	STATE_Sample();
+	        if(++sampleCount >= NUMBER_OF_SAMPLES)
+	        {
+	          SystemState = Compute;
+	        }
+	      }
         break;
       case Compute:
           STATE_Compute();
