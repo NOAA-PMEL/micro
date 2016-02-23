@@ -262,7 +262,7 @@ void STATE_Compute(void)
   	
     // Retreive Pressures from Buffer
     sampleCount = 0;
-    while(BufferF_IsEmpty(&PressureDataBuffer) == BUFFER_F_NOT_EMPTY)
+    while(BufferF_IsEmpty(&PressureDataBuffer) == BUFFER_NOT_EMPTY)
     {
     	BufferF_Get(&PressureDataBuffer,&Pressures[sampleCount++]);
     }
@@ -276,7 +276,7 @@ void STATE_Compute(void)
 
 		// Retreive Temperatures from buffer
 		sampleCount = 0;
-    while(BufferF_IsEmpty(&TemperatureDataBuffer) == BUFFER_F_NOT_EMPTY)
+    while(BufferF_IsEmpty(&TemperatureDataBuffer) == BUFFER_NOT_EMPTY)
     {
     	BufferF_Get(&TemperatureDataBuffer,&Temperatures[sampleCount++]);
     }
@@ -300,7 +300,7 @@ void STATE_Transmit(void)
 	char sendString[64] = {0};
   uint8_t sendVal[64]= {0};
   
-  sprintf(sendString,"%3.2f,%3.4f,%3.2f,%3.2f,%3.1f\n",PressureMean,PressureSTD,PressureMax,PressureMin,TemperatureMean);
+  sprintf(sendString,"%3.2f,%3.4f,%3.2f,%3.2f,%3.1f\n\r",PressureMean,PressureSTD,PressureMax,PressureMin,TemperatureMean);
   memcpy(sendVal,sendString,64);
   __delay_cycles(500000);
   UART_Write(&sendVal[0],64,UART_A1);
@@ -312,11 +312,10 @@ void STATE_Transmit(void)
 }
 void STATE_Console(void)
 {
-  if(BufferC_CheckForNewline(&ConsoleData) == BUFFER_C_NEWLINE_DETECTED)
-  {
-  	UART_WriteChar('Y',UART_A1);
-  	
-  }
+	CONSOLE_State_Main();
+	
+	CONSOLE_State_ManualCalibration();
+ 
   
   
 }

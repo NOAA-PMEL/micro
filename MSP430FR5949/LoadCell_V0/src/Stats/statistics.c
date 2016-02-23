@@ -1,9 +1,9 @@
-/** @file i2c.c
- *  @brief I2C driver for MSP430FR5969
+/** @file statistics.c
+ *  @brief Statistics functions
  *
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date Oct 2, 2015
- *  @version A.0.1
+ *  @date Feb 18, 2016
+ *  @version 0.0.1
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
@@ -131,6 +131,3 @@ uint8_t STATS_ComputeSTD(float *vals, uint16_t length, float mean, float *std)
 	
 	return STATISTICS_OK;
 }
-/************************************************************************
-*						STATIC FUNCTIONS
-************************************************************************/

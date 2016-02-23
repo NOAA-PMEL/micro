@@ -38,18 +38,21 @@ void I2CInit(void)
 	UCB0CTLW0 |= UCMODE_3 + UCSYNC + UCMST;	// I2C, Synchronous Mode, Master
 	UCB0CTLW0 |= UCSSEL_2;					// SMCLK Used
 	UCB0CTLW0 |= UCTR;						// Set for Transmit
+	
+	// Set the Clock division to Clock/4
+	UCB0BRW = 0x04;				
+	    
+	// Set the stop condition to auto generate on byte counter
+	UCB0CTLW1 |= UCASTP_2;	
+	
+	// Set Byte Counter for Tx of 1 byte
+	UCB0TBCNT = 1;					
 
-	//UCB0BRW = 0x08;							// Clock/8
-	//UCB0BRW = 0x02;							// Clock/8
-	UCB0BRW = 0x04;
-        // Set Byte Counter for Tx of 1 byte
-	UCB0CTLW1 |= UCASTP_2;
-	UCB0TBCNT = 1;
-
-	UCB0CTLW0 &= ~UCSWRST;					// Release from Reset
+	// Release from Reset
+	UCB0CTLW0 &= ~UCSWRST;					
 
 	// Set interrupt on STOP and RECEIVE
-    UCB0IE = UCSTPIE | UCRXIE;
+	UCB0IE = UCSTPIE | UCRXIE;
 	return;
 }
 
@@ -58,6 +61,7 @@ void I2CClose(void)
 {
 	UCB0CTLW0 |= UCSWRST;			// Hold I2C in reset
 	P1SEL1 &= ~(BIT6 | BIT7);		// Make P1.6 & P1.7 GPIO
+	
 	// Set P1.6 & P1.7 as output LOW
 	GPIO_SetPinAsOutput(1,6);
 	GPIO_SetPinAsOutput(1,7);

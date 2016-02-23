@@ -27,47 +27,47 @@
 ************************************************************************/
 uint8_t GPIO_Init(void)
 {
+	// Set all outputs low
 	P1OUT = 0;
 	P2OUT = 0;
 	P3OUT = 0;
 	P4OUT = 0;
 
-
+	// Set all directions as input
 	P1DIR = 0;
 	P2DIR = 0;
 	P3DIR = 0;
 	P4DIR = 0;
 
+	// Clear all secondary registers (make GPIO)
 	P1SEL0 = 0;
 	P2SEL0 = 0;
 	P3SEL0 = 0;
 	P4SEL0 = 0;
-
 	P1SEL1 = 0;
 	P2SEL1 = 0;
 	P3SEL1 = 0;
 	P4SEL1 = 0;
 
+	// Turn off pull-up resistors
 	P1REN = 0;
 	P2REN = 0;
 	P3REN = 0;
 	P4REN = 0;
-//
-//	P1IN = 0;
-//	P2IN = 0;
-//	P3IN = 0;
-//	P4IN = 0;
+
 
 	return (GPIO_OK);
 }
 
 uint8_t GPIO_SetPinAsOutput(uint8_t Port, uint8_t Pin)
 {
+	// Check for valid port
 	if(Port < 1 || Port > 4)
 	{
 		return (GPIO_FAIL);
 	}
 
+	// Check for valid pin
 	if(Pin > 15)
 	{
 		return (GPIO_FAIL);
@@ -99,6 +99,7 @@ uint8_t GPIO_SetPinAsOutput(uint8_t Port, uint8_t Pin)
 
 uint8_t GPIO_SetPinAsInput( uint8_t Port, uint16_t Pin )
 {
+	// Check for valid port
 	if(Port < 1 || Port > 4)
 	{
 		return (GPIO_FAIL);
@@ -128,12 +129,13 @@ uint8_t GPIO_SetPinAsInput( uint8_t Port, uint16_t Pin )
 
 uint8_t GPIO_SetPin(uint8_t Port, uint8_t Pin)
 {
-
+	// Check for valid port
 	if(Port < 1 || Port > 4)
 	{
 		return (GPIO_FAIL);
 	}
 
+	// Check for valid pin
 	if( Pin > 16)
 	{
 		return (GPIO_FAIL);
@@ -164,11 +166,13 @@ uint8_t GPIO_SetPin(uint8_t Port, uint8_t Pin)
 
 uint8_t GPIO_ClearPin(uint8_t Port, uint8_t Pin)
 {
+	// Check for valid port
 	if(Port < 1 || Port > 4)
 	{
 		return (GPIO_FAIL);
 	}
-
+	
+	// Check for valid pin
 	if( Pin > 16)
 	{
 		return (GPIO_FAIL);
@@ -212,6 +216,8 @@ uint8_t GPIO_ClearPin(uint8_t Port, uint8_t Pin)
 
 uint8_t GPIO_SetAllPortOutputPinsLow(uint8_t Port)
 {
+	uint16_t dir;
+	// Check for valid port
 	if(Port < 1 || Port > 4)
 	{
 		return (GPIO_FAIL);
@@ -219,16 +225,20 @@ uint8_t GPIO_SetAllPortOutputPinsLow(uint8_t Port)
 	switch(Port)
 	{
 		case GPIO_PORTP1:
-			P1OUT &= ~P1DIR;
+			dir = P1DIR;
+			P1OUT &= ~dir;
 			break;
 		case GPIO_PORTP2:
-			P2OUT &= ~P2DIR;
+			dir = P2DIR;
+			P2OUT &= ~dir;
 			break;
 		case GPIO_PORTP3:
-			P3OUT &= ~P3DIR;
+			dir = P3DIR;
+			P3OUT &= ~dir;
 			break;
 		case GPIO_PORTP4:
-			P4OUT &= ~P4DIR;
+			dir = P4DIR;
+			P4OUT &= ~dir;
 			break;
 	}
 	return (GPIO_OK);
@@ -236,6 +246,9 @@ uint8_t GPIO_SetAllPortOutputPinsLow(uint8_t Port)
 
 uint8_t GPIO_SetAllPortOutputPinsHigh(uint8_t Port)
 {
+	uint16_t dir;
+	
+	// Check for valid port
 	if(Port < 1 || Port > 4)
 	{
 		return (GPIO_FAIL);
@@ -244,16 +257,20 @@ uint8_t GPIO_SetAllPortOutputPinsHigh(uint8_t Port)
 	switch(Port)
 	{
 		case GPIO_PORTP1:
-			P1OUT |= P1DIR;
+			dir = P1DIR;
+			P1OUT |= dir;
 			break;
 		case GPIO_PORTP2:
-			P2OUT |= P2DIR;
+			dir = P2DIR;
+			P2OUT |= dir;
 			break;
 		case GPIO_PORTP3:
-			P3OUT |= P3DIR;
+			dir = P3DIR;
+			P3OUT |= dir;
 			break;
 		case GPIO_PORTP4:
-			P4OUT |= P4DIR;
+			dir = P4DIR;
+			P4OUT |= dir;
 			break;
 		default:
 			break;
@@ -263,6 +280,7 @@ uint8_t GPIO_SetAllPortOutputPinsHigh(uint8_t Port)
 
 int8_t GPIO_ReadInputPin( uint8_t Port, uint8_t Pin)
 {
+	// Check for valid port
 	int response;
 	if( Port < 1 || Port > 4 )
 	{
@@ -292,7 +310,8 @@ int8_t GPIO_ReadInputPin( uint8_t Port, uint8_t Pin)
 int32_t GPIO_ReadInputPort(uint8_t Port)
 {
 	int32_t response = 0;
-
+	uint16_t dir;
+	// Check for valid port
 	if( Port < 1 || Port > 4)
 	{
 		return (GPIO_PORT_FAIL);
@@ -301,16 +320,20 @@ int32_t GPIO_ReadInputPort(uint8_t Port)
 	switch(Port)
 	{
 		case GPIO_PORTP1:
-			response = (int32_t) (P1IN & ~P1DIR);
+			dir = P1DIR;
+			response = (int32_t) (P1IN & ~dir);
 			break;
 		case GPIO_PORTP2:
-			response = (int32_t) (P2IN & ~P2DIR);
+			dir = P2DIR;
+			response = (int32_t) (P2IN & ~dir);
 			break;
 		case GPIO_PORTP3:
-			response = (int32_t) (P3IN & ~P3DIR);
+			dir = P3DIR;
+			response = (int32_t) (P3IN & ~dir);
 			break;
 		case GPIO_PORTP4:
-			response = (int32_t) (P4IN & ~P4DIR);
+			dir = P4DIR;
+			response = (int32_t) (P4IN & ~dir);
 			break;
 		default:
 			break;
@@ -322,11 +345,15 @@ int32_t GPIO_ReadInputPort(uint8_t Port)
 
 uint8_t GPIO_TogglePin(uint8_t Port, uint8_t Pin)
 {
+	uint16_t dir;
+	
+	// Check for valid port
 	if( Port < 1 || Port > 4)
 	{
 		return (GPIO_FAIL);
 	}
 
+	// Check for valid pin
 	if(Pin > 15)
 	{
 		return (GPIO_FAIL);
@@ -335,16 +362,20 @@ uint8_t GPIO_TogglePin(uint8_t Port, uint8_t Pin)
 	switch(Port)
 	{
 		case GPIO_PORTP1:
-			P1OUT = P1DIR & (P1OUT ^ BIT_TO_MASK(Pin));
+			dir = P1DIR;
+			P1OUT = dir & (P1OUT ^ BIT_TO_MASK(Pin));
 			break;
 		case GPIO_PORTP2:
-			P2OUT = P2DIR & (P2OUT ^ BIT_TO_MASK(Pin));
+			dir = P2DIR;
+			P2OUT = dir & (P2OUT ^ BIT_TO_MASK(Pin));
 			break;
 		case GPIO_PORTP3:
-			P3OUT = P3DIR & (P3OUT ^ BIT_TO_MASK(Pin));
+			dir = P3DIR;
+			P3OUT = dir & (P3OUT ^ BIT_TO_MASK(Pin));
 			break;
 		case GPIO_PORTP4:
-			P4OUT = P4DIR & (P4OUT ^ BIT_TO_MASK(Pin));
+			dir = P4DIR;
+			P4OUT = dir & (P4OUT ^ BIT_TO_MASK(Pin));
 			break;
 		default:
 			break;
@@ -357,11 +388,15 @@ uint8_t GPIO_TogglePin(uint8_t Port, uint8_t Pin)
 uint8_t GPIO_AttachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin, uint8_t edge)
 {
 	uint8_t response = GPIO_OK;
+	uint16_t dir;
+	
+	// Check for valid port
 	if(gpioPort < 1 || gpioPort > 4)
 	{
 		return GPIO_FAIL;
 	}
-
+	
+	// Check for valid pin
 	if(gpioPin > 15)
 	{
 		return GPIO_FAIL;
@@ -382,7 +417,8 @@ uint8_t GPIO_AttachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin, uint8_t ed
 				P1IES |= BIT_TO_MASK(gpioPin);
 			}
 			// Set Interrupt
-			P1IE |= (BIT_TO_MASK(gpioPin) & ~P1DIR);
+			dir = P1DIR;
+			P1IE |= (BIT_TO_MASK(gpioPin) & ~dir);
 			break;
 		case GPIO_PORTP2:
 			// Clear Interrupt Flag
@@ -397,7 +433,8 @@ uint8_t GPIO_AttachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin, uint8_t ed
 				P2IES |= BIT_TO_MASK(gpioPin);
 			}
 			// Set Interrupt
-			P2IE |= (BIT_TO_MASK(gpioPin) & ~P2DIR);
+			dir = P2DIR;
+			P2IE |= (BIT_TO_MASK(gpioPin) & ~dir);
 			break;
 		case GPIO_PORTP3:
 			// Clear Interrupt Flag
@@ -412,7 +449,8 @@ uint8_t GPIO_AttachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin, uint8_t ed
 				P3IES |= BIT_TO_MASK(gpioPin);
 			}
 			// Set Interrupt
-			P3IE |= (BIT_TO_MASK(gpioPin) & ~P3DIR);
+			dir = P3DIR;
+			P3IE |= (BIT_TO_MASK(gpioPin) & ~dir);
 			break;
 		case GPIO_PORTP4:
 			// Clear Interrupt Flag
@@ -427,7 +465,8 @@ uint8_t GPIO_AttachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin, uint8_t ed
 				P4IES |= BIT_TO_MASK(gpioPin);
 			}
 			// Set Interrupt
-			P4IE |= (BIT_TO_MASK(gpioPin) & ~P4DIR);
+			dir = P4DIR;
+			P4IE |= (BIT_TO_MASK(gpioPin) & ~dir);
 			break;
 		default:
 			response = GPIO_FAIL;
@@ -440,6 +479,7 @@ uint8_t GPIO_AttachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin, uint8_t ed
 
 uint8_t GPIO_DetachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin)
 {
+	// Check for valid port
 	if(gpioPort < 1 || gpioPort > 4)
 	{
 		return GPIO_FAIL;

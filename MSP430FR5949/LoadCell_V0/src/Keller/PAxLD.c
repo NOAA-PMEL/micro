@@ -36,14 +36,6 @@ const uint16_t PAXLD_WRITE_COMMAND = 0xAC;
 ************************************************************************/
 void PAxLDInit(PAXLD_t *sensor, uint8_t address, uint8_t port, uint16_t pin)
 {
-	// Turn power to PAXLD sensor ON
-	//PAXLD_POWER_ON();
-
-	// Set I2C
-	//I2CInit();
-
-	//__delay_cycles(5000);
-
 	// Clear the structure
 	PAxLDNullStructure(sensor);
 
@@ -60,8 +52,10 @@ void PAxLDInit(PAXLD_t *sensor, uint8_t address, uint8_t port, uint16_t pin)
 	// Retreive data from memory
 	sensor->dataIndex = 0;
 	PAxLDRequestScaleValues(sensor);
+	
 	return;
 }
+
 /***********************************************************************/
 void PAxLDClose(PAXLD_t *sensor)
 {
@@ -265,12 +259,6 @@ void PAxLDRequestScaleValues(PAXLD_t *sensor)
 	temp2 += (uint32_t) temp1;
 	tempX.i = temp2;
 	sensor->pressureMax = (double) tempX.f;
-
-//    if((sensor->pressureMin - sensor->factoryMin) > 1.0 || (sensor->pressureMin - sensor->factoryMin) < -1.0)
-//    {
-//      // Use factory
-//      sensor->pressureMin = sensor->factoryMin;
-//    }
 
 	return;
 }

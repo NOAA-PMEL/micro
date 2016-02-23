@@ -12,10 +12,6 @@
  *	@note 
  *	@note
  *
- *	@todo Need to add Mean
- *  @todo Need to add MAX
- *  @todo Need to add MIN
- *  @todo Need to add STD
  *
  *  @bug  No known bugs
  */
@@ -38,7 +34,7 @@
 ************************************************************************/
 #include <stdint.h>
 #include <math.h>
-//#include <float.h>
+
 
 #include "../../inc/includes.h"
 
@@ -105,4 +101,6 @@ uint8_t STATS_FindMin(float *vals, uint16_t length, float *min);
 *  @return Error code
 */
 uint8_t STATS_ComputeSTD(float *vals, uint16_t length, float mean, float *std);
+
+
 #endif // statistics_H

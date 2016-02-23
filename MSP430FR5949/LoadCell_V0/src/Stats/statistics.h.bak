@@ -12,10 +12,6 @@
  *	@note 
  *	@note
  *
- *	@todo Need to add Mean
- *  @todo Need to add MAX
- *  @todo Need to add MIN
- *  @todo Need to add STD
  *
  *  @bug  No known bugs
  */
@@ -38,10 +34,11 @@
 ************************************************************************/
 #include <stdint.h>
 #include <math.h>
-//#include <float.h>
+
+
+#include "../../inc/includes.h"
 
 #ifdef PMEL
-#include "../../inc/includes.h"
 #include <msp430fr5949.h>
 #else
 #include "../../test/msp430fr5969.h"

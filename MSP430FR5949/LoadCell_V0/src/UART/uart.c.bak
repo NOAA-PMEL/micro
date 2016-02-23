@@ -82,6 +82,7 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 			break;
 	}
 
+	// Perform the UCBRS lookup and fail out if invalid
 	if( (UCBRSLookup( ClkFreq, Baudrate, &UCBRx, &MCTLWReg)) == BAUDRATE_FAIL)
 	{
 		return UART_FAIL;
@@ -111,6 +112,7 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 }
 
 
+
 uint8_t UART_Read(uint8_t *value, uint8_t Port)
 {
 	switch(Port)
@@ -130,6 +132,7 @@ uint8_t UART_Read(uint8_t *value, uint8_t Port)
 }
 
 
+
 uint8_t UART_WriteChar(uint8_t value, uint8_t Port)
 {
 	switch(Port)
@@ -146,6 +149,8 @@ uint8_t UART_WriteChar(uint8_t value, uint8_t Port)
 	}
 	return UART_OK;
 }
+
+
 
 uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port)
 {
@@ -168,10 +173,10 @@ uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port)
 		}
 	}
 
-	UART_WriteChar('\r',Port);
-    __delay_cycles(5000);
-	UART_WriteChar('\n',Port);
-    __delay_cycles(5000);
+//	UART_WriteChar('\r',Port);
+//    __delay_cycles(5000);
+//	UART_WriteChar('\n',Port);
+//    __delay_cycles(5000);
 	return UART_OK;
 }
 /************************************************************************
@@ -594,4 +599,4 @@ __interrupt void USCI_A0_ISR(void)
 	}
 }
 
-
+#endif

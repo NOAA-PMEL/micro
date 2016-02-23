@@ -46,9 +46,7 @@
 #include "../src/Keller/PAxLD.h"		// Keller PAxLD Sensor Driver Header file
 #include "../src/Stats/statistics.h"    // Statistics functions
 #include "../src/buffers/buffers.h"
-//#include "../src/buffers/buffer_c.h"
-//#include "../src/buffers/buffer_f.h"
-//#include "./Analog/analog.h"
+#include "../src/Console/console.h"
 
 /************************************************************************
 *							CONSTANTS
@@ -68,20 +66,15 @@
 #define LENGTH_OF(x)				(sizeof(x)/sizeof(x[0]))
 #define BIT_TO_MASK(a) 			 ( 1u << (a) )
 
-
 // I2C bus being used (only on on the MSP430FR5969)
 #define I2C_B0
-
 
 // Set up the wait loop delay values
 #define DELAY					(1000)
 
-
 // Timer B Values
 #define ResetTimerB()				(TB0R = 0)
 #define SetTimerBInterrupt()		(TB0CCTL0 = CCIE)
-
-
 
 // Define PAXLD Power FET Pin
 #define FET_PORT					(3)
@@ -93,12 +86,12 @@
 
 // Number of PAXLD sensors attached to the I2C Bus
 #define NUM_KELLER_SENSORS	(1)
+
 // Number of samples to average over
 #define NUM_SAMPLES (5)
 #define NUMBER_OF_SAMPLES       (5)
 
 // Interrupt mapping
-
 #define INT_P1_0                    (__no_operation())
 #define INT_P1_1                    (__no_operation())
 #define INT_P1_2                    (__no_operation())
@@ -135,12 +128,14 @@
 #define INT_P4_6                    (__no_operation())
 #define INT_P4_7                    (__no_operation())
 
-// PAXLD structure definition
-typedef struct PAXLD PAXLDSensor_t;
+
 
 /************************************************************************
 *							STRUCTURES
 ************************************************************************/
+
+// PAXLD structure definition
+typedef struct PAXLD PAXLDSensor_t;
 typedef struct{
 	union {
 
@@ -209,6 +204,7 @@ typedef enum SysState {
 ************************************************************************/
 
 extern console_t console;
+
 #ifdef PMEL
 // Flags and counters
 extern volatile FLAGS TimerFlags;

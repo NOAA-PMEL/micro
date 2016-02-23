@@ -54,7 +54,7 @@
 #define PAXLD_POWER_ON()	FET_ON()
 #define PAXLD_POWER_OFF()	FET_OFF()
 
-// pa7ld.c
+
 #define PAXLD_BAUD_RATE (100000)
 
 // Define the number of pressure sensors on the bus
@@ -81,11 +81,6 @@
 // PA7LD Sensor Conversion Values
 #define PAXLD_PRESSURE_CONVERSION_MIN	(16384u)		// Lowest int value returned (min of range)
 #define PAXLD_PRESSURE_CONVERSION_MAX	(49152u)		// Greatest int value returned (max of range)
-//#define PAXLD_MIN_PRESSURE						(0.0)			// Map these in Map file
-//#define PAXLD_MAX_PRESSURE						(100.0)			// Map these in Map File
-
-
-
 
 // pa7ldstring.c
 #define INVALID_STRING	(-1)
@@ -94,7 +89,7 @@
 #define WRITE_REQUEST	(2)
 
 
-
+// Scaling commands
 #define PAXLD_SCALING1_CMD (0x13)
 #define PAXLD_SCALING2_CMD (0x14)
 #define PAXLD_SCALING3_CMD (0x15)

@@ -2296,6 +2296,15 @@
       </file>
     </group>
     <group>
+      <name>Console</name>
+      <file>
+        <name>$PROJ_DIR$\src\Console\console.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\Console\console.h</name>
+      </file>
+    </group>
+    <group>
       <name>GPIO</name>
       <file>
         <name>$PROJ_DIR$\src\GPIO\gpio.c</name>
