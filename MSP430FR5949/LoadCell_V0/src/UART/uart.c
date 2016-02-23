@@ -601,13 +601,26 @@ __interrupt void USCI_A1_ISR(void)
 	{
 		case USCI_NONE:
 			break;
-		case USCI_UART_UCRXIFG:
-          if( UCA1RXBUF =='D' || UCA1RXBUF == 'd')
-					{
-						//UCA1TXBUF = 'D';
-						SystemState = Compute;
-					}
-					
+		case USCI_UART_UCRXIFG:     
+			switch(UCA1RXBUF)
+			{
+				case 'D':
+				case 'd':
+					 SystemState = Compute;
+					 break;
+				case 0x03:	// Ctrl-C
+					SystemState = Console;
+					break;
+				default:
+					break;
+				
+			}
+//          if( UCA1RXBUF =='D' || UCA1RXBUF == 'd')
+//					{
+//						//UCA1TXBUF = 'D';
+//						SystemState = Compute;
+//					}
+//					
           //FET_TOGGLE();
 			break;
 		case USCI_UART_UCTXIFG:

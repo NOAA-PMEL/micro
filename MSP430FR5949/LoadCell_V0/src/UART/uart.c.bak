@@ -581,7 +581,7 @@ __interrupt void USCI_A0_ISR(void)
 			break;
 		case USCI_UART_UCRXIFG:
 			//SystemState = BUFFER_RECEIVE;
-			__bis_SR_register(GIE);
+			//__bis_SR_register(GIE);
 			break;
 		case USCI_UART_UCTXIFG:
 			break;
@@ -601,10 +601,23 @@ __interrupt void USCI_A1_ISR(void)
 	{
 		case USCI_NONE:
 			break;
-		case USCI_UART_UCRXIFG:
+		case USCI_UART_UCRXIFG:     
+			switch(UCA1RXBUF)
+			{
+				case 'D':
+				case 'd':
+					 SystemState = Compute;
+					 break;
+				case 0x03:	// Ctrl-C
+					SystemState = Console;
+					break;
+				default:
+					break;
+				
+			}
           if( UCA1RXBUF =='D' || UCA1RXBUF == 'd')
 					{
-						UCA1TXBUF = 'D';
+						//UCA1TXBUF = 'D';
 						SystemState = Compute;
 					}
 					

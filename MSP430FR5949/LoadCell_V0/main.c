@@ -238,7 +238,7 @@ int main(void) {
         sampleTimer = 0;
         break;
       case Console:
-        
+        UART_WriteChar('C',UART_A1);
         break;
       default:
         break;
