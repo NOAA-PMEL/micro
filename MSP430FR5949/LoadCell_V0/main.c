@@ -213,7 +213,7 @@ int main(void) {
 //          STATE_Sample();
 //          sampleTimer = 0;
 //        }
-				if(sampleTimer > 200)
+				if(sampleTimer > 100)
 				{
 					sampleTimer = 0;
         	STATE_Sample();
@@ -267,8 +267,8 @@ void STATE_Sample(void)
     // Process sensor data
     sensorProcessData(&pxSensor);
     //Pressures[sampleCount] = pxSensor.pressure;
-    BufferF_Put(&PressureDataBuffer,pxSensor.pressure);
-    BufferF_Put(&TemperatureDataBuffer,pxSensor.temperature);
+    BufferF_Put_Circular(&PressureDataBuffer,pxSensor.pressure);
+    BufferF_Put_Circular(&TemperatureDataBuffer,pxSensor.temperature);
  
 }
 

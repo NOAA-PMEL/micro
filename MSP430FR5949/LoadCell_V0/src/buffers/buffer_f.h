@@ -69,7 +69,7 @@ int8_t BufferF_Get(CircularBufferF_s *buf, float *value);
 int8_t BufferF_Clear(CircularBufferF_s *buf);
 int8_t BufferF_IsFull(CircularBufferF_s *buf);
 int8_t BufferF_IsEmpty(CircularBufferF_s *buf);
-
+int8_t BufferF_Put_Circular(CircularBufferF_s *buf, float value);                                                         
 
 #endif
 
