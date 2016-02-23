@@ -209,21 +209,11 @@ int main(void) {
     switch(SystemState)
     {
       case Sample:
-//        if(sampleCount >= 16) //sampleTimer >= 1000)
-//        {
-//          STATE_Sample();
-//          sampleTimer = 0;
-//        }
 				if(sampleTimer > 100)
 				{
                   
 					sampleTimer = 0;
         	STATE_Sample();
-//	        if(BufferF_IsFull(&PressureDataBuffer))
-//	        {
-//	          SystemState = Compute;
-//            sampleCount = 0;
-//	        }
 	      }
         break;
       case Compute:
@@ -247,13 +237,6 @@ int main(void) {
       
     }
     
-    //FET_OFF();
-    
-   
-    
-    
-    //FET_ON();
-    //__delay_cycles(500000);  
   }
 }
 
@@ -329,7 +312,11 @@ void STATE_Transmit(void)
 }
 void STATE_Console(void)
 {
-  
+  if(BufferC_CheckForNewline(&ConsoleData) == BUFFER_C_NEWLINE_DETECTED)
+  {
+  	UART_WriteChar('Y',UART_A1);
+  	
+  }
   
   
 }

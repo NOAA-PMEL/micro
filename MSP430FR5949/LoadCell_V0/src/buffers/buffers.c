@@ -184,3 +184,35 @@ int8_t BufferC_IsEmpty(CircularBufferC_s *buf)
 }
 
 
+int8_t BufferC_CheckForNewline(CircularBufferC_s *buf)
+{
+	uint16_t readNum = 0;
+	uint16_t length = 0;
+	
+	if(buf->write == buf->read)
+	{
+		return BUFFER_C_IS_EMPTY;
+	}
+	
+	if(buf->read > buf->write)
+	{
+		length = ACTUAL_BUFFER_C_SIZE - buf->read;
+		length += buf->write;
+	}
+	else 
+	{
+		length = buf->write - buf->read;
+	}
+
+	for(uint16_t i=0;i<length;i++)
+	{
+		readNum = ((buf->read+i) % (ACTUAL_BUFFER_C_SIZE));
+		
+		if(buf->buffer[readNum] == 0x0A)
+		{
+			return BUFFER_C_NEWLINE_DETECTED;
+		}
+	}
+	
+	return BUFFER_C_NEWLINE_NOT_DETECTED;
+}

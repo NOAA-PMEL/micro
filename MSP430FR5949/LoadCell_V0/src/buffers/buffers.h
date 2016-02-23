@@ -96,6 +96,8 @@
 #define BUFFER_C_IS_EMPTY				(1)
 #define BUFFER_C_IS_FULL				(2)
 
+#define BUFFER_C_NEWLINE_DETECTED	(3)
+#define BUFFER_C_NEWLINE_NOT_DETECTED	(1)
 
 typedef struct _CircularBufferF_s
 {
@@ -178,6 +180,10 @@ int8_t BufferC_IsFull(CircularBufferC_s *buf);
  *  @return status
  */
 int8_t BufferC_IsEmpty(CircularBufferC_s *buf);
+
+
+int8_t BufferC_CheckForNewline(CircularBufferC_s *buf);
+
 
 #endif
 
