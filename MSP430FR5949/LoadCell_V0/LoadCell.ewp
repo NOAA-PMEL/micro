@@ -394,6 +394,7 @@
           <state>C:\Users\Casari\version-control\PMEL\micro\MSP430FR5949\LoadCell_V0</state>
           <state>C:\Users\Casari\version-control\PMEL\micro\MSP430FR5949\LoadCell_V0</state>
           <state>C:\Users\Casari\version-control\PMEL\micro\MSP430FR5949\LoadCell_V0\src\buffers</state>
+          <state>C:\Users\Casari\version-control\PMEL\micro\MSP430FR5949\LoadCell_V0\src\buffers</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -2265,15 +2266,27 @@
       <name>Buffers</name>
       <file>
         <name>$PROJ_DIR$\src\buffers\buffer_c.c</name>
+        <excluded>
+          <configuration>Debug</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\src\buffers\buffer_c.h</name>
+        <excluded>
+          <configuration>Debug</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\src\buffers\buffer_f.c</name>
+        <excluded>
+          <configuration>Debug</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\src\buffers\buffer_f.h</name>
+        <excluded>
+          <configuration>Debug</configuration>
+        </excluded>
       </file>
       <file>
         <name>$PROJ_DIR$\src\buffers\buffers.c</name>

@@ -26,7 +26,7 @@ int8_t BufferC_Put(CircularBufferC_s *buf, char value)
 
 	if(NextWrite == buf->read)
 	{
-		return BUFFER_ERROR_FULL;
+		return BUFFER_C_ERROR_FULL;
 	}
 
 	buf->buffer[buf->write] = value;
@@ -39,7 +39,7 @@ int8_t BufferC_Get(CircularBufferC_s *buf, char *value)
 {
 	if(buf->read == buf->write)
 	{
-		return BUFFER_ERROR_EMPTY;
+		return BUFFER_C_ERROR_EMPTY;
 	}
 
 	*value = buf->buffer[buf->read];
@@ -70,19 +70,19 @@ int8_t BufferC_IsFull(CircularBufferC_s *buf)
 
 	if(NextWrite == buf->read)
 	{
-		return BUFFER_IS_FULL;
+		return BUFFER_C_IS_FULL;
 	}
-	return BUFFER_NOT_FULL;
+	return BUFFER_C_NOT_FULL;
 }
 
 int8_t BufferC_IsEmpty(CircularBufferC_s *buf)
 {
 	if(buf->write == buf->read)
 	{
-		return BUFFER_IS_EMPTY;
+		return BUFFER_C_IS_EMPTY;
 	}
 
-	return BUFFER_NOT_EMPTY;
+	return BUFFER_C_NOT_EMPTY;
 }
 
 

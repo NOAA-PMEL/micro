@@ -88,6 +88,7 @@ float TemperatureMean = 0;
 PAXLDSensor_t pxSensor;
 CircularBufferF_s PressureDataBuffer;
 CircularBufferF_s TemperatureDataBuffer;
+CircularBufferC_s ConsoleData;
 
 // Enum types
 SystemState_t SystemState;
@@ -215,6 +216,7 @@ int main(void) {
 //        }
 				if(sampleTimer > 100)
 				{
+                  
 					sampleTimer = 0;
         	STATE_Sample();
 //	        if(BufferF_IsFull(&PressureDataBuffer))
@@ -238,7 +240,7 @@ int main(void) {
         sampleTimer = 0;
         break;
       case Console:
-        UART_WriteChar('C',UART_A1);
+				STATE_Console();
         break;
       default:
         break;
@@ -277,7 +279,7 @@ void STATE_Compute(void)
   	
     // Retreive Pressures from Buffer
     sampleCount = 0;
-    while(BufferF_IsEmpty(&PressureDataBuffer) == BUFFER_NOT_EMPTY)
+    while(BufferF_IsEmpty(&PressureDataBuffer) == BUFFER_F_NOT_EMPTY)
     {
     	BufferF_Get(&PressureDataBuffer,&Pressures[sampleCount++]);
     }
@@ -291,7 +293,7 @@ void STATE_Compute(void)
 
 		// Retreive Temperatures from buffer
 		sampleCount = 0;
-    while(BufferF_IsEmpty(&TemperatureDataBuffer) == BUFFER_NOT_EMPTY)
+    while(BufferF_IsEmpty(&TemperatureDataBuffer) == BUFFER_F_NOT_EMPTY)
     {
     	BufferF_Get(&TemperatureDataBuffer,&Temperatures[sampleCount++]);
     }
@@ -381,3 +383,52 @@ void sensorProcessData(PAXLD_t *sensor)
 
 
 
+
+
+#pragma vector=USCI_A1_VECTOR
+__interrupt void USCI_A1_ISR(void)
+{
+	switch(__even_in_range(UCA1IV, USCI_UART_UCTXCPTIFG))
+	{
+		case USCI_NONE:
+			break;
+		case USCI_UART_UCRXIFG:     
+			switch(SystemState)
+			{
+				case Sample:
+					switch(UCA1RXBUF)
+					{
+						case 'D':
+						case 'd':
+							SystemState = Compute;
+					 		break;
+						case 0x03:	// Ctrl-C
+							SystemState = Console;
+							break;
+						default:
+							break;
+					}
+					break;
+				case Console:
+					BufferC_Put(&ConsoleData, UCA1RXBUF);
+					break;
+      }
+      
+
+
+
+
+
+
+
+			break;
+		case USCI_UART_UCTXIFG:
+			break;
+		case USCI_UART_UCSTTIFG:
+			break;
+		case USCI_UART_UCTXCPTIFG:
+			break;
+		default:
+			break;
+	}
+}

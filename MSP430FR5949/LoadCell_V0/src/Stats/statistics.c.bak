@@ -30,7 +30,7 @@
 uint8_t STATS_CalculateMean(float *vals, uint16_t length, float *mean)
 {
 	float sum = 0.0;
-	float len = (float) length;
+	//float len = (float) length;
 	float CalculatedMean = 0.0;
 	uint16_t i = 0;
 	
@@ -127,9 +127,8 @@ uint8_t STATS_ComputeSTD(float *vals, uint16_t length, float mean, float *std)
 	
 	VarianceSum /= length;
 	
-	//*std = sqrt(VarianceSum);
+	*std = sqrt(VarianceSum);
 	
-	*std = sqrt(9.0);
 	return STATISTICS_OK;
 }
 /************************************************************************

@@ -30,7 +30,7 @@
 uint8_t STATS_CalculateMean(float *vals, uint16_t length, float *mean)
 {
 	float sum = 0.0;
-	float len = (float) length;
+	//float len = (float) length;
 	float CalculatedMean = 0.0;
 	uint16_t i = 0;
 	
@@ -111,7 +111,7 @@ uint8_t STATS_ComputeSTD(float *vals, uint16_t length, float mean, float *std)
 	float Diff = 0;
 	uint16_t i;
 	
-	if(length < 0)
+	if(length <= 0)
 	{
 		return STATISTICS_FAIL;	
 	}

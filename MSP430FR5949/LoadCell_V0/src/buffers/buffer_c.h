@@ -16,12 +16,13 @@
 
 
 
-#ifndef _BUFFER_C_H
-#define _BUFFER_C_H
+#ifndef BUFFER_C_H_
+#define BUFFER_C_H_
 /************************************************************************
 *							HEADER FILES
 ************************************************************************/
 #include <stdint.h>
+
 #include "buffers.h"
 
 #ifndef PMEL
@@ -29,23 +30,29 @@
 #else
 #include <msp430fr5969.h>
 #endif
-
-//#include "../inc/includes.h"
-
 /************************************************************************
 *						STANDARD LIBRARIES
 ************************************************************************/
-#include <stdint.h>
+
 /************************************************************************
 *							MACROS
 ************************************************************************/
 
+#define BUFFER_C_SIZE				(64)
+#define ACTUAL_BUFFER_C_SIZE		(BUFFER_C_SIZE + 1)
 
+
+#define BUFFER_C_ERROR_EMPTY			(1)
+#define BUFFER_C_ERROR_FULL			(2)
+#define BUFFER_C_NOT_FULL				(0)
+#define BUFFER_C_NOT_EMPTY			(BUFFER_C_NOT_FULL)
+#define BUFFER_C_IS_EMPTY				(1)
+#define BUFFER_C_IS_FULL				(2)
 
 
 typedef struct _CircularBufferC_s
 {
-	char buffer[255];
+	char buffer[BUFFER_C_SIZE];
 	uint16_t size;
 	uint16_t read;
 	uint16_t write;
