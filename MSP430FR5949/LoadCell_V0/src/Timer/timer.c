@@ -55,10 +55,10 @@ void TIMER_B_MilliSecond( uint16_t length )
 
 	for(uint16_t i=0; i<length;i++)
 	{
-		TimerFlags.TimerB = true;
+		//TimerFlags.TimerB = true;
 		ResetTimerB();
 		SetTimerBInterrupt();
-		while(TimerFlags.TimerB == true );
+		//while(TimerFlags.TimerB == true );
 	}
 }
 
@@ -83,6 +83,7 @@ __interrupt void TIMER0_A1_ISR(void)
     case TA0IV_5:      break;               // reserved
     case TA0IV_6:      break;               // reserved
     case TA0IV_TAIFG:                       // overflow
+    	MenuTimeoutA++;
       break;
     default: break;
   }

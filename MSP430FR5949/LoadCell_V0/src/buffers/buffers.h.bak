@@ -1,5 +1,5 @@
 /** @file buffers.h
- *  @brief
+ *  @brief Combination of float and char buffers for 
  *
  *  @author Matt Casari, matthew.casari@noaa.org
  *  @date Feb 23, 2016
@@ -35,8 +35,8 @@
 /************************************************************************
 *							MACROS
 ************************************************************************/
-#define BUFFER_F_SIZE				(64)
-#define BUFFER_C_SIZE				(64)
+#define BUFFER_F_SIZE				(120)
+#define BUFFER_C_SIZE				(16)
 
 
 #define ACTUAL_BUFFER_F_SIZE		(BUFFER_F_SIZE + 1)

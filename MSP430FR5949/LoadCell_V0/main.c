@@ -76,31 +76,33 @@ volatile uint32_t sampleTimer = 0;
 volatile uint8_t errorCounter = 0;
 volatile double pressure = 0.0;
 
-float Pressures[BUFFER_F_SIZE] = {0};
+//float Pressures[BUFFER_F_SIZE] = {0};
 float PressureMean = 0;
 float PressureMax = 0;
 float PressureMin = 0;
 float PressureSTD = 0;
-float Temperatures[BUFFER_F_SIZE] = {0};
+
+//float Temperatures[BUFFER_F_SIZE] = {0};
 float TemperatureMean = 0;
 
 // Structures
 PAXLDSensor_t pxSensor;
 CircularBufferF_s PressureDataBuffer;
 CircularBufferF_s TemperatureDataBuffer;
-CircularBufferC_s ConsoleData;
+CircularBuffer_t ConsoleData;
 
 // Enum types
 SystemState_t SystemState;
-
+state_t ConsoleState;
 // Character Arrays
 char sendData[128];
 
 // Counters
-volatile uint8_t TimeoutCounter_1 = 0;
-volatile uint8_t TimeoutCounter_2 = 0;
+//volatile uint8_t TimeoutCounter_1 = 0;
+//volatile uint8_t TimeoutCounter_2 = 0;
 volatile uint32_t msTimeoutCounter = 0;
 volatile uint32_t ms2TimeoutCounter = 0;
+volatile uint32_t MenuTimeoutA = 0;
 
 /*******************************  MAIN  **********************************/
 int main(void) {
@@ -174,7 +176,7 @@ int main(void) {
   
   // Initialize the timer for 1 Second
   TIMER_A1_Init();
-  //TIMER_A0_Init();
+  TIMER_A0_Init();
   
   // Set interrupts
   P3IFG &= ~BIT7;
@@ -259,26 +261,29 @@ void STATE_Sample(void)
 
 void STATE_Compute(void)
 {
-  	
+  	float TempF[BUFFER_F_SIZE] = {0};
+//  	float Temperatures[BUFFER_F_SIZE] = {0};
     // Retreive Pressures from Buffer
     sampleCount = 0;
     while(BufferF_IsEmpty(&PressureDataBuffer) == BUFFER_NOT_EMPTY)
     {
-    	BufferF_Get(&PressureDataBuffer,&Pressures[sampleCount++]);
+    	BufferF_Get(&PressureDataBuffer,&TempF[sampleCount++]);
     }
     
     
      // Run Stats on the pressures
-    STATS_CalculateMean(&Pressures[0],sampleCount,&PressureMean);
-    STATS_ComputeSTD(&Pressures[0],sampleCount,PressureMean,&PressureSTD);
-    STATS_FindMax(&Pressures[0],sampleCount,&PressureMax);
-    STATS_FindMin(&Pressures[0],sampleCount,&PressureMin);
+    STATS_CalculateMean(&TempF[0],sampleCount,&PressureMean);
+    STATS_ComputeSTD(&TempF[0],sampleCount,PressureMean,&PressureSTD);
+    
+    //STATS_ComputeSTD(&TempF[0],sampleCount,PressureMean,&TempF);
+    STATS_FindMax(&TempF[0],sampleCount,&PressureMax);
+    STATS_FindMin(&TempF[0],sampleCount,&PressureMin);
 
 		// Retreive Temperatures from buffer
 		sampleCount = 0;
     while(BufferF_IsEmpty(&TemperatureDataBuffer) == BUFFER_NOT_EMPTY)
     {
-    	BufferF_Get(&TemperatureDataBuffer,&Temperatures[sampleCount++]);
+    	BufferF_Get(&TemperatureDataBuffer,&TempF[sampleCount++]);
     }
     
     // Clear the buffers
@@ -286,13 +291,13 @@ void STATE_Compute(void)
     BufferF_Clear(&TemperatureDataBuffer);
     
     // Find mean of the temperature for reporting
-    STATS_CalculateMean(&Temperatures[0],sampleCount,&TemperatureMean);
+    STATS_CalculateMean(&TempF[0],sampleCount,&TemperatureMean);
   
-  	for(uint16_t i = 0;i<BUFFER_F_SIZE;i++)
-  	{
-  		Pressures[i] = 0;
-  		Temperatures[i] = 0;
-  	}
+//  	for(uint16_t i = 0;i<BUFFER_F_SIZE;i++)
+//  	{
+//  		Pressures[i] = 0;
+//  		Temperatures[i] = 0;
+//  	}
 }
 
 void STATE_Transmit(void)
@@ -312,10 +317,33 @@ void STATE_Transmit(void)
 }
 void STATE_Console(void)
 {
-	CONSOLE_State_Main();
+	MenuTimeoutA = 0;
+	switch(ConsoleState)
+	{
+		case Main:
+			
+			break;
+		case Calibration:
+			break;
+		case ManualCal:
+			break;
+		case DisplayCal:
+			break;
+		case DisplayMetadata:
+			break;
+		case UpdateSN:
+			break;
+		case AutoSample:
+			break;
+		default:
+			break;		
+		
+		
+	}
+		CONSOLE_State_Main();
 	
-	CONSOLE_State_ManualCalibration();
- 
+		CONSOLE_State_ManualCalibration();
+ 	
   
   
 }

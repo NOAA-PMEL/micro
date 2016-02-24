@@ -91,42 +91,7 @@
 #define NUM_SAMPLES (5)
 #define NUMBER_OF_SAMPLES       (5)
 
-// Interrupt mapping
-#define INT_P1_0                    (__no_operation())
-#define INT_P1_1                    (__no_operation())
-#define INT_P1_2                    (__no_operation())
-#define INT_P1_3                    (__no_operation())
-#define INT_P1_4                    (__no_operation())
-#define INT_P1_5                    (__no_operation())
-#define INT_P1_6                    (__no_operation())
-#define INT_P1_7                    (__no_operation())
 
-#define INT_P2_0                    (__no_operation())
-#define INT_P2_1                    (__no_operation())
-#define INT_P2_2                    (__no_operation())
-#define INT_P2_3                    (__no_operation())
-#define INT_P2_4                    (__no_operation())
-#define INT_P2_5                    (__no_operation())
-#define INT_P2_6                    (__no_operation())
-#define INT_P2_7                    (__no_operation())
-
-#define INT_P3_0                    (__no_operation())
-#define INT_P3_1                    (__no_operation())
-#define INT_P3_2                    (__no_operation())
-#define INT_P3_3                    (__no_operation())
-#define INT_P3_4                    (__no_operation())
-#define INT_P3_5                    (__no_operation())
-#define INT_P3_6                    (__no_operation())
-#define INT_P3_7                    (__no_operation())
-
-#define INT_P4_0                    (__no_operation())
-#define INT_P4_1                    (__no_operation())
-#define INT_P4_2                    (__no_operation())
-#define INT_P4_3                    (__no_operation())
-#define INT_P4_4                    (__no_operation())
-#define INT_P4_5                    (__no_operation())
-#define INT_P4_6                    (__no_operation())
-#define INT_P4_7                    (__no_operation())
 
 
 
@@ -136,30 +101,32 @@
 
 // PAXLD structure definition
 typedef struct PAXLD PAXLDSensor_t;
-typedef struct{
-	union {
+typedef struct _CircularBufferC_s CircularBuffer_t ;
 
-		struct {
-			uint16_t	StateA : 1,	/* Temperature Ready to Convert	*/
-						StateB : 1,			/* Timer A has been hit */
-						StateC : 1,	// Unused
-						StateD : 1,	// Unused
-						StateE : 1,	// Unused
-						DebounceFlag : 1,	// Unused
-						TimerB : 1,		// Unused
-						spare8 : 1,		// Unused
-						spare7 : 1,		// Unused
-						spare6 : 1,		// Unused
-						spare5 : 1,		// Unused
-						spare4 : 1,		// Unused
-						spare3 : 1,		// Unused
-						spare2 : 1,		// Unused
-						spare1 : 1,		// Unused
-						spare0 : 1;		// Unused
-		};
-		uint16_t	all_flags;
-	};
-}FLAGS;
+//typedef struct{
+//	union {
+//
+//		struct {
+//			uint16_t	StateA : 1,	/* Temperature Ready to Convert	*/
+//						StateB : 1,			/* Timer A has been hit */
+//						StateC : 1,	// Unused
+//						StateD : 1,	// Unused
+//						StateE : 1,	// Unused
+//						DebounceFlag : 1,	// Unused
+//						TimerB : 1,		// Unused
+//						spare8 : 1,		// Unused
+//						spare7 : 1,		// Unused
+//						spare6 : 1,		// Unused
+//						spare5 : 1,		// Unused
+//						spare4 : 1,		// Unused
+//						spare3 : 1,		// Unused
+//						spare2 : 1,		// Unused
+//						spare1 : 1,		// Unused
+//						spare0 : 1;		// Unused
+//		};
+//		uint16_t	all_flags;
+//	};
+//}FLAGS;
 
 typedef struct SystemValues {
     float slope;
@@ -173,15 +140,15 @@ typedef enum mode {
     Exit
 } modes_t;
 
-//typedef enum state {
-//    Main,
-//    Calibration,
-//    ManualCal,
-//    DisplayCal,
-//    DisplayMetadata,
-//    UpdateSN,
-//    Sample
-//} state_t;
+typedef enum state {
+    Main,
+    Calibration,
+    ManualCal,
+    DisplayCal,
+    DisplayMetadata,
+    UpdateSN,
+    AutoSample
+} state_t;
 
 typedef struct console {
     modes_t mode;
@@ -207,15 +174,15 @@ extern console_t console;
 
 #ifdef PMEL
 // Flags and counters
-extern volatile FLAGS TimerFlags;
+//extern volatile FLAGS TimerFlags;
 extern volatile uint32_t msTimeoutCounter;
 extern volatile uint32_t ms2TimeoutCounter;
 extern volatile uint32_t sampleTimer;
-
+extern volatile uint32_t MenuTimeoutA;
 // Structures
 extern PAXLDSensor_t pxSensor;
 extern SystemState_t SystemState;
-
+extern CircularBuffer_t ConsoleData;
 #endif
 
 #endif
