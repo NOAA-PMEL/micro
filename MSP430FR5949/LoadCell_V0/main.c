@@ -211,22 +211,27 @@ int main(void) {
     switch(SystemState)
     {
       case Sample:
-				if(sampleTimer > 100)
+      	if(sampleTimer > 800)
+      	{
+      		FET_ON();
+      	}
+				if(sampleTimer > 1000)
 				{
                   
 					sampleTimer = 0;
         	STATE_Sample();
+        	FET_OFF();
 	      }
         break;
       case Compute:
-      	FET_OFF();
+      	
           STATE_Compute();
           sampleCount = 0;
           SystemState = Transmit;
         break;
       case Transmit:
         STATE_Transmit();
-        FET_ON();
+        //FET_ON();
         SystemState = Sample;
         sampleCount = 0;
         sampleTimer = 0;
