@@ -141,6 +141,7 @@ typedef enum mode {
 } modes_t;
 
 typedef enum state {
+		Hold,
     Main,
     Calibration,
     ManualCal,
@@ -173,16 +174,23 @@ typedef enum SysState {
 extern console_t console;
 
 #ifdef PMEL
+extern float slope;
+extern float intercept;
+
 // Flags and counters
 //extern volatile FLAGS TimerFlags;
 extern volatile uint32_t msTimeoutCounter;
 extern volatile uint32_t ms2TimeoutCounter;
 extern volatile uint32_t sampleTimer;
 extern volatile uint32_t MenuTimeoutA;
+extern volatile uint32_t ControlTimer;
+extern volatile uint32_t ControlCounter;
 // Structures
 extern PAXLDSensor_t pxSensor;
 extern SystemState_t SystemState;
 extern CircularBuffer_t ConsoleData;
+
+extern state_t ConsoleState;
 #endif
 
 #endif

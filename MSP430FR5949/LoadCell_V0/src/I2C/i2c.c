@@ -36,7 +36,7 @@ void I2CInit(void)
 	P1SEL1 |= BIT6 | BIT7;					// Set P1.6 and P1.7 to I2C (MSP430FR5969 specific)
 	UCB0CTLW0 |= UCSWRST;					// Hold in Reset
 	UCB0CTLW0 |= UCMODE_3 + UCSYNC + UCMST;	// I2C, Synchronous Mode, Master
-	UCB0CTLW0 |= UCSSEL_2;					// SMCLK Used
+	UCB0CTLW0 |= UCSSEL__ACLK;//UCSSEL_2;					// SMCLK Used
 	UCB0CTLW0 |= UCTR;						// Set for Transmit
 	
 	// Set the Clock division to Clock/4

@@ -84,6 +84,10 @@ __interrupt void TIMER0_A1_ISR(void)
     case TA0IV_6:      break;               // reserved
     case TA0IV_TAIFG:                       // overflow
     	MenuTimeoutA++;
+    	if(ControlTimer++ > 10)
+    	{
+    		ControlCounter = 0;
+    	}
       break;
     default: break;
   }

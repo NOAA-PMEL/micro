@@ -69,12 +69,18 @@ const uint8_t sensorAddress = 0x46;
 const uint8_t sensorEOCPort = 3;
 const uint8_t sensorEOCPin = 7;
 
+const float FRAM_Slope = 3.7;
+const float FRAM_Intercept = 22.9;
+
 /*************************  Global variables  *****************************/
 // Variables
 volatile uint16_t sampleCount = 0;
 volatile uint32_t sampleTimer = 0;
 volatile uint8_t errorCounter = 0;
 volatile double pressure = 0.0;
+
+float slope = 0;
+float intercept = 0;
 
 //float Pressures[BUFFER_F_SIZE] = {0};
 float PressureMean = 0;
@@ -103,12 +109,18 @@ char sendData[128];
 volatile uint32_t msTimeoutCounter = 0;
 volatile uint32_t ms2TimeoutCounter = 0;
 volatile uint32_t MenuTimeoutA = 0;
+volatile uint32_t ControlTimer = 0;
+volatile uint32_t ControlCounter = 0;
 
 /*******************************  MAIN  **********************************/
 int main(void) {
   
   // Set the sensor I2C address -> Change for production
   pxSensor.address = 0x46;
+  
+  // Retreive FRAM values
+  slope = FRAM_Slope;
+  intercept = FRAM_Intercept;
   
   // Pause the watchdog
   WDTCTL = WDTPW | WDTHOLD;		
@@ -155,9 +167,11 @@ int main(void) {
   // LFXT Driver on low power
   CSCTL0_H = CSKEY >> 8;					// Unlock registers
   CSCTL1 = DCOFSEL_1;			// Set DCO to 8Mhz
+  //CSCTL2 = SELA__LFXTCLK | SELS__LFXTCLK | SELM__LFXTCLK;
   CSCTL2 = SELA__LFXTCLK | SELS__DCOCLK | SELM__DCOCLK;
+  //CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;	// Divide 8 all reg
   CSCTL3 = DIVA__1 | DIVS__2 | DIVM__1;	// Divide 8 all reg
-  CSCTL4 =   LFXTDRIVE_0;
+  CSCTL4 =   LFXTDRIVE_0 | VLOOFF;;
   CSCTL4 &= ~LFXTOFF;
   
 //   Wait for the clock to lock
@@ -238,6 +252,7 @@ int main(void) {
         break;
       case Console:
 				STATE_Console();
+				sampleTimer = 0;
         break;
       default:
         break;
@@ -258,6 +273,7 @@ void STATE_Sample(void)
     
     // Process sensor data
     sensorProcessData(&pxSensor);
+    
     //Pressures[sampleCount] = pxSensor.pressure;
     BufferF_Put_Circular(&PressureDataBuffer,pxSensor.pressure);
     BufferF_Put_Circular(&TemperatureDataBuffer,pxSensor.temperature);
@@ -267,7 +283,7 @@ void STATE_Sample(void)
 void STATE_Compute(void)
 {
   	float TempF[BUFFER_F_SIZE] = {0};
-//  	float Temperatures[BUFFER_F_SIZE] = {0};
+
     // Retreive Pressures from Buffer
     sampleCount = 0;
     while(BufferF_IsEmpty(&PressureDataBuffer) == BUFFER_NOT_EMPTY)
@@ -298,11 +314,6 @@ void STATE_Compute(void)
     // Find mean of the temperature for reporting
     STATS_CalculateMean(&TempF[0],sampleCount,&TemperatureMean);
   
-//  	for(uint16_t i = 0;i<BUFFER_F_SIZE;i++)
-//  	{
-//  		Pressures[i] = 0;
-//  		Temperatures[i] = 0;
-//  	}
 }
 
 void STATE_Transmit(void)
@@ -320,34 +331,16 @@ void STATE_Transmit(void)
     sendString[i] = 0;
   }
 }
+
+
 void STATE_Console(void)
 {
 	MenuTimeoutA = 0;
-	switch(ConsoleState)
-	{
-		case Main:
-			
-			break;
-		case Calibration:
-			break;
-		case ManualCal:
-			break;
-		case DisplayCal:
-			break;
-		case DisplayMetadata:
-			break;
-		case UpdateSN:
-			break;
-		case AutoSample:
-			break;
-		default:
-			break;		
-		
-		
-	}
-		CONSOLE_State_Main();
+	CONSOLE_State_Main();
 	
-		CONSOLE_State_ManualCalibration();
+		
+	
+		
  	
   
   
@@ -404,50 +397,4 @@ void sensorProcessData(PAXLD_t *sensor)
 
 
 
-#pragma vector=USCI_A1_VECTOR
-__interrupt void USCI_A1_ISR(void)
-{
-	switch(__even_in_range(UCA1IV, USCI_UART_UCTXCPTIFG))
-	{
-		case USCI_NONE:
-			break;
-		case USCI_UART_UCRXIFG:     
-			switch(SystemState)
-			{
-				case Sample:
-					switch(UCA1RXBUF)
-					{
-						case 'D':
-						case 'd':
-							SystemState = Compute;
-					 		break;
-						case 0x03:	// Ctrl-C
-							SystemState = Console;
-							break;
-						default:
-							break;
-					}
-					break;
-				case Console:
-					BufferC_Put(&ConsoleData, UCA1RXBUF);
-					break;
-      }
-      
 
-
-
-
-
-
-
-			break;
-		case USCI_UART_UCTXIFG:
-			break;
-		case USCI_UART_UCSTTIFG:
-			break;
-		case USCI_UART_UCTXCPTIFG:
-			break;
-		default:
-			break;
-	}
-}
