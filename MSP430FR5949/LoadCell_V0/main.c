@@ -19,6 +19,8 @@
  *  the average, max, min and standard deviation are computed.  
  *	
  *	A console program allows the user to configure the Load Cell
+ *
+ *  @note To add FRAM capability, you must enable MPU in IAR (Project->Options->General Options->MPU/IPU->Support MPU)
  * 
  *	@todo watchdog is not setup
  *	@todo Add console
@@ -64,16 +66,23 @@ void STATE_Sample(void);
 void STATE_Console(void);
 void STATE_Compute(void);
 void STATE_Transmit(void);
+
+void FRAM_RetreiveData(void);
+void FRAM_SaveData(void);
+
 /***********************  Constants (In FRAM)  *****************************/
 const uint8_t sensorAddress = 0x46;
 const uint8_t sensorEOCPort = 3;
 const uint8_t sensorEOCPin = 7;
 
-const float FRAM_Slope = 3.7;
-const float FRAM_Intercept = 22.9;
+__persistent uint8_t counterValTestWhee = 0;
+__persistent metadata_t FRAM_Metadata;
+
+
 
 /*************************  Global variables  *****************************/
 // Variables
+metadata_t	Metadata;
 volatile uint16_t sampleCount = 0;
 volatile uint32_t sampleTimer = 0;
 volatile uint8_t errorCounter = 0;
@@ -115,16 +124,16 @@ volatile uint32_t ControlCounter = 0;
 /*******************************  MAIN  **********************************/
 int main(void) {
   
-  // Set the sensor I2C address -> Change for production
+	// Configure MPU		
+  __low_level_init();				// Setup FRAM
+	
+	
+	// Load Saved (FRAM) metadata into local RAM
+	FRAM_RetreiveData();
+	
+	
+	// Set the sensor I2C address -> Change for production
   pxSensor.address = 0x46;
-  
-  // Retreive FRAM values
-  slope = FRAM_Slope;
-  intercept = FRAM_Intercept;
-  
-  // Pause the watchdog
-  WDTCTL = WDTPW | WDTHOLD;		
-	__low_level_init();				// Setup FRAM
 	
   // Set All GPIO settings to 0
   GPIO_Init();        // Sets all Outputs Low and regs to 0
@@ -330,6 +339,11 @@ void STATE_Transmit(void)
     sendVal[i] = 0;
     sendString[i] = 0;
   }
+  
+//  UART_WriteChar((counterValTestWhee+0x40),UART_A1);
+//  __delay_cycles(500000);
+//  UART_WriteChar('\n',UART_A1);
+//  counterValTestWhee++;
 }
 
 
@@ -398,3 +412,29 @@ void sensorProcessData(PAXLD_t *sensor)
 
 
 
+void FRAM_RetreiveData(void)
+{
+	
+	Metadata.Slope = FRAM_Metadata.Slope;
+	Metadata.Intercept = FRAM_Metadata.Intercept;
+	Metadata.DataCounter = FRAM_Metadata.DataCounter;
+	for(uint8_t i=0;i<METADATA_ARRAY_SIZE;i++)
+	{
+		Metadata.RecordedData[i] = FRAM_Metadata.RecordedData[i];
+		Metadata.InputLoad[i] = FRAM_Metadata.InputLoad[i];
+	}
+	return;
+}
+
+void FRAM_SaveData(void)
+{
+	FRAM_Metadata.Slope = Metadata.Slope;
+	FRAM_Metadata.Intercept = Metadata.Intercept;
+	FRAM_Metadata.DataCounter = Metadata.DataCounter;
+	for(uint8_t i=0;i<METADATA_ARRAY_SIZE;i++)
+	{
+		FRAM_Metadata.RecordedData[i] = Metadata.RecordedData[i];
+		FRAM_Metadata.InputLoad[i] = Metadata.InputLoad[i];
+	}
+	return;
+}

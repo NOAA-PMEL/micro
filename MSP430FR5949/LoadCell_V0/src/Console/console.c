@@ -3,6 +3,10 @@
 static void CONSOLE_DisplayState_Main(void);
 static void CONSOLE_DisplayState_ManualCalibrationInput(uint8_t line, float value);
 static void CONSOLE_DisplayMetadata(void);
+static void CONSOLE_DisplayCalData(void);
+static void CONSOLE_Calibration(void);
+static void RetreiveData(char *value, uint8_t *dataCount);
+static uint8_t RetreiveData_F(char *value, uint8_t *dataCount)
 /*********************************************************************************
 *									GLOBAL FUNCTIONS
 *********************************************************************************/
@@ -34,28 +38,8 @@ void CONSOLE_State_Main(void)
 		// the new data down to one value
 		if( BufferC_CheckForNewline(&ConsoleData) == BUFFER_C_NEWLINE_DETECTED)
 		{
-           dataCount = 0;
-           while(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
-           {
-             BufferC_Get(&ConsoleData, &UserInputVal[dataCount++]);
-           }
-             
-			BufferC_Clear(&ConsoleData);
-			NewlineFlag = false;
-			for(uint8_t i =0;i<BUFFER_C_SIZE;i++)
-			{
-				// If the newline flag is already set, clear the rest of the values
-				if(NewlineFlag == true)
-				{
-					UserInputVal[i] =0;
-				}
-				
-				if(UserInputVal[i] == '\n'  || UserInputVal[i] == '\r')
-				{
-					NewlineFlag = i;
-					UserInputVal[i] = 0;
-				}
-			}
+    	RetreiveData(&UserInputVal[0],&dataCount);
+        NewlineFlag = true;
 		}
         
         // Using user input, set the state commanded
@@ -94,7 +78,7 @@ void CONSOLE_State_Main(void)
 					ConsoleState = Main;
 					break;
 				default:
-                    ConsoleState = Hold;
+          ConsoleState = Hold;
 					UART_WriteChar('I',UART_A1);
 					break;
 			}
@@ -117,12 +101,14 @@ void CONSOLE_State_Main(void)
         ConsoleState = Hold;
 				break;
 			case Calibration:
+				CONSOLE_Calibration();
 				MenuTimeoutA = 0;
 				break;
 			case ManualCal:
 				MenuTimeoutA = 0;
 				break;
 			case DisplayCal:
+				CONSOLE_DisplayCalData();
 				MenuTimeoutA = 0;
 				break;
 			case DisplayMetadata:
@@ -239,7 +225,7 @@ static void CONSOLE_DisplayMetadata(void)
 	char values[32];
 	uint8_t vals[32];
 	
-	sprintf(values, "%f\r\n",slope);
+	sprintf(values, "%3.3f\r\n",Metadata.Slope);
 	for(uint8_t i=0;i<32;i++)
 	{
 		vals[i] = (uint8_t) values[i];
@@ -247,7 +233,7 @@ static void CONSOLE_DisplayMetadata(void)
 	UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
 	UART_Write(&vals[0],LENGTH_OF(values),UART_A1);
 	
-	sprintf(values, "%f\r\n",intercept);
+	sprintf(values, "3.3%f\r\n",Metadata.Intercept);
 	for(uint8_t i=0;i<32;i++)
 	{
 		vals[i] = (uint8_t) values[i];
@@ -256,5 +242,185 @@ static void CONSOLE_DisplayMetadata(void)
 	UART_Write(&vals[0],LENGTH_OF(values),UART_A1);
 	UART_WriteChar('>',UART_A1);
 	
+	
 	return;
+}
+
+
+static void CONSOLE_DisplayCalData(void)
+{
+	uint8_t line0[] = "Load[";
+	uint8_t line1[] = "Pressure[";
+	uint8_t load[32] = {0};
+	uint8_t pressure[32] = {0};
+	
+	
+	UART_WriteChar('\r',UART_A1);
+	__delay_cycles(5000);
+	UART_WriteChar('\n',UART_A1);
+
+	for(uint8_t i=0;i<METADATA_ARRAY_SIZE;i++)
+	{
+	
+		sprintf(load,"Load[%d] = %6.2f(lbs)\r\n",i,Metadata.InputLoad[i]);
+		sprintf(pressure,"Pres[%d] = %6.2f(bar)\r\n",i,Metadata.RecordedData[i]);
+		
+		//UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
+		UART_Write(&load[0],LENGTH_OF(load),UART_A1);
+		//UART_Write(&line1[0],LENGTH_OF(line1),UART_A1);
+		UART_Write(&pressure[0],LENGTH_OF(pressure),UART_A1);
+			__delay_cycles(5000);
+		UART_WriteChar('\r',UART_A1);
+			__delay_cycles(5000);
+		UART_WriteChar('\n',UART_A1);
+		
+	}
+	
+	
+}
+
+static void CONSOLE_DisplayCalibration(void)
+{
+	
+	
+	
+}
+
+static void CONSOLE_Calibration(void)
+{
+	uint8_t line0[] = "Enter load in LBS: ";
+	uint8_t line1[] = "Sampling\r\n";
+	uint8_t rxValues[BUFFER_C_SIZE] = {0};
+	uint8_t dataCount = 0;
+	uint8_t NewlineFlag = false;
+	uint8_t ExitFlag = false;
+    uint8_t ValidFlag = false;
+	float tempLoad = NAN;
+
+	
+	
+	// Display user command
+	UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
+	
+	// Wait for User to input data or timeout
+	MenuTimeoutA = 0;
+	while(ExitFlag == false)
+	{
+		if(MenuTimeoutA > 60)
+		{
+			ExitFlag = true;
+		}
+		
+		// Check for newline in the buffer.  If it exists, retreive the data and process it.
+		if(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
+		{
+          ExitFlag = RetreiveData2(&rxValues[dataCount++],&dataCount);
+//          BufferC_Get(&ConsoleData,&rxValues[dataCount]);
+//          if(rxValues[dataCount] == '\r' || rxValues[dataCount] == '\n')
+//          {
+//              rxValues[dataCount] = 0;
+//              ExitFlag = true;
+//              dataCount++;
+//              
+//          }
+//          else 
+//          {
+//              // Echo the value and increase the 
+//              UART_WriteChar(rxValues[dataCount],UART_A1);
+//              dataCount++;
+//          }
+        }
+		
+		
+	}
+	
+    // Check string for valid ascii values
+    ValidFlag = true;
+    for(uint8_t i=0;i<--dataCount;i++)
+    {
+      
+      if( !((rxValues[i] >= '0') && (rxValues[i] <= '9')) || (rxValues[i] == '.')  )
+      {
+        ValidFlag = false;
+      }
+      
+    }
+
+    // If 
+	if(ValidFlag == true)
+    {
+      	tempLoad = atof(rxValues);
+    }
+	else
+    {
+      uint8_t returnline[] = "\r\nInvalid Entry\r\n";
+      UART_Write(&returnline[0],LENGTH_OF(returnline),UART_A1);
+      return;
+    }
+	
+}
+
+
+static void RetreiveData(char *value, uint8_t *dataCount)
+{
+	uint8_t NewlineFlag = false;
+    uint8_t count = 0;
+	char rxValues[BUFFER_C_SIZE] = {0};
+	
+	count = 0;
+	while(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
+	{
+		BufferC_Get(&ConsoleData, &rxValues[count++]);
+//		BufferC_Get(&ConsoleData, &rxValues[dataCount++]);
+	}
+	 
+	BufferC_Clear(&ConsoleData);
+	NewlineFlag = false;
+	for(uint8_t i =0;i<BUFFER_C_SIZE;i++)
+	{
+		// Check for newline character
+		if(rxValues[i] == '\n'  || rxValues[i] == '\r')
+		{
+		NewlineFlag = i;
+		}
+		
+		// If the newline flag is write a zero to values, otherwise use retreived value
+		if(NewlineFlag == true)
+		{
+		value[i] =0;
+		}
+		else 
+		{
+			value[i] = rxValues[i];
+		}
+		
+
+	}
+	
+	*dataCount = count;
+	return;
+}
+
+
+static uint8_t RetreiveData_F(char *value, uint8_t *dataCount)
+{
+  uint8_t NewlineFlag = false;
+  
+  // Check for newline in the buffer.  If it exists, retreive the data and process it.
+  if(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
+  {
+    BufferC_Get(&ConsoleData,value);
+    if(*value == '\r' || *value == '\n')
+    {
+        value = 0;
+        NewlineFlag = true;
+    }
+    else 
+    {
+        // Echo the value and increase the 
+        UART_WriteChar(*value,UART_A1);
+    }
+  }
+  
+  return NewlineFlag;
 }

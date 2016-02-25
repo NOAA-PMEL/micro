@@ -171,7 +171,7 @@
         </option>
         <option>
           <name>GESupportMpu</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GELockMpu</name>
@@ -2358,6 +2358,9 @@
         <name>$PROJ_DIR$\src\UART\uart.h</name>
       </file>
     </group>
+    <file>
+      <name>$PROJ_DIR$\src\low_level_init.c</name>
+    </file>
     <file>
       <name>$PROJ_DIR$\main.c</name>
     </file>

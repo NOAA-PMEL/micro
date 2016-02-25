@@ -91,7 +91,8 @@
 #define NUM_SAMPLES (5)
 #define NUMBER_OF_SAMPLES       (5)
 
-
+// Size of the metadata arrays
+#define METADATA_ARRAY_SIZE (6)
 
 
 
@@ -167,6 +168,15 @@ typedef enum SysState {
 } SystemState_t;
 
 
+typedef struct _Metadata {
+	float Slope;
+	float Intercept;
+	float RecordedData[METADATA_ARRAY_SIZE];
+	float InputLoad[METADATA_ARRAY_SIZE];
+	uint8_t DataCounter;
+}metadata_t;
+
+
 /************************************************************************
 *							GLOBAL VARIABLES
 ************************************************************************/
@@ -185,12 +195,15 @@ extern volatile uint32_t sampleTimer;
 extern volatile uint32_t MenuTimeoutA;
 extern volatile uint32_t ControlTimer;
 extern volatile uint32_t ControlCounter;
+
 // Structures
 extern PAXLDSensor_t pxSensor;
 extern SystemState_t SystemState;
 extern CircularBuffer_t ConsoleData;
-
 extern state_t ConsoleState;
+extern metadata_t Metadata;
+extern metadata_t FRAM_Metadata;
+
 #endif
 
 #endif
