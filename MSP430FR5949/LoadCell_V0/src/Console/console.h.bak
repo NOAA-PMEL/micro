@@ -4,6 +4,11 @@
 #include "../../inc/includes.h"
 #include "../buffers/buffers.h"
 
-void CONSOLE_State_Main(void);
+#define CALIBRATION_TIMEOUT (10)
+#define CALIBRATION_SAMPLE_COUNT 	(5)
 
+
+void CONSOLE_State_Main(void);
+void CONSOLE_State_ManualCalibration(void);
+void CONSOLE_CalibrationInputState(void);
 #endif // console_H

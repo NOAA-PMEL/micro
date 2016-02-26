@@ -109,6 +109,7 @@ CircularBuffer_t ConsoleData;
 
 // Enum types
 SystemState_t SystemState;
+CalibrationState_t CalibrationState;
 state_t ConsoleState;
 // Character Arrays
 char sendData[128];

@@ -153,6 +153,16 @@ typedef enum state {
     AutoSample
 } state_t;
 
+typedef enum _CalibrationState {
+	CalHold,
+	Input,
+	CalculateSandI,
+	DisplayCalValues,
+	DisplaySandI,
+	ClearAllData,
+	ReturnToMain
+}CalibrationState_t;
+
 typedef struct console {
     modes_t mode;
 //    state_t state;
@@ -182,7 +192,7 @@ typedef struct _Metadata {
 *							GLOBAL VARIABLES
 ************************************************************************/
 
-extern console_t console;
+//extern console_t console;
 
 #ifdef PMEL
 extern float slope;
@@ -204,7 +214,7 @@ extern CircularBuffer_t ConsoleData;
 extern state_t ConsoleState;
 extern metadata_t Metadata;
 extern metadata_t FRAM_Metadata;
-
+extern CalibrationState_t CalibrationState;
 // functions
 
 extern void sensorRead(PAXLDSensor_t *sensor);
