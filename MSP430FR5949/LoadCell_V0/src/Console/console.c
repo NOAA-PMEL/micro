@@ -447,7 +447,7 @@ static void CONSOLE_SampleSensor(float *AverageValue)
   uint8_t line0[] = "\r\nSampling";
   uint8_t sampleCount = 0;
   uint8_t SaveValue = false;
-  float TempF[BUFFER_F_SIZE] = {0};
+  float TempF[10] = {0};
   float PressureMean = 0;
   
   BufferF_Clear(&SampleData);
@@ -458,8 +458,9 @@ static void CONSOLE_SampleSensor(float *AverageValue)
   // Display text
   UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
 
-  for(uint8_t i=0;i<BUFFER_F_SIZE;i++)
+  for(uint8_t i=0;i<10;i++)
   {
+    MenuTimeoutA = 0;
     // Request data from sensor
     PAxLDRequestDataOnInterrupt(&pxSensor);
     
@@ -469,8 +470,10 @@ static void CONSOLE_SampleSensor(float *AverageValue)
     // Process sensor data
     sensorProcessData(&pxSensor);
     
+    // Put the data retreived in the buffer
     BufferF_Put_Circular(&SampleData, pxSensor.pressure);
     UART_WriteChar('.',UART_A1);
+    while(MenuTimeoutA < 1);
   }
 
  
@@ -482,15 +485,14 @@ static void CONSOLE_SampleSensor(float *AverageValue)
       BufferF_Get(&SampleData,&TempF[sampleCount++]);
   }
 
-
-  // Calculate the mean pressure
+  // Calculate the mean pressure & transfer to variable
   STATS_CalculateMean(&TempF[0],sampleCount,&PressureMean);
-
   *AverageValue = PressureMean;
   
+  // Query user to save data or exit without saving
   SaveValue = CONSOLE_InquireYesOrNoSave();
   
-  
+  return;
 }
 
 
@@ -507,9 +509,10 @@ static uint8_t CONSOLE_InquireYesOrNoSave(void)
   BufferC_Clear(&ConsoleData);
   while(MenuFlag == false)
   {
+    ExitFlag = false;
     while((ExitFlag == false) && (MenuTimeoutA < 10))
     {
-      //ExitFlag = RetreiveSingleChar( &DisplayValue);
+      ExitFlag = RetreiveSingleChar( &DisplayValue);
     }
     
     switch(DisplayValue)
@@ -527,6 +530,8 @@ static uint8_t CONSOLE_InquireYesOrNoSave(void)
       
     default:
       UART_Write(&line1[0], LENGTH_OF(line1),UART_A1);
+      UART_Write(&line0[0], LENGTH_OF(line0),UART_A1);
+      DisplayValue = 0;
       MenuFlag = false;
       break;
   
@@ -545,6 +550,7 @@ static uint8_t RetreiveSingleChar(char *value)
   if(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
   {
     BufferC_Get(&ConsoleData,&TempValue);
+    UART_WriteChar(TempValue,UART_A1);
     *value = TempValue;
     return true;
   }
