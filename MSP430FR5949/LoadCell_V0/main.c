@@ -60,12 +60,13 @@
 #include "./inc/includes.h"
 
 /************************ Function Prototypes *****************************/
-void sensorRead(PAXLD_t *sensor);
-void sensorProcessData(PAXLD_t *sensor);
 void STATE_Sample(void);
 void STATE_Console(void);
 void STATE_Compute(void);
 void STATE_Transmit(void);
+
+void sensorRead(PAXLDSensor_t *sensor);
+void sensorProcessData(PAXLDSensor_t *sensor);
 
 void FRAM_RetreiveData(void);
 void FRAM_SaveData(void);
@@ -183,7 +184,7 @@ int main(void) {
   CSCTL4 =   LFXTDRIVE_0 | VLOOFF;;
   CSCTL4 &= ~LFXTOFF;
   
-//   Wait for the clock to lock
+  //   Wait for the clock to lock
   do
   {
     CSCTL5 &= ~LFXTOFFG;
@@ -360,52 +361,6 @@ void STATE_Console(void)
   
 }
 
-void sensorRead(PAXLD_t *sensor)
-{
-
-  ms2TimeoutCounter = 0;
-  while(sensor->dataAvailableFlag != true && ms2TimeoutCounter < 15);
-  if(sensor->dataAvailableFlag != true)
-  {
-      sensor->badDataCount++;
-  }
-  else
-  {
-  		UCA1IE &= ~UCRXIE;
-      PAxLDRequestDataRead(&sensor[0], 5);
-      UCA1IE |= UCRXIE;
-      sensor->badDataCount = 0;
-  }
-
-}
-
-
-/** @brief Request data from PAxLD sensor on I2C Interrupts
- *
- *  writes to PAxLD sensor with a request for the sensor
- *  to return the data.  Uses I2C STOP and RX interrupts
- *
- *  @param *sensor Sensor data structure
- *
- *  @return Void
- */
-void sensorProcessData(PAXLD_t *sensor)
-{
-
-  ms2TimeoutCounter = 0;
-  while((sensor->dataIndex < 5) && ms2TimeoutCounter < 15);
-  {
-     if((sensor->dataIndex < 5))
-     {
-         sensor->pressure = -999.9;
-     }
-     else
-     {
-         PAxLDProcessReceivedData(&sensor[0]);
-     }
-  }
-
-}
 
 
 
@@ -437,4 +392,51 @@ void FRAM_SaveData(void)
 		FRAM_Metadata.InputLoad[i] = Metadata.InputLoad[i];
 	}
 	return;
+}
+
+void sensorRead(PAXLDSensor_t *sensor)
+{
+
+  ms2TimeoutCounter = 0;
+  while(sensor->dataAvailableFlag != true && ms2TimeoutCounter < 15);
+  if(sensor->dataAvailableFlag != true)
+  {
+      sensor->badDataCount++;
+  }
+  else
+  {
+  		UCA1IE &= ~UCRXIE;
+      PAxLDRequestDataRead(&sensor[0], 5);
+      UCA1IE |= UCRXIE;
+      sensor->badDataCount = 0;
+  }
+
+}
+
+
+/** @brief Request data from PAxLD sensor on I2C Interrupts
+ *
+ *  writes to PAxLD sensor with a request for the sensor
+ *  to return the data.  Uses I2C STOP and RX interrupts
+ *
+ *  @param *sensor Sensor data structure
+ *
+ *  @return Void
+ */
+void sensorProcessData(PAXLDSensor_t *sensor)
+{
+
+  ms2TimeoutCounter = 0;
+  while((sensor->dataIndex < 5) && ms2TimeoutCounter < 15);
+  {
+     if((sensor->dataIndex < 5))
+     {
+         sensor->pressure = -999.9;
+     }
+     else
+     {
+         PAxLDProcessReceivedData(&sensor[0]);
+     }
+  }
+
 }

@@ -6,8 +6,10 @@ static void CONSOLE_DisplayMetadata(void);
 static void CONSOLE_DisplayCalData(void);
 static void CONSOLE_Calibration(void);
 static void CONSOLE_SampleSensor(float *AverageValue);
+static uint8_t CONSOLE_InquireYesOrNoSave(void);
 static void RetreiveData(char *value, uint8_t *dataCount);
 static uint8_t RetreiveData2(char *value, uint8_t *dataCount);
+static uint8_t RetreiveSingleChar(char *value);
 static uint8_t StringFloatCheck(char *value,uint8_t length);
 /*********************************************************************************
 *									GLOBAL FUNCTIONS
@@ -294,6 +296,7 @@ static void CONSOLE_Calibration(void)
 	uint8_t line0[] = "\r\n\r\nEnter load in LBS: ";
 	uint8_t line1[] = "Sampling\r\n";
 	uint8_t rxValues[BUFFER_C_SIZE] = {0};
+    uint8_t DisplayBuffer[32] = {0};
 	uint8_t dataCount = 0;
 	uint8_t NewlineFlag = false;
 	uint8_t ExitFlag = false;
@@ -341,6 +344,8 @@ static void CONSOLE_Calibration(void)
         // Initialize float sensor
         float SensorAverageValue = 0.0;
         CONSOLE_SampleSensor(&SensorAverageValue);
+        sprintf(DisplayBuffer,"\r\nAverage Pressure = %3.3f",SensorAverageValue);
+        UART_Write(DisplayBuffer,LENGTH_OF(DisplayBuffer),UART_A1);
     }
 	else
     {
@@ -438,25 +443,112 @@ static uint8_t StringFloatCheck(char *value,uint8_t length)
 
 static void CONSOLE_SampleSensor(float *AverageValue)
 {
+	CircularBufferF_s SampleData;
   uint8_t line0[] = "\r\nSampling";
+  uint8_t sampleCount = 0;
+  uint8_t SaveValue = false;
+  float TempF[BUFFER_F_SIZE] = {0};
+  float PressureMean = 0;
+  
+  BufferF_Clear(&SampleData);
 
+  // Turn on the device
+  FET_ON();
 
   // Display text
-	UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
-//
-//   // Request data from sensor
-//    PAxLDRequestDataOnInterrupt(&pxSensor);
-//
-//    // Read the sensors
-//    sensorRead(&pxSensor);
-//
-//    // Process sensor data
-//    sensorProcessData(&pxSensor);
-//
-//    //Pressures[sampleCount] = pxSensor.pressure;
-//    BufferF_Put_Circular(&PressureDataBuffer,pxSensor.pressure);
-//    BufferF_Put_Circular(&TemperatureDataBuffer,pxSensor.temperature);
+  UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
+
+  for(uint8_t i=0;i<BUFFER_F_SIZE;i++)
+  {
+    // Request data from sensor
+    PAxLDRequestDataOnInterrupt(&pxSensor);
+    
+    // Read the sensors
+    sensorRead(&pxSensor);
+    
+    // Process sensor data
+    sensorProcessData(&pxSensor);
+    
+    BufferF_Put_Circular(&SampleData, pxSensor.pressure);
+    UART_WriteChar('.',UART_A1);
+  }
+
+ 
+
+  // Retreive Pressures from Buffer
+  sampleCount = 0;
+  while(BufferF_IsEmpty(&SampleData) == BUFFER_NOT_EMPTY)
+  {
+      BufferF_Get(&SampleData,&TempF[sampleCount++]);
+  }
+
+
+  // Calculate the mean pressure
+  STATS_CalculateMean(&TempF[0],sampleCount,&PressureMean);
+
+  *AverageValue = PressureMean;
+  
+  SaveValue = CONSOLE_InquireYesOrNoSave();
+  
+  
+}
+
+
+static uint8_t CONSOLE_InquireYesOrNoSave(void)
+{
+  uint8_t line0[] = "\r\nWould you like to save this data? (Y or N): ";
+  uint8_t line1[] = "\r\nInvalid command\r\n";
+  uint8_t DisplayValue = 0;
+  uint8_t ExitFlag = false;
+  uint8_t MenuFlag = false;
+  
+  MenuTimeoutA = 0;
+  UART_Write(&line0[0], LENGTH_OF(line0),UART_A1);
+  BufferC_Clear(&ConsoleData);
+  while(MenuFlag == false)
+  {
+    while((ExitFlag == false) && (MenuTimeoutA < 10))
+    {
+      //ExitFlag = RetreiveSingleChar( &DisplayValue);
+    }
+    
+    switch(DisplayValue)
+    {
+      
+    case 'Y':
+    case 'y':
+      MenuFlag = true;
+      break;
+      
+    case 'N':
+    case 'n':
+      MenuFlag = true;
+      break;
+      
+    default:
+      UART_Write(&line1[0], LENGTH_OF(line1),UART_A1);
+      MenuFlag = false;
+      break;
+  
+    }
+    
+  
+  } 
+}
 
 
 
+static uint8_t RetreiveSingleChar(char *value)
+{
+  uint8_t TempValue = {0};
+  
+  if(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
+  {
+    BufferC_Get(&ConsoleData,&TempValue);
+    *value = TempValue;
+    return true;
+  }
+  
+  return false;
+  
 }

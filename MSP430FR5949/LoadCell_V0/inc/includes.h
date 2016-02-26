@@ -48,6 +48,7 @@
 #include "../src/buffers/buffers.h"
 #include "../src/Console/console.h"
 
+
 /************************************************************************
 *							CONSTANTS
 ************************************************************************/
@@ -203,6 +204,11 @@ extern CircularBuffer_t ConsoleData;
 extern state_t ConsoleState;
 extern metadata_t Metadata;
 extern metadata_t FRAM_Metadata;
+
+// functions
+
+extern void sensorRead(PAXLDSensor_t *sensor);
+extern void sensorProcessData(PAXLDSensor_t *sensor);
 
 #endif
 
