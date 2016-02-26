@@ -2330,6 +2330,9 @@
       <file>
         <name>$PROJ_DIR$\src\Keller\PAxLD.h</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\src\Keller\sensor.c</name>
+      </file>
     </group>
     <group>
       <name>Stats</name>
