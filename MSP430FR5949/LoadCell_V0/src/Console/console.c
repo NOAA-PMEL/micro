@@ -1,5 +1,6 @@
 #include "console.h"
 
+static void CONSOLE_State_ManualCalibration(void);
 static void CONSOLE_DisplayState_Main(void);
 static void CONSOLE_DisplayState_ManualCalibrationInput(uint8_t line, float value);
 static void CONSOLE_DisplayMetadata(void);
@@ -7,12 +8,14 @@ static void CONSOLE_DisplayCalData(void);
 static void CONSOLE_Calibration(void);
 static void CONSOLE_SampleSensor(float *AverageValue);
 static void CONSOLE_ClearAllData(void);
+static void CONSOLE_CalibrationInputState(void);
 
 static uint8_t CONSOLE_InquireYesOrNoSave(void);
 static void RetreiveData(char *value, uint8_t *dataCount);
 static uint8_t RetreiveData2(char *value, uint8_t *dataCount);
 static uint8_t RetreiveSingleChar(char *value);
 static uint8_t StringFloatCheck(char *value,uint8_t length);
+static void RequestAnyKey(void);
 
 /*********************************************************************************
 *									GLOBAL FUNCTIONS
@@ -35,6 +38,15 @@ void CONSOLE_State_Main(void)
 
 	while(ExitConsoleFlag == false)
 	{
+      // Clear the buffers
+      DisplayValue = 0;
+      BufferC_Clear(&ConsoleData);
+      
+      
+        if(ExitFlag == true)
+        {
+          CONSOLE_DisplayState_Main();
+        }
         // Wait for User Input or Timeout
         ExitFlag = false;
         while((ExitFlag == false) && (MenuTimeoutA < 10))
@@ -48,18 +60,7 @@ void CONSOLE_State_Main(void)
 
 		}
 
-		// Check the Console buffer for new inputs.  If there is
-		// then transfer the data, clear the buffer and whittle
-		// the new data down to one value
-        
-        
-        
-//		if( BufferC_CheckForNewline(&ConsoleData) == BUFFER_C_NEWLINE_DETECTED)
-//		{
-//    	RetreiveData(&UserInputVal[0],&dataCount);
-//        NewlineFlag = true;
-//		}
-        
+        // Convert user input into menu state selection
         switch(DisplayValue)
         {
         case '1':
@@ -91,55 +92,7 @@ void CONSOLE_State_Main(void)
           
         }
 
-//        // Using user input, set the state commanded
-//		if(NewlineFlag == 1)
-//		{
-//			switch(UserInputVal[0])
-//			{
-//				case '1':
-//					UART_WriteChar('1',UART_A1);
-//          ConsoleState = Calibration;
-//					break;
-//				case '2':
-//					UART_WriteChar('2',UART_A1);
-//          ConsoleState = ManualCal;
-//					break;
-//				case '5':
-//					UART_WriteChar('5',UART_A1);
-//          ConsoleState = DisplayCal;
-//					break;
-//				case '6':
-//					UART_WriteChar('6',UART_A1);
-//          ConsoleState = DisplayMetadata;
-//					break;
-//				case '9':
-//					UART_WriteChar('9',UART_A1);
-//          ConsoleState = UpdateSN;
-//					break;
-//				case 'Q':
-//				case 'q':
-//					UART_WriteChar('Q',UART_A1);
-//          ConsoleState = Hold;
-//          ExitConsoleFlag = true;
-//					break;
-//				case '?':
-//					UART_WriteChar('\n', UART_A1);
-//					ConsoleState = Main;
-//					break;
-//				default:
-//          ConsoleState = Hold;
-//					UART_WriteChar('I',UART_A1);
-//					break;
-//			}
-//
-//            for(uint8_t i =0;i<BUFFER_C_SIZE;i++)
-//            {
-//              UserInputVal[i] = 0;
-//            }
-//            NewlineFlag = false;
-//		}
-
-        // Display the state commanded
+        // Run the state commanded
 		switch(ConsoleState)
 		{
 			case Hold:
@@ -155,6 +108,7 @@ void CONSOLE_State_Main(void)
 				MenuTimeoutA = 0;
 				break;
 			case ManualCal:
+                CONSOLE_State_ManualCalibration();
 				MenuTimeoutA = 0;
                 ConsoleState = Main;
 				break;
@@ -181,7 +135,6 @@ void CONSOLE_State_Main(void)
 
 
 		}
-        //ConsoleState = Hold;
 	}
 
 	UART_Write(&OutText[0],LENGTH_OF(OutText),UART_A1);
@@ -191,7 +144,12 @@ void CONSOLE_State_Main(void)
 
 
 
-void CONSOLE_State_ManualCalibration(void)
+
+/*********************************************************************************
+*									STATIC FUNCTIONS
+*********************************************************************************/
+
+static void CONSOLE_State_ManualCalibration(void)
 {
 	CONSOLE_DisplayState_ManualCalibrationInput(0,0);
 	CONSOLE_DisplayState_ManualCalibrationInput(1,1.1);
@@ -200,12 +158,9 @@ void CONSOLE_State_ManualCalibration(void)
 
 
 }
-/*********************************************************************************
-*									STATIC FUNCTIONS
-*********************************************************************************/
 static void CONSOLE_DisplayState_Main(void)
 {
-
+    uint8_t cls[] = "\033[2J";
 	uint8_t splash[] = "\n\r*********** MAIN *************\n\r\n";
 	uint8_t line0[] = "SERIAL #001\n\r";
 	uint8_t line1[] = "1 - Calibration Mode\n\r";
@@ -215,7 +170,8 @@ static void CONSOLE_DisplayState_Main(void)
 	uint8_t line5[] = "9 - Update Serial #\n\r";
 	uint8_t line6[] = "Q - Exit (to Log Mode)\n\n\r";
 
-	//UART_ClearChar();
+
+    UART_Write(&cls[0],LENGTH_OF(cls),UART_A1);
 	UART_Write(&splash[0],LENGTH_OF(splash),UART_A1);
 	UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
 	UART_Write(&line1[0],LENGTH_OF(line1),UART_A1);
@@ -275,10 +231,11 @@ static void CONSOLE_DisplayState_ManualCalibrationInput(uint8_t line, float valu
 
 static void CONSOLE_DisplayMetadata(void)
 {
+    
 	uint8_t line0[] = "\r\n\nSlope = ";
 	uint8_t line1[] = "Intercept = ";
-	char values[32];
-	uint8_t vals[32];
+	char values[32] = {0};
+	uint8_t vals[32] = {0};
 
 	sprintf(values, "%3.3f\r\n",Metadata.Slope);
 	for(uint8_t i=0;i<32;i++)
@@ -288,15 +245,17 @@ static void CONSOLE_DisplayMetadata(void)
 	UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
 	UART_Write(&vals[0],LENGTH_OF(values),UART_A1);
 
-	sprintf(values, "3.3%f\r\n",Metadata.Intercept);
+	sprintf(values, "%3.3f\r\n",Metadata.Intercept);
 	for(uint8_t i=0;i<32;i++)
 	{
 		vals[i] = (uint8_t) values[i];
 	}
 	UART_Write(&line1[0],LENGTH_OF(line1),UART_A1);
 	UART_Write(&vals[0],LENGTH_OF(values),UART_A1);
-	UART_WriteChar('>',UART_A1);
+    
 
+    // Wait for user or timeout
+    RequestAnyKey();
 
 	return;
 }
@@ -314,23 +273,25 @@ static void CONSOLE_DisplayCalData(void)
 	__delay_cycles(5000);
 	UART_WriteChar('\n',UART_A1);
 
+    
 	for(uint8_t i=0;i<METADATA_ARRAY_SIZE;i++)
 	{
 
-		sprintf(load,"Load[%d] = %6.2f(lbs)\r\n",i,Metadata.InputLoad[i]);
+		sprintf(load,"\r\nLoad[%d] = %6.2f(lbs)\r\n",i,Metadata.InputLoad[i]);
 		sprintf(pressure,"Pres[%d] = %6.2f(bar)\r\n",i,Metadata.RecordedData[i]);
 
-		//UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
 		UART_Write(&load[0],LENGTH_OF(load),UART_A1);
-		//UART_Write(&line1[0],LENGTH_OF(line1),UART_A1);
 		UART_Write(&pressure[0],LENGTH_OF(pressure),UART_A1);
-			__delay_cycles(5000);
+		__delay_cycles(5000);
 		UART_WriteChar('\r',UART_A1);
-			__delay_cycles(5000);
+		__delay_cycles(5000);
 		UART_WriteChar('\n',UART_A1);
 
 	}
 
+    
+    // Wait for user to command continue,or timeout
+    RequestAnyKey();
 
 }
 
@@ -450,7 +411,7 @@ static void CONSOLE_Calibration(void)
     return;
 }
 
-void CONSOLE_CalibrationInputState(void)
+static void CONSOLE_CalibrationInputState(void)
 {
   	uint8_t line0[] = "\r\n\r\nEnter load in LBS: ";
 	uint8_t line1[] = "Sampling\r\n";
@@ -463,7 +424,8 @@ void CONSOLE_CalibrationInputState(void)
 	uint8_t ExitFlag = false;
     uint8_t ValidFlag = false;
     uint8_t SaveValue =  false;
-	float tempLoad = NAN;
+    uint8_t UserValue = 0;
+	float UserInputLoad = NAN;
     
 	// Display user command
 	UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
@@ -502,7 +464,7 @@ void CONSOLE_CalibrationInputState(void)
 	if(ValidFlag == true)
     {
         // Convert the load string to a float variable
-      	tempLoad = atof(rxValues);
+      	UserInputLoad = atof(rxValues);
         
         // Initialize float sensor
         float SensorAverageValue = 0.0;
@@ -517,14 +479,45 @@ void CONSOLE_CalibrationInputState(void)
          // Query user to save data or exit without saving
         SaveValue = CONSOLE_InquireYesOrNoSave();
         
-        // If Save requested, store to permanent structure
-        if(SaveValue == true)
+        // If Save requested, store to permanent structure (FRAM)
+        // Otherwise revert to original data (in FRAM).
+        if(SaveValue == 'Y' || SaveValue == 'y')
         {
+          // 
+          if((Metadata.DataCounter + 1) >= METADATA_ARRAY_SIZE)
+          {
+            for(uint8_t i=1;i<METADATA_ARRAY_SIZE;i++)
+            {
+              Metadata.RecordedData[i-1] = Metadata.RecordedData[i];
+              Metadata.InputLoad[i-1] = Metadata.InputLoad[i];
+              Metadata.RecordedData[Metadata.DataCounter] = SensorAverageValue;
+              Metadata.InputLoad[Metadata.DataCounter] = UserInputLoad;
+            }
+          }
+          else
+          {
+            Metadata.RecordedData[Metadata.DataCounter] = SensorAverageValue;
+            Metadata.InputLoad[Metadata.DataCounter] = UserInputLoad;
+            Metadata.DataCounter = Metadata.DataCounter + 1;
+            
+          }
           
+
+          
+          
+          for(uint8_t i=0;i<METADATA_ARRAY_SIZE;i++)
+          {
+            FRAM_Metadata.RecordedData[i] = Metadata.RecordedData[i];
+            FRAM_Metadata.InputLoad[i] = Metadata.InputLoad[i];
+          }
         }
         else
         {
-          
+        	for(uint8_t i=0;i<METADATA_ARRAY_SIZE;i++)
+          {
+	          Metadata.RecordedData[i] = FRAM_Metadata.RecordedData[i];
+	          Metadata.InputLoad[i] = FRAM_Metadata.InputLoad[i];
+	        }
         }
         
     }
@@ -755,17 +748,56 @@ static void CONSOLE_ClearAllData(void)
   uint8_t line0[] = "\r\n\r\n*************WARNING*************\r\n\r\n";
   uint8_t line1[] = "THIS WILL PERMANENTLY RESET THE MEMORY\r\n";
   uint8_t line2[] = "\r\nDo you wish to continue? (Y or N): ";
+  uint8_t UserInput = 0;
   uint8_t SaveFlag = false;
   
   UART_Write(&line0[0], LENGTH_OF(line0),UART_A1);
   UART_Write(&line1[0], LENGTH_OF(line1),UART_A1);
   // Query for Y/N
-  SaveFlag = CONSOLE_InquireYesOrNoSave();
-  
+  UserInput = CONSOLE_InquireYesOrNoSave();
+  if(UserInput == 'Y')
+  { 
+    SaveFlag = true;
+  }
+  else
+  {
+    SaveFlag = false;
+  }
   if(SaveFlag == true)
   {
-    // Clear both temporary and FRAM data structures
+    // Clear Metadata in RAM
+    Metadata.Slope = 0;
+    Metadata.Intercept = 0;
+    Metadata.DataCounter = 0;
+    for(uint8_t i=0;i<METADATA_ARRAY_SIZE;i++)
+    {
+      Metadata.RecordedData[i] = 0;
+      Metadata.InputLoad[i] = 0;
+    }
+    // Clear Metadata in FRAM
+    FRAM_Metadata.Slope = 0;
+    FRAM_Metadata.Intercept = 0;
+    FRAM_Metadata.DataCounter = 0;
+    for(uint8_t i=0;i<METADATA_ARRAY_SIZE;i++)
+    {
+      FRAM_Metadata.RecordedData[i] = 0;
+      FRAM_Metadata.InputLoad[i] = 0;
+    }
   }
+  
+  return;
+}
+
+
+static void RequestAnyKey(void)
+{
+  uint8_t line0[] = "\r\nPress Any Key to Continue: ";
+  UART_WriteChar('\r',UART_A1);
+  __delay_cycles(5000);
+  UART_WriteChar('\n',UART_A1);
+  UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
+  MenuTimeoutA = 0;
+  while( (BufferC_IsEmpty(&ConsoleData) == BUFFER_IS_EMPTY) && MenuTimeoutA < ANYKEY_TIMEOUT);
   
   return;
 }
