@@ -71,6 +71,7 @@ void sensorProcessData(PAXLDSensor_t *sensor);
 void FRAM_RetreiveData(void);
 void FRAM_SaveData(void);
 
+void PMEL_OutputString(void);
 
 /***********************  Constants (In FRAM)  *****************************/
 const uint8_t sensorAddress = 0x46;
@@ -342,14 +343,14 @@ void STATE_Transmit(void)
   char sendString[64] = {0};
   uint8_t sendVal[64]= {0};
   
-
-  // Setup the Load report string
-  sprintf(sendString,"%3.4f,%3.4f,%3.4f,%3.4f,%3.1f\n\r",CurrentData.MeanLoad,CurrentData.STDLoad,CurrentData.MaxLoad,CurrentData.MinLoad,CurrentData.MeanTemperature);
-  memcpy(sendVal,sendString,64);
-  __delay_cycles(500000);
-  
-  // Write the load string
-  UART_Write(&sendVal[0],64,UART_A1);
+  PMEL_OutputString();
+//  // Setup the Load report string
+//  sprintf(sendString,"%3.4f,%3.4f,%3.4f,%3.4f,%3.1f\n\r",CurrentData.MeanLoad,CurrentData.STDLoad,CurrentData.MaxLoad,CurrentData.MinLoad,CurrentData.MeanTemperature);
+//  memcpy(sendVal,sendString,64);
+//  __delay_cycles(500000);
+//  
+//  // Write the load string
+//  UART_Write(&sendVal[0],64,UART_A1);
   
   return;
 }
@@ -445,3 +446,68 @@ void sensorProcessData(PAXLDSensor_t *sensor)
 
 
 
+void PMEL_OutputString(void)
+{
+  uint8_t BadStringLength[] = "STRING TOO LONG\r\n";
+  uint8_t OutputString[64] = {0};
+  uint8_t DataString[32] = {0};
+  uint8_t CRC_OutputH = 0;
+  uint8_t CRC_OutputL = 0;
+  uint8_t DataLengthH = 0;
+  uint8_t DataLengthL = 0;
+  uint16_t DataLength = 0;
+  uint8_t StringLength = 0;
+  uint16_t CRC_Output = 0;
+  uint16_t CRC_Init = 0xFFFF;
+  // Initialize the CRC
+  CRCINIRES = CRC_Init;
+  
+  
+  // Create the Data String
+  sprintf(DataString,",%.1f,%.2f,%.1f,%.1f,%.1f\r\n",CurrentData.MeanLoad,CurrentData.STDLoad,CurrentData.MaxLoad,CurrentData.MinLoad,CurrentData.MeanTemperature);
+  
+  // Look for the end of the string & Compute the CRC16
+  for(uint8_t i=0;i<32;i++)
+  {
+    if(DataString[i] == NULL)
+    {
+      DataLength = i;
+      i = 32;
+    }
+    else
+    {
+      // Add DataString[i] to the CRC generator
+      CRCDIRB = DataString[i];
+    }
+  }
+  
+  CRC_Output = CRCINIRES;
+  
+  CRC_OutputL = 0x00FF & CRC_Output;
+  CRC_OutputH = (0xFF00 & CRC_Output) >> 8;
+  
+  DataLengthL = 0x00FF & DataLength;
+  DataLengthH = (0x00FF & DataLength) >> 8;
+  
+  sprintf(OutputString,"@@@%d%d%d%d",CRC_OutputH,CRC_OutputL,DataLengthH,DataLengthL);
+  
+  for(uint8_t i=0;i<64;i++)
+  {
+    if(OutputString[i] == 0)
+    {
+      StringLength = i;
+      i = 64;
+    }
+  }
+  
+  if(StringLength <= (64 - DataLength))
+  {
+    memcpy(&OutputString[StringLength],DataString,DataLength);
+    UART_Write(&OutputString[0],LENGTH_OF(OutputString),UART_A1);
+    UART_WriteChar(DataLength,UART_A1);
+  }
+  else
+  {
+    UART_Write(&BadStringLength[0], LENGTH_OF(BadStringLength),UART_A1);
+  }
+}
