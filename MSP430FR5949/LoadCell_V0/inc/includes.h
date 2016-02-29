@@ -188,6 +188,20 @@ typedef struct _Metadata {
 }metadata_t;
 
 
+typedef struct _CurrentData {
+	float MeanPressure;
+	float MaxPressure;
+	float MinPressure;
+	float STDPressure;
+	float MeanTemperature;
+	float MeanLoad;
+	float MaxLoad;
+	float MinLoad;
+	float STDLoad;
+	
+	uint32_t crc;
+}CurrentData_t;
+
 /************************************************************************
 *							GLOBAL VARIABLES
 ************************************************************************/

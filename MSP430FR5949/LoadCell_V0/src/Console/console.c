@@ -742,7 +742,7 @@ static void CONSOLE_SampleSensor(float *AverageValue)
   
   BufferF_Clear(&SampleData);
 
-  // Turn on the device
+  // Turn the sensor ON
   FET_ON();
 
   // Display text
@@ -766,7 +766,8 @@ static void CONSOLE_SampleSensor(float *AverageValue)
     while(MenuTimeoutA < 1);
   }
 
- 
+  // Turn the sensor OFF to conserve power
+  FET_OFF();
 
   // Retreive Pressures from Buffer
   sampleCount = 0;
