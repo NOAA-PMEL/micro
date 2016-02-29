@@ -151,12 +151,128 @@ void CONSOLE_State_Main(void)
 
 static void CONSOLE_State_ManualCalibration(void)
 {
+  uint8_t ExitFlag =  false;
+  uint8_t ValidFlag = false;
+  uint8_t dataCount = 0;
+  uint8_t SaveValue = false;
+  uint8_t rxValues[32] = {0};
+  uint8_t saveline[] = "\r\n\nSave Data?";
+  float slope = 0.0;
+  float intercept = 0.0;
+  
+  // Display Slope input command
 	CONSOLE_DisplayState_ManualCalibrationInput(0,0);
-	CONSOLE_DisplayState_ManualCalibrationInput(1,1.1);
-	CONSOLE_DisplayState_ManualCalibrationInput(2,0);
-	CONSOLE_DisplayState_ManualCalibrationInput(3,86.7);
+    
+  // Wait for user input SLOPE
+  while(ExitFlag == false)
+  {
+      if(MenuTimeoutA > CALIBRATION_TIMEOUT)
+      {
+          ExitFlag = true;
+      }
+
+      // Check for newline in the buffer.  If it exists, retreive the data and process it.
+      if(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
+      {
+        ExitFlag = RetreiveData2(&rxValues[dataCount++],&dataCount);
+
+      }
 
 
+  }
+
+  // Check string for valid ascii values
+  if(dataCount > 0){
+    
+    ValidFlag = StringFloatCheck(&rxValues[0],--dataCount);
+  }
+  else
+  {
+    ValidFlag = false;
+  }
+
+  // If a valid value is input, sample the sensor and ask if user wants to save
+  // Otherwise, retry
+  if(ValidFlag == true)
+  {
+      // Convert the load string to a float variable
+      slope = atof(rxValues);
+      
+  }
+  // Clear the buffers & temp variables
+  for(uint8_t i=0;i<32;i++)
+  {
+    rxValues[i] = 0;
+  }
+  BufferC_Clear(&ConsoleData);
+  ValidFlag = false;
+  ExitFlag = false;
+  dataCount = 0;
+
+  // Display INTERCEPT input command
+  CONSOLE_DisplayState_ManualCalibrationInput(2,0);
+  
+  // Wait for user input INTERCEPT
+  while(ExitFlag == false)
+  {
+      if(MenuTimeoutA > CALIBRATION_TIMEOUT)
+      {
+          ExitFlag = true;
+      }
+
+      // Check for newline in the buffer.  If it exists, retreive the data and process it.
+      if(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
+      {
+        ExitFlag = RetreiveData2(&rxValues[dataCount++],&dataCount);
+
+      }
+
+
+  }
+
+  // Check string for valid ascii values
+  if(dataCount > 0){
+    
+    ValidFlag = StringFloatCheck(&rxValues[0],--dataCount);
+  }
+  else
+  {
+    ValidFlag = false;
+  }
+  
+  // If a valid value is input, sample the sensor and ask if user wants to save
+  // Otherwise, retry
+  if(ValidFlag == true)
+  {
+      // Convert the load string to a float variable
+      intercept = atof(rxValues);
+      
+  }
+  
+  // Clear the buffer
+  BufferC_Clear(&ConsoleData);
+  
+  // Display User input SLOPE & INTERCEPT
+  CONSOLE_DisplayState_ManualCalibrationInput(1,slope);
+  CONSOLE_DisplayState_ManualCalibrationInput(3,intercept);
+  
+  // Wait for user or timeout
+  RequestAnyKey();
+  
+  // Query user to save data or exit without saving
+  UART_Write(&saveline[0],LENGTH_OF(saveline),UART_A1);
+  SaveValue = CONSOLE_InquireYesOrNoSave();
+
+  if(SaveValue == 'Y' || SaveValue == 'y')
+  {
+    Metadata.Slope = slope;
+    Metadata.Intercept = intercept;
+    FRAM_Metadata.Slope = slope;
+    FRAM_Metadata.Intercept = intercept;
+  }
+  
+  return;
+  
 }
 static void CONSOLE_DisplayState_Main(void)
 {
@@ -188,9 +304,9 @@ static void CONSOLE_DisplayState_Main(void)
 static void CONSOLE_DisplayState_ManualCalibrationInput(uint8_t line, float value)
 {
 	uint8_t line0[] = "\n\rEnter SLOPE (xxxx.y): ";
-	uint8_t line1[] = "\n\rSlope = ";
+	uint8_t line1[] = "\r\n\r\nSlope = ";
 	uint8_t line2[] = "\n\rEnter INTERCEPT (xxx.y): ";
-	uint8_t line3[] = "\n\rIntercept = ";
+	uint8_t line3[] = "Intercept = ";
 	uint8_t temp[16] = "";
 
 	// check valid input conditions
