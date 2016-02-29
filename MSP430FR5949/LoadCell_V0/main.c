@@ -71,7 +71,7 @@ void sensorProcessData(PAXLDSensor_t *sensor);
 void FRAM_RetreiveData(void);
 void FRAM_SaveData(void);
 
-void convertLoadToPressure(void);
+
 /***********************  Constants (In FRAM)  *****************************/
 const uint8_t sensorAddress = 0x46;
 const uint8_t sensorEOCPort = 3;
@@ -140,6 +140,7 @@ int main(void) {
   // Temporary fakeout values;
   Metadata.Slope = 100;
   Metadata.Intercept = 1000;
+ 
   
 	// Set the sensor I2C address -> Change for production
   pxSensor.address = 0x46;
@@ -301,21 +302,28 @@ void STATE_Sample(void)
 void STATE_Compute(void)
 {
   	float TempF[BUFFER_F_SIZE] = {0};
-
+    
+    
     // Retreive Pressures from Buffer
     sampleCount = 0;
     while(BufferF_IsEmpty(&PressureDataBuffer) == BUFFER_NOT_EMPTY)
     {
-    	BufferF_Get(&PressureDataBuffer,&TempF[sampleCount++]);
+      BufferF_Get(&PressureDataBuffer,&TempF[sampleCount++]);
+    }
+    
+    // Convert to Load
+    for(uint8_t i=0;i<sampleCount;i++)
+    {
+      TempF[i] *= Metadata.Slope;
+      TempF[i] += Metadata.Intercept;
     }
    
-    // Run Stats on the pressures
-    STATS_CalculateMean(&TempF[0],sampleCount, &CurrentData.MeanPressure);
-    STATS_ComputeSTD(&TempF[0],sampleCount,CurrentData.MeanPressure,&CurrentData.STDPressure);
     
-    //STATS_ComputeSTD(&TempF[0],sampleCount,PressureMean,&TempF);
-    STATS_FindMax(&TempF[0],sampleCount,&CurrentData.MaxPressure);
-    STATS_FindMin(&TempF[0],sampleCount,&CurrentData.MinPressure);
+    // Run Stats on the pressures
+    STATS_CalculateMean(&TempF[0],sampleCount, &CurrentData.MeanLoad);
+    STATS_ComputeSTD(&TempF[0],sampleCount,CurrentData.MeanLoad,&CurrentData.STDLoad);
+    STATS_FindMax(&TempF[0],sampleCount,&CurrentData.MaxLoad);
+    STATS_FindMin(&TempF[0],sampleCount,&CurrentData.MinLoad);
 
     // Retreive Temperatures from buffer
     sampleCount = 0;
@@ -331,8 +339,7 @@ void STATE_Compute(void)
     // Find mean of the temperature for reporting
     STATS_CalculateMean(&TempF[0],sampleCount,&CurrentData.MeanTemperature);
     
-    // Convert Pressure to Load
-    convertLoadToPressure();
+
   
 }
 
@@ -356,15 +363,10 @@ void STATE_Transmit(void)
 
 void STATE_Console(void)
 {
-	MenuTimeoutA = 0;
-	CONSOLE_State_Main();
-	
-		
-	
-		
- 	
-  
-  
+  MenuTimeoutA = 0;
+  CONSOLE_State_Main();
+
+  return;
 }
 
 
@@ -449,13 +451,3 @@ void sensorProcessData(PAXLDSensor_t *sensor)
 
 
 
-void convertLoadToPressure(void)
-{
-  // Y = Mx + B
-  CurrentData.MeanLoad = (CurrentData.MeanPressure * Metadata.Slope) + Metadata.Intercept;
-  CurrentData.STDLoad = (CurrentData.STDPressure * Metadata.Slope) + Metadata.Intercept;
-  CurrentData.MaxLoad = (CurrentData.MaxPressure * Metadata.Slope) + Metadata.Intercept;
-  CurrentData.MinLoad = (CurrentData.MinPressure * Metadata.Slope) + Metadata.Intercept;
-	
-	return;
-}

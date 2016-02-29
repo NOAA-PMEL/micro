@@ -17,6 +17,8 @@ static uint8_t RetreiveSingleChar(char *value);
 static uint8_t StringFloatCheck(char *value,uint8_t length);
 static void RequestAnyKey(void);
 
+static void CALCULATE_SlopeAndIntercept(void);
+
 /*********************************************************************************
 *									GLOBAL FUNCTIONS
 *********************************************************************************/
@@ -35,6 +37,8 @@ void CONSOLE_State_Main(void)
 	CONSOLE_DisplayState_Main();
 	ConsoleState = Hold;
 
+	
+	
 
 	while(ExitConsoleFlag == false)
 	{
@@ -499,6 +503,7 @@ static void CONSOLE_Calibration(void)
           CalibrationState = CalHold;
           break;
         case CalculateSandI:
+          CALCULATE_SlopeAndIntercept();
           CalibrationState = CalHold;
           break;
         case DisplayCalValues:
@@ -533,6 +538,7 @@ static void CONSOLE_CalibrationInputState(void)
 	uint8_t line1[] = "Sampling\r\n";
     uint8_t line2y[] = "Data Saved\r\n";
     uint8_t line2n[] = "Data NOT Saved\r\n";
+    uint8_t CalculateString[] = "\r\nCalculate Slope & Intercept?";
     uint8_t rxValues[BUFFER_C_SIZE] = {0};
     uint8_t DisplayBuffer[32] = {0};
 	uint8_t dataCount = 0;
@@ -643,7 +649,19 @@ static void CONSOLE_CalibrationInputState(void)
       UART_Write(&returnline[0],LENGTH_OF(returnline),UART_A1);
       return;
     }
-
+    
+    BufferC_Clear(&ConsoleData);
+    // Query user for calculating metadata
+    SaveValue = false;
+    UART_Write(&CalculateString[0], LENGTH_OF(CalculateString), UART_A1);
+    SaveValue = CONSOLE_InquireYesOrNoSave();
+    if(SaveValue == true)
+    {
+      CALCULATE_SlopeAndIntercept();
+    }
+    
+    BufferC_Clear(&ConsoleData); 
+    return;  
 }
 
 
@@ -917,4 +935,72 @@ static void RequestAnyKey(void)
   while( (BufferC_IsEmpty(&ConsoleData) == BUFFER_IS_EMPTY) && MenuTimeoutA < ANYKEY_TIMEOUT);
   
   return;
+}
+
+
+static void CALCULATE_SlopeAndIntercept(void)
+{
+	float x_mean = 0.0;
+	float y_mean = 0.0;
+	float m = 0.0;
+	float b = 0.0;
+	float tempX =0.0;
+	float tempY = 0.0;
+	float tempNum= 0.0;
+	float tempDen = 0.0;
+    uint8_t SaveFlag = false;
+    uint8_t SaveText[] = "\r\n\nSave Calculated Slope & Intercept?";
+     
+	// Calculate the mean values
+	for(uint8_t i=0;i<Metadata.DataCounter;i++)
+	{
+		x_mean += Metadata.RecordedData[i];
+		y_mean += Metadata.InputLoad[i];
+	}
+	
+	x_mean /= (Metadata.DataCounter);
+	y_mean /= (Metadata.DataCounter);
+	
+	// Calculate M value
+	for(uint8_t i=0;i<Metadata.DataCounter;i++)
+	{
+		tempX = Metadata.RecordedData[i] - x_mean;
+		tempY = Metadata.InputLoad[i] - y_mean;
+		tempNum += (tempX * tempY);
+		tempDen += (tempX * tempX);
+		
+	}	
+	m = tempNum/tempDen;
+	
+	
+	b = y_mean - (m*x_mean);
+
+    // Round to nearest 0.001
+    m *= 1000;
+    m = round(m);
+    m /= 1000;
+    
+    b *= 1000;
+    b = round(b);
+    b /= 1000;
+    
+    UART_Write(&SaveText[0],LENGTH_OF(SaveText), UART_A1);
+    SaveFlag = CONSOLE_InquireYesOrNoSave();
+    
+    if(SaveFlag == 'Y' || SaveFlag == 'y')
+    {
+      Metadata.Slope = m;
+      Metadata.Intercept = b;
+      FRAM_Metadata.Slope = m;
+      FRAM_Metadata.Intercept = b;
+    }
+    else
+    {
+      Metadata.Slope = FRAM_Metadata.Slope;
+      Metadata.Intercept = FRAM_Metadata.Intercept;
+    }
+    
+    CONSOLE_DisplayMetadata();
+    
+	return;
 }

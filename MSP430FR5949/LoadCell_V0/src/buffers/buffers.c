@@ -195,7 +195,7 @@ int8_t BufferC_CheckForNewline(CircularBufferC_s *buf)
 		return BUFFER_IS_EMPTY;
 	}
 	
-	// Read leading right?
+	// Read leading write?
 	if(buf->read > buf->write)
 	{
 		length = ACTUAL_BUFFER_C_SIZE - buf->read;

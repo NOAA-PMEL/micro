@@ -17,6 +17,8 @@ static uint8_t RetreiveSingleChar(char *value);
 static uint8_t StringFloatCheck(char *value,uint8_t length);
 static void RequestAnyKey(void);
 
+static void CALCULATE_SlopeAndIntercept(void);
+
 /*********************************************************************************
 *									GLOBAL FUNCTIONS
 *********************************************************************************/
@@ -35,6 +37,8 @@ void CONSOLE_State_Main(void)
 	CONSOLE_DisplayState_Main();
 	ConsoleState = Hold;
 
+	
+	
 
 	while(ExitConsoleFlag == false)
 	{
@@ -151,12 +155,128 @@ void CONSOLE_State_Main(void)
 
 static void CONSOLE_State_ManualCalibration(void)
 {
+  uint8_t ExitFlag =  false;
+  uint8_t ValidFlag = false;
+  uint8_t dataCount = 0;
+  uint8_t SaveValue = false;
+  uint8_t rxValues[32] = {0};
+  uint8_t saveline[] = "\r\n\nSave Data?";
+  float slope = 0.0;
+  float intercept = 0.0;
+  
+  // Display Slope input command
 	CONSOLE_DisplayState_ManualCalibrationInput(0,0);
-	CONSOLE_DisplayState_ManualCalibrationInput(1,1.1);
-	CONSOLE_DisplayState_ManualCalibrationInput(2,0);
-	CONSOLE_DisplayState_ManualCalibrationInput(3,86.7);
+    
+  // Wait for user input SLOPE
+  while(ExitFlag == false)
+  {
+      if(MenuTimeoutA > CALIBRATION_TIMEOUT)
+      {
+          ExitFlag = true;
+      }
+
+      // Check for newline in the buffer.  If it exists, retreive the data and process it.
+      if(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
+      {
+        ExitFlag = RetreiveData2(&rxValues[dataCount++],&dataCount);
+
+      }
 
 
+  }
+
+  // Check string for valid ascii values
+  if(dataCount > 0){
+    
+    ValidFlag = StringFloatCheck(&rxValues[0],--dataCount);
+  }
+  else
+  {
+    ValidFlag = false;
+  }
+
+  // If a valid value is input, sample the sensor and ask if user wants to save
+  // Otherwise, retry
+  if(ValidFlag == true)
+  {
+      // Convert the load string to a float variable
+      slope = atof(rxValues);
+      
+  }
+  // Clear the buffers & temp variables
+  for(uint8_t i=0;i<32;i++)
+  {
+    rxValues[i] = 0;
+  }
+  BufferC_Clear(&ConsoleData);
+  ValidFlag = false;
+  ExitFlag = false;
+  dataCount = 0;
+
+  // Display INTERCEPT input command
+  CONSOLE_DisplayState_ManualCalibrationInput(2,0);
+  
+  // Wait for user input INTERCEPT
+  while(ExitFlag == false)
+  {
+      if(MenuTimeoutA > CALIBRATION_TIMEOUT)
+      {
+          ExitFlag = true;
+      }
+
+      // Check for newline in the buffer.  If it exists, retreive the data and process it.
+      if(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
+      {
+        ExitFlag = RetreiveData2(&rxValues[dataCount++],&dataCount);
+
+      }
+
+
+  }
+
+  // Check string for valid ascii values
+  if(dataCount > 0){
+    
+    ValidFlag = StringFloatCheck(&rxValues[0],--dataCount);
+  }
+  else
+  {
+    ValidFlag = false;
+  }
+  
+  // If a valid value is input, sample the sensor and ask if user wants to save
+  // Otherwise, retry
+  if(ValidFlag == true)
+  {
+      // Convert the load string to a float variable
+      intercept = atof(rxValues);
+      
+  }
+  
+  // Clear the buffer
+  BufferC_Clear(&ConsoleData);
+  
+  // Display User input SLOPE & INTERCEPT
+  CONSOLE_DisplayState_ManualCalibrationInput(1,slope);
+  CONSOLE_DisplayState_ManualCalibrationInput(3,intercept);
+  
+  // Wait for user or timeout
+  RequestAnyKey();
+  
+  // Query user to save data or exit without saving
+  UART_Write(&saveline[0],LENGTH_OF(saveline),UART_A1);
+  SaveValue = CONSOLE_InquireYesOrNoSave();
+
+  if(SaveValue == 'Y' || SaveValue == 'y')
+  {
+    Metadata.Slope = slope;
+    Metadata.Intercept = intercept;
+    FRAM_Metadata.Slope = slope;
+    FRAM_Metadata.Intercept = intercept;
+  }
+  
+  return;
+  
 }
 static void CONSOLE_DisplayState_Main(void)
 {
@@ -188,9 +308,9 @@ static void CONSOLE_DisplayState_Main(void)
 static void CONSOLE_DisplayState_ManualCalibrationInput(uint8_t line, float value)
 {
 	uint8_t line0[] = "\n\rEnter SLOPE (xxxx.y): ";
-	uint8_t line1[] = "\n\rSlope = ";
+	uint8_t line1[] = "\r\n\r\nSlope = ";
 	uint8_t line2[] = "\n\rEnter INTERCEPT (xxx.y): ";
-	uint8_t line3[] = "\n\rIntercept = ";
+	uint8_t line3[] = "Intercept = ";
 	uint8_t temp[16] = "";
 
 	// check valid input conditions
@@ -383,6 +503,7 @@ static void CONSOLE_Calibration(void)
           CalibrationState = CalHold;
           break;
         case CalculateSandI:
+          CALCULATE_SlopeAndIntercept();
           CalibrationState = CalHold;
           break;
         case DisplayCalValues:
@@ -424,6 +545,7 @@ static void CONSOLE_CalibrationInputState(void)
 	uint8_t ExitFlag = false;
     uint8_t ValidFlag = false;
     uint8_t SaveValue =  false;
+    uint8_t UserValue = 0;
 	float UserInputLoad = NAN;
     
 	// Display user command
@@ -480,7 +602,7 @@ static void CONSOLE_CalibrationInputState(void)
         
         // If Save requested, store to permanent structure (FRAM)
         // Otherwise revert to original data (in FRAM).
-        if(SaveValue == true)
+        if(SaveValue == 'Y' || SaveValue == 'y')
         {
           // 
           if((Metadata.DataCounter + 1) >= METADATA_ARRAY_SIZE)
@@ -489,15 +611,19 @@ static void CONSOLE_CalibrationInputState(void)
             {
               Metadata.RecordedData[i-1] = Metadata.RecordedData[i];
               Metadata.InputLoad[i-1] = Metadata.InputLoad[i];
+              Metadata.RecordedData[Metadata.DataCounter] = SensorAverageValue;
+              Metadata.InputLoad[Metadata.DataCounter] = UserInputLoad;
             }
           }
           else
           {
+            Metadata.RecordedData[Metadata.DataCounter] = SensorAverageValue;
+            Metadata.InputLoad[Metadata.DataCounter] = UserInputLoad;
             Metadata.DataCounter = Metadata.DataCounter + 1;
+            
           }
           
-          Metadata.RecordedData[Metadata.DataCounter] = SensorAverageValue;
-          Metadata.InputLoad[Metadata.DataCounter] = UserInputLoad
+
           
           
           for(uint8_t i=0;i<METADATA_ARRAY_SIZE;i++)
@@ -522,7 +648,18 @@ static void CONSOLE_CalibrationInputState(void)
       UART_Write(&returnline[0],LENGTH_OF(returnline),UART_A1);
       return;
     }
-
+    
+    
+    // Query user for calculating metadata
+    SaveValue = false;
+    SaveValue = CONSOLE_InquireYesOrNoSave();
+    if(SaveFlag == true)
+    {
+      CALCULATE_SlopeAndIntercept();
+    }
+    
+      
+    return;  
 }
 
 
@@ -621,7 +758,7 @@ static void CONSOLE_SampleSensor(float *AverageValue)
   
   BufferF_Clear(&SampleData);
 
-  // Turn on the device
+  // Turn the sensor ON
   FET_ON();
 
   // Display text
@@ -645,7 +782,8 @@ static void CONSOLE_SampleSensor(float *AverageValue)
     while(MenuTimeoutA < 1);
   }
 
- 
+  // Turn the sensor OFF to conserve power
+  FET_OFF();
 
   // Retreive Pressures from Buffer
   sampleCount = 0;
@@ -795,4 +933,72 @@ static void RequestAnyKey(void)
   while( (BufferC_IsEmpty(&ConsoleData) == BUFFER_IS_EMPTY) && MenuTimeoutA < ANYKEY_TIMEOUT);
   
   return;
+}
+
+
+static void CALCULATE_SlopeAndIntercept(void)
+{
+	float x_mean = 0.0;
+	float y_mean = 0.0;
+	float m = 0.0;
+	float b = 0.0;
+	float tempX =0.0;
+	float tempY = 0.0;
+	float tempNum= 0.0;
+	float tempDen = 0.0;
+    uint8_t SaveFlag = false;
+    uint8_t SaveText[] = "\r\n\nSave Calculated Slope & Intercept?";
+     
+	// Calculate the mean values
+	for(uint8_t i=0;i<Metadata.DataCounter;i++)
+	{
+		x_mean += Metadata.RecordedData[i];
+		y_mean += Metadata.InputLoad[i];
+	}
+	
+	x_mean /= (Metadata.DataCounter);
+	y_mean /= (Metadata.DataCounter);
+	
+	// Calculate M value
+	for(uint8_t i=0;i<Metadata.DataCounter;i++)
+	{
+		tempX = Metadata.RecordedData[i] - x_mean;
+		tempY = Metadata.InputLoad[i] - y_mean;
+		tempNum += (tempX * tempY);
+		tempDen += (tempX * tempX);
+		
+	}	
+	m = tempNum/tempDen;
+	
+	
+	b = y_mean - (m*x_mean);
+
+    // Round to nearest 0.001
+    m *= 1000;
+    m = round(m);
+    m /= 1000;
+    
+    b *= 1000;
+    b = round(b);
+    b /= 1000;
+    
+    UART_Write(&SaveText[0],LENGTH_OF(SaveText), UART_A1);
+    SaveFlag = CONSOLE_InquireYesOrNoSave();
+    
+    if(SaveFlag == 'Y' || SaveFlag == 'y')
+    {
+      Metadata.Slope = m;
+      Metadata.Intercept = b;
+      FRAM_Metadata.Slope = m;
+      FRAM_Metadata.Intercept = b;
+    }
+    else
+    {
+      Metadata.Slope = FRAM_Metadata.Slope;
+      Metadata.Intercept = FRAM_Metadata.Intercept;
+    }
+    
+    CONSOLE_DisplayMetadata();
+    
+	return;
 }
