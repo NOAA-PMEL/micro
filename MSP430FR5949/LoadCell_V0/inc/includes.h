@@ -209,8 +209,7 @@ typedef struct _CurrentData {
 //extern console_t console;
 
 #ifdef PMEL
-extern float slope;
-extern float intercept;
+
 
 // Flags and counters
 //extern volatile FLAGS TimerFlags;

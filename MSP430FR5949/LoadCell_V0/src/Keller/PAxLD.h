@@ -116,10 +116,10 @@ typedef struct PAXLD {
 	uint8_t data[PAXLD_DATA_LENGTH];
 	int32_t pressureCount;
 	uint16_t temperatureCount;
-	double pressure;
-	double temperature;
-	double pressureMin;
-	double pressureMax;
+	float pressure;
+	float temperature;
+	float pressureMin;
+	float pressureMax;
 }PAXLD_t;
 
 

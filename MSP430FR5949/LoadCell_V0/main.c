@@ -90,14 +90,8 @@ volatile uint32_t sampleTimer = 0;
 volatile uint8_t errorCounter = 0;
 volatile double pressure = 0.0;
 
-float slope = 0;
-float intercept = 0;
 
-//float Pressures[BUFFER_F_SIZE] = {0};
-//float PressureMean = 0;
-//float PressureMax = 0;
-//float PressureMin = 0;
-//float PressureSTD = 0;
+
 
 //float Temperatures[BUFFER_F_SIZE] = {0};
 float TemperatureMean = 0;
@@ -138,8 +132,8 @@ int main(void) {
 	FRAM_RetreiveData();
 	
   // Temporary fakeout values;
-  Metadata.Slope = 100;
-  Metadata.Intercept = 1000;
+//  Metadata.Slope = 100;
+//  Metadata.Intercept = 1000;
  
   
 	// Set the sensor I2C address -> Change for production

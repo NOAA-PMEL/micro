@@ -11,7 +11,7 @@ static void CONSOLE_ClearAllData(void);
 static void CONSOLE_CalibrationInputState(void);
 
 static uint8_t CONSOLE_InquireYesOrNoSave(void);
-static void RetreiveData(char *value, uint8_t *dataCount);
+//static void RetreiveData(char *value, uint8_t *dataCount);
 static uint8_t RetreiveData2(char *value, uint8_t *dataCount);
 static uint8_t RetreiveSingleChar(char *value);
 static uint8_t StringFloatCheck(char *value,uint8_t length);
@@ -26,9 +26,6 @@ void CONSOLE_State_Main(void)
 {
 	uint8_t OutText[] = "\n\rRestarting Sampling\r\n";
 	uint8_t ExitConsoleFlag = false;
-	char UserInputVal[BUFFER_C_SIZE] = {0};
-	uint8_t NewlineFlag = 0;
-	uint8_t dataCount = 0;
     uint8_t ExitFlag = false;
     uint8_t DisplayValue = 0;
     
@@ -383,8 +380,6 @@ static void CONSOLE_DisplayMetadata(void)
 
 static void CONSOLE_DisplayCalData(void)
 {
-	uint8_t line0[] = "Load[";
-	uint8_t line1[] = "Pressure[";
 	uint8_t load[32] = {0};
 	uint8_t pressure[32] = {0};
 
@@ -536,16 +531,15 @@ static void CONSOLE_CalibrationInputState(void)
 {
   	uint8_t line0[] = "\r\n\r\nEnter load in LBS: ";
 	uint8_t line1[] = "Sampling\r\n";
-    uint8_t line2y[] = "Data Saved\r\n";
-    uint8_t line2n[] = "Data NOT Saved\r\n";
+    uint8_t CalculateString[] = "\r\nCalculate Slope & Intercept?";
     uint8_t rxValues[BUFFER_C_SIZE] = {0};
     uint8_t DisplayBuffer[32] = {0};
 	uint8_t dataCount = 0;
-	uint8_t NewlineFlag = false;
+
 	uint8_t ExitFlag = false;
     uint8_t ValidFlag = false;
     uint8_t SaveValue =  false;
-    uint8_t UserValue = 0;
+
 	float UserInputLoad = NAN;
     
 	// Display user command
@@ -649,58 +643,59 @@ static void CONSOLE_CalibrationInputState(void)
       return;
     }
     
-    
+    BufferC_Clear(&ConsoleData);
     // Query user for calculating metadata
     SaveValue = false;
+    UART_Write(&CalculateString[0], LENGTH_OF(CalculateString), UART_A1);
     SaveValue = CONSOLE_InquireYesOrNoSave();
-    if(SaveFlag == true)
+    if(SaveValue == true)
     {
       CALCULATE_SlopeAndIntercept();
     }
     
-      
+    BufferC_Clear(&ConsoleData); 
     return;  
 }
 
 
-static void RetreiveData(char *value, uint8_t *dataCount)
-{
-	uint8_t NewlineFlag = false;
-    uint8_t count = 0;
-	char rxValues[BUFFER_C_SIZE] = {0};
-
-	count = 0;
-	while(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
-	{
-		BufferC_Get(&ConsoleData, &rxValues[count++]);
-	}
-
-	BufferC_Clear(&ConsoleData);
-	NewlineFlag = false;
-	for(uint8_t i =0;i<BUFFER_C_SIZE;i++)
-	{
-		// Check for newline character
-		if(rxValues[i] == '\n'  || rxValues[i] == '\r')
-		{
-		NewlineFlag = i;
-		}
-
-		// If the newline flag is write a zero to values, otherwise use retreived value
-		if(NewlineFlag == true)
-		{
-		value[i] =0;
-		}
-		else
-		{
-			value[i] = rxValues[i];
-		}
-
-
-	}
-
-	*dataCount = count;
-	return;
-}
+//static void RetreiveData(char *value, uint8_t *dataCount)
+//{
+//	uint8_t NewlineFlag = false;
+//    uint8_t count = 0;
+//	char rxValues[BUFFER_C_SIZE] = {0};
+//
+//	count = 0;
+//	while(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
+//	{
+//		BufferC_Get(&ConsoleData, &rxValues[count++]);
+//	}
+//
+//	BufferC_Clear(&ConsoleData);
+//	NewlineFlag = false;
+//	for(uint8_t i =0;i<BUFFER_C_SIZE;i++)
+//	{
+//		// Check for newline character
+//		if(rxValues[i] == '\n'  || rxValues[i] == '\r')
+//		{
+//		NewlineFlag = i;
+//		}
+//
+//		// If the newline flag is write a zero to values, otherwise use retreived value
+//		if(NewlineFlag == true)
+//		{
+//		value[i] =0;
+//		}
+//		else
+//		{
+//			value[i] = rxValues[i];
+//		}
+//
+//
+//	}
+//
+//	*dataCount = count;
+//	return;
+//}
 
 
 static uint8_t RetreiveData2(char *value, uint8_t *dataCount)
@@ -752,7 +747,6 @@ static void CONSOLE_SampleSensor(float *AverageValue)
 	CircularBufferF_s SampleData;
   uint8_t line0[] = "\r\nSampling";
   uint8_t sampleCount = 0;
-  uint8_t SaveValue = false;
   float TempF[CALIBRATION_SAMPLE_COUNT] = {0};
   float PressureMean = 0;
   
@@ -880,7 +874,7 @@ static void CONSOLE_ClearAllData(void)
 {
   uint8_t line0[] = "\r\n\r\n*************WARNING*************\r\n\r\n";
   uint8_t line1[] = "THIS WILL PERMANENTLY RESET THE MEMORY\r\n";
-  uint8_t line2[] = "\r\nDo you wish to continue? (Y or N): ";
+
   uint8_t UserInput = 0;
   uint8_t SaveFlag = false;
   

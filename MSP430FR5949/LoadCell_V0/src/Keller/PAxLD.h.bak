@@ -89,7 +89,7 @@
 #define WRITE_REQUEST	(2)
 
 
-
+// Scaling commands
 #define PAXLD_SCALING1_CMD (0x13)
 #define PAXLD_SCALING2_CMD (0x14)
 #define PAXLD_SCALING3_CMD (0x15)

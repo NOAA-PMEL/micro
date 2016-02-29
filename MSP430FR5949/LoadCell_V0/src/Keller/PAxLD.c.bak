@@ -260,12 +260,6 @@ void PAxLDRequestScaleValues(PAXLD_t *sensor)
 	tempX.i = temp2;
 	sensor->pressureMax = (double) tempX.f;
 
-//    if((sensor->pressureMin - sensor->factoryMin) > 1.0 || (sensor->pressureMin - sensor->factoryMin) < -1.0)
-//    {
-//      // Use factory
-//      sensor->pressureMin = sensor->factoryMin;
-//    }
-
 	return;
 }
 

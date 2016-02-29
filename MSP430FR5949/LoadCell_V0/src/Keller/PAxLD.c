@@ -22,8 +22,8 @@
 ************************************************************************/
 void PAxLDNullStructure(PAXLD_t *sensor);
 static uint8_t	PopulateSensorStruct( PAXLD_t *sensor);
-static double PAxLDConvertPressureData( uint16_t counts, double pressureMin, double pressureMax);
-static double PAxLDConvertTemperatureData( uint16_t counts);
+static float PAxLDConvertPressureData( uint16_t counts, float pressureMin, float pressureMax);
+static float PAxLDConvertTemperatureData( uint16_t counts);
 static void PAxLDMemoryRead(PAXLD_t *sensor, uint16_t *cmd, uint8_t dataLength);
 static void PAxLDNullStructureDataOnly(PAXLD_t *sensor);
 /************************************************************************
@@ -237,7 +237,7 @@ void PAxLDRequestScaleValues(PAXLD_t *sensor)
 	temp2 = (uint32_t) temp0 << 16;
 	temp2 += (uint32_t) temp1;
 	tempX.i = temp2;
-	sensor->pressureMin = (double) tempX.f;
+	sensor->pressureMin = (float) tempX.f;
 
 	// Retreive Scaling 3 Data
 	cmdVal = PAXLD_SCALING3_CMD;
@@ -258,7 +258,7 @@ void PAxLDRequestScaleValues(PAXLD_t *sensor)
 	temp2 = (uint32_t) temp0 << 16;
 	temp2 += (uint32_t) temp1;
 	tempX.i = temp2;
-	sensor->pressureMax = (double) tempX.f;
+	sensor->pressureMax = (float) tempX.f;
 
 	return;
 }
@@ -441,9 +441,9 @@ static uint8_t	PopulateSensorStruct( PAXLD_t *sensor)
 	return(response);
 }
 
-/** @brief Convert int pressure data to double
+/** @brief Convert int pressure data to float
  *
- *	Takes in counts from PAxLD pressure data and converts to a double using the formula:
+ *	Takes in counts from PAxLD pressure data and converts to a float using the formula:
  *
  *	Ptotal = (Pcounts - Pcounts_min) * (MaxPressure - MinPressure)/(Maxcounts - Mincounts) + MinPressure
  *
@@ -454,12 +454,12 @@ static uint8_t	PopulateSensorStruct( PAXLD_t *sensor)
  *
  *  @return pressure value
  */
-static double PAxLDConvertPressureData( uint16_t counts, double pressureMin, double pressureMax)
+static float PAxLDConvertPressureData( uint16_t counts, float pressureMin, float pressureMax)
 {
-	double temp = 0.0;
-	double pressureTemp1 = 0.0;
-	double pressureTemp2 = 0.0;
-	double pressureTotal = 0.0;
+	float temp = 0.0;
+	float pressureTemp1 = 0.0;
+	float pressureTemp2 = 0.0;
+	float pressureTotal = 0.0;
 
 	if(counts < PAXLD_PRESSURE_CONVERSION_MIN)
 	{
@@ -473,12 +473,12 @@ static double PAxLDConvertPressureData( uint16_t counts, double pressureMin, dou
 	// Formula is  Ptotal = (Pcounts - Pcounts_min) * (MaxPressure - MinPressure)/(Maxcounts - Mincounts) + MinPressure
 	// Need to figure out how to incorporate pressureMax and pressureMin to be variables
 
-	temp = (double) (PAXLD_PRESSURE_CONVERSION_MAX - PAXLD_PRESSURE_CONVERSION_MIN);
+	temp = (float) (PAXLD_PRESSURE_CONVERSION_MAX - PAXLD_PRESSURE_CONVERSION_MIN);
 	pressureTemp1 = (pressureMax - pressureMin);
 	pressureTemp1 /= temp;
-	//pressureTemp1 = ( PAXLD_MAX_PRESSURE - PAXLD_MIN_PRESSURE ) / ( (double) (PAXLD_PRESSURE_CONVERSION_MAX - PAXLD_PRESSURE_CONVERSION_MIN ) );
+	//pressureTemp1 = ( PAXLD_MAX_PRESSURE - PAXLD_MIN_PRESSURE ) / ( (float) (PAXLD_PRESSURE_CONVERSION_MAX - PAXLD_PRESSURE_CONVERSION_MIN ) );
 
-	pressureTemp2 = (double) (counts - PAXLD_PRESSURE_CONVERSION_MIN);
+	pressureTemp2 = (float) (counts - PAXLD_PRESSURE_CONVERSION_MIN);
 	pressureTemp2 *= pressureTemp1;
 	pressureTotal = pressureTemp2 + pressureMin;
 
@@ -487,9 +487,9 @@ static double PAxLDConvertPressureData( uint16_t counts, double pressureMin, dou
 
 }
 
-/** @brief Convert int temperature data to double
+/** @brief Convert int temperature data to float
  *
- *	Takes in counts from PAxLD pressure data and converts to a double using the formula:
+ *	Takes in counts from PAxLD pressure data and converts to a float using the formula:
  *
  *  Ptotal = (Pcounts - Pcounts_min) * (MaxPressure - MinPressure)/(Maxcounts - Mincounts) + MinPressure
  *
@@ -500,9 +500,9 @@ static double PAxLDConvertPressureData( uint16_t counts, double pressureMin, dou
  *
  *  @return temperature value
  */
-static double PAxLDConvertTemperatureData( uint16_t counts)
+static float PAxLDConvertTemperatureData( uint16_t counts)
 {
-	double temperatureTemp = 0.0;
+	float temperatureTemp = 0.0;
 
 
 	// Formula is T = (( value >> 4) - 24) * 0.5 - 50
@@ -510,7 +510,7 @@ static double PAxLDConvertTemperatureData( uint16_t counts)
 	counts = (counts>>4);
 	counts -= 4;
 
-	temperatureTemp = (double) counts;
+	temperatureTemp = (float) counts;
 	temperatureTemp *= 0.05;
 	temperatureTemp -= 50;
 

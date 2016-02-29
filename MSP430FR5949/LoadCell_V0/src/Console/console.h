@@ -4,7 +4,7 @@
 #include "../../inc/includes.h"
 #include "../buffers/buffers.h"
 
-#define MENU_TIMEOUT				(5)
+#define MENU_TIMEOUT				(10)
 #define ANYKEY_TIMEOUT			(10)
 #define CALIBRATION_TIMEOUT (10)
 #define CALIBRATION_SAMPLE_COUNT 	(3)
