@@ -71,8 +71,8 @@ void sensorProcessData(PAXLDSensor_t *sensor);
 void FRAM_RetreiveData(void);
 void FRAM_SaveData(void);
 
-void PMEL_OutputString(void);
-
+void SETUP_Clock(void);
+void SETUP_GPIO(void);
 /***********************  Constants (In FRAM)  *****************************/
 const uint8_t sensorAddress = 0x46;
 const uint8_t sensorEOCPort = 3;
@@ -128,74 +128,15 @@ int main(void) {
 	// Configure MPU		
   __low_level_init();				// Setup FRAM
 	
-	
-	// Load Saved (FRAM) metadata into local RAM
-	FRAM_RetreiveData();
-	
-  // Temporary fakeout values;
-//  Metadata.Slope = 100;
-//  Metadata.Intercept = 1000;
- 
+  // Load Saved (FRAM) metadata into local RAM
+  FRAM_RetreiveData();
   
 	// Set the sensor I2C address -> Change for production
   pxSensor.address = 0x46;
 	
-  // Set All GPIO settings to 0
-  GPIO_Init();        // Sets all Outputs Low and regs to 0
+  // Configure GPIO
+  SETUP_GPIO();
   
-  // Set up the PAxLD Input Pin
-  GPIO_ClearPin(sensorEOCPort, sensorEOCPin);
-  GPIO_SetPinAsInput(sensorEOCPort, sensorEOCPin);
-  GPIO_AttachInputInterrupt(sensorEOCPort,sensorEOCPin,GPIO_EDGE_HIGH_TO_LOW);
-  
-  // Set up the I2C Pins
-  GPIO_ClearPin(1,6);
-  GPIO_ClearPin(1,7);
-  GPIO_SetPinAsOutput(1,6);
-  GPIO_SetPinAsOutput(1,7);
-
-  
-  // Configure the FET driving power to the Keller Sensor
-  FET_OFF();
-  FET_INIT();
-
-    // Configure GPIO
-  P2SEL1 |= BIT5 | BIT6;                    // USCI_A0 UART operation
-  P2SEL0 &= ~(BIT5 | BIT6);
-  
-  // Configure I2C Pins
-  P1SEL1 |= BIT6 | BIT7;
-
-  // LFXIN
-  PJSEL1 &= ~BIT4;
-  PJSEL0 |= BIT4;
-  
-  // Unlock GPIO
-  PM5CTL0 &= ~LOCKLPM5;		// Needs to be done after config GPIO & Pins!
-
-  // Configure the clock 
-  // DCO running at 1MHz
-  // ACLK running on LFXT 32768Hz
-  // SMCLK running on DCOCLK, 500MHz
-  // MCLK running on DCOCLK, 1MHz
-  // LFXT Driver on low power
-  CSCTL0_H = CSKEY >> 8;					// Unlock registers
-  CSCTL1 = DCOFSEL_1;			// Set DCO to 8Mhz
-  //CSCTL2 = SELA__LFXTCLK | SELS__LFXTCLK | SELM__LFXTCLK;
-  CSCTL2 = SELA__LFXTCLK | SELS__DCOCLK | SELM__DCOCLK;
-  //CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;	// Divide 8 all reg
-  CSCTL3 = DIVA__1 | DIVS__2 | DIVM__1;	// Divide 8 all reg
-  CSCTL4 =   LFXTDRIVE_0 | VLOOFF;;
-  CSCTL4 &= ~LFXTOFF;
-  
-  //   Wait for the clock to lock
-  do
-  {
-    CSCTL5 &= ~LFXTOFFG;
-    SFRIFG1 &= ~OFIFG;
-  }while(SFRIFG1 & OFIFG);
-  CSCTL0_H = 0;							// Lock CS Register
-     
     // Configure the UART
   UART_Init(UART_A1,UART_BAUD_9600,CLK_32768,UART_CLK_SMCLK);
 
@@ -209,6 +150,7 @@ int main(void) {
   // Set interrupts
   P3IFG &= ~BIT7;
   
+  // Enable the interrupts
   __bis_SR_register(GIE);
   __no_operation();                         // For debugger
 
@@ -221,7 +163,7 @@ int main(void) {
   PAxLDInit(&pxSensor,sensorAddress,sensorEOCPort,sensorEOCPin);
   
   // Set interrupts
-   __bis_SR_register(GIE);       // Enter LPM0 w/ interrupts
+   //__bis_SR_register(GIE);       // Enter LPM0 w/ interrupts
    
   // Reset sample timer
   sampleTimer = 1000;
@@ -341,16 +283,12 @@ void STATE_Compute(void)
 void STATE_Transmit(void)
 {
   char sendString[64] = {0};
-  uint8_t sendVal[64]= {0};
+
+  // Setup the Load report string
+  sprintf(sendString,"@@@%6.1f,%6.1f,%6.1f,%6.1f,%6.1f\r\n",CurrentData.MeanLoad,CurrentData.STDLoad,CurrentData.MaxLoad,CurrentData.MinLoad,CurrentData.MeanTemperature);
   
-  PMEL_OutputString();
-//  // Setup the Load report string
-//  sprintf(sendString,"%3.4f,%3.4f,%3.4f,%3.4f,%3.1f\n\r",CurrentData.MeanLoad,CurrentData.STDLoad,CurrentData.MaxLoad,CurrentData.MinLoad,CurrentData.MeanTemperature);
-//  memcpy(sendVal,sendString,64);
-//  __delay_cycles(500000);
-//  
-//  // Write the load string
-//  UART_Write(&sendVal[0],64,UART_A1);
+  // Write the load string
+  UART_Write(&sendString[0],64,UART_A1);
   
   return;
 }
@@ -446,68 +384,72 @@ void sensorProcessData(PAXLDSensor_t *sensor)
 
 
 
-void PMEL_OutputString(void)
+
+void SETUP_Clock(void)
 {
-  uint8_t BadStringLength[] = "STRING TOO LONG\r\n";
-  uint8_t OutputString[64] = {0};
-  uint8_t DataString[32] = {0};
-  uint8_t CRC_OutputH = 0;
-  uint8_t CRC_OutputL = 0;
-  uint8_t DataLengthH = 0;
-  uint8_t DataLengthL = 0;
-  uint16_t DataLength = 0;
-  uint8_t StringLength = 0;
-  uint16_t CRC_Output = 0;
-  uint16_t CRC_Init = 0xFFFF;
-  // Initialize the CRC
-  CRCINIRES = CRC_Init;
+    // Configure the clock 
+  // DCO running at 1MHz
+  // ACLK running on LFXT 32768Hz
+  // SMCLK running on DCOCLK, 500MHz
+  // MCLK running on DCOCLK, 1MHz
+  // LFXT Driver on low power
+  CSCTL0_H = CSKEY >> 8;					// Unlock registers
+  CSCTL1 = DCOFSEL_1;			// Set DCO to 8Mhz
+  //CSCTL2 = SELA__LFXTCLK | SELS__LFXTCLK | SELM__LFXTCLK;
+  CSCTL2 = SELA__LFXTCLK | SELS__DCOCLK | SELM__DCOCLK;
+  //CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;	// Divide 8 all reg
+  CSCTL3 = DIVA__1 | DIVS__2 | DIVM__1;	// Divide 8 all reg
+  CSCTL4 =   LFXTDRIVE_0 | VLOOFF;;
+  CSCTL4 &= ~LFXTOFF;
   
-  
-  // Create the Data String
-  sprintf(DataString,",%.1f,%.2f,%.1f,%.1f,%.1f\r\n",CurrentData.MeanLoad,CurrentData.STDLoad,CurrentData.MaxLoad,CurrentData.MinLoad,CurrentData.MeanTemperature);
-  
-  // Look for the end of the string & Compute the CRC16
-  for(uint8_t i=0;i<32;i++)
+  //   Wait for the clock to lock
+  do
   {
-    if(DataString[i] == NULL)
-    {
-      DataLength = i;
-      i = 32;
-    }
-    else
-    {
-      // Add DataString[i] to the CRC generator
-      CRCDIRB = DataString[i];
-    }
-  }
+    CSCTL5 &= ~LFXTOFFG;
+    SFRIFG1 &= ~OFIFG;
+  }while(SFRIFG1 & OFIFG);
+  CSCTL0_H = 0;							// Lock CS Register
   
-  CRC_Output = CRCINIRES;
+}
+
+
+void SETUP_GPIO(void)
+{
   
-  CRC_OutputL = 0x00FF & CRC_Output;
-  CRC_OutputH = (0xFF00 & CRC_Output) >> 8;
+    // Set All GPIO settings to 0
+  GPIO_Init();        // Sets all Outputs Low and regs to 0
   
-  DataLengthL = 0x00FF & DataLength;
-  DataLengthH = (0x00FF & DataLength) >> 8;
+  // Set up the PAxLD Input Pin
+  GPIO_ClearPin(sensorEOCPort, sensorEOCPin);
+  GPIO_SetPinAsInput(sensorEOCPort, sensorEOCPin);
+  GPIO_AttachInputInterrupt(sensorEOCPort,sensorEOCPin,GPIO_EDGE_HIGH_TO_LOW);
   
-  sprintf(OutputString,"@@@%d%d%d%d",CRC_OutputH,CRC_OutputL,DataLengthH,DataLengthL);
+  // Set up the I2C Pins
+  GPIO_ClearPin(1,6);
+  GPIO_ClearPin(1,7);
+  GPIO_SetPinAsOutput(1,6);
+  GPIO_SetPinAsOutput(1,7);
+
   
-  for(uint8_t i=0;i<64;i++)
-  {
-    if(OutputString[i] == 0)
-    {
-      StringLength = i;
-      i = 64;
-    }
-  }
+  // Configure the FET driving power to the Keller Sensor
+  FET_OFF();
+  FET_INIT();
   
-  if(StringLength <= (64 - DataLength))
-  {
-    memcpy(&OutputString[StringLength],DataString,DataLength);
-    UART_Write(&OutputString[0],LENGTH_OF(OutputString),UART_A1);
-    UART_WriteChar(DataLength,UART_A1);
-  }
-  else
-  {
-    UART_Write(&BadStringLength[0], LENGTH_OF(BadStringLength),UART_A1);
-  }
+  // Configure Selection bits for UART
+  P2SEL1 |= BIT5 | BIT6;                    // USCI_A0 UART operation
+  P2SEL0 &= ~(BIT5 | BIT6);
+  
+  // Configure I2C Pins
+  P1SEL1 |= BIT6 | BIT7;
+
+  // LFXIN
+  PJSEL1 &= ~BIT4;
+  PJSEL0 |= BIT4;
+  
+  // Unlock GPIO
+  PM5CTL0 &= ~LOCKLPM5;		// Needs to be done after config GPIO & Pins!
+
+  // Setup the Clock
+  SETUP_Clock();
+  
 }

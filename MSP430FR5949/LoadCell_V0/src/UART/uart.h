@@ -135,6 +135,6 @@ uint8_t UART_WriteChar(uint8_t value, uint8_t Port);
  */
 uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port);
 
-
+uint8_t UART_WriteIncludeNull(uint8_t *value, uint8_t length, uint8_t Port);
 #endif
 

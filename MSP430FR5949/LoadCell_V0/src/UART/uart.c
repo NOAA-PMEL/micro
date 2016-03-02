@@ -175,6 +175,24 @@ uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port)
 	
 	return UART_OK;
 }
+
+uint8_t UART_WriteIncludeNull(uint8_t *value, uint8_t length, uint8_t Port)
+{
+  	uint8_t i=0;
+
+	if(Port != UART_A0 && Port != UART_A1)
+	{
+		return UART_FAIL;
+	}
+	for(i=0;i<length;i++)
+	{
+      UART_WriteChar(value[i],Port);
+      __delay_cycles(5000);
+	}
+	
+	return UART_OK;
+  
+}
 /************************************************************************
 *					STATIC FUNCTIONS
 ************************************************************************/
