@@ -161,9 +161,6 @@ int main(void) {
   uint16_t tempA = 0xA8;
   I2CWrite( pxSensor.address, &tempA, 1);
   PAxLDInit(&pxSensor,sensorAddress,sensorEOCPort,sensorEOCPin);
-  
-  // Set interrupts
-   //__bis_SR_register(GIE);       // Enter LPM0 w/ interrupts
    
   // Reset sample timer
   sampleTimer = 1000;
@@ -453,3 +450,10 @@ void SETUP_GPIO(void)
   SETUP_Clock();
   
 }
+
+
+
+
+
+
+

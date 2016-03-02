@@ -70,6 +70,7 @@ void TIMER_B_MilliSecond( uint16_t length )
 #ifdef PMEL
 
 
+
 #pragma vector=TIMER0_A1_VECTOR
 __interrupt void TIMER0_A1_ISR(void)
 {
@@ -91,6 +92,7 @@ __interrupt void TIMER0_A1_ISR(void)
       break;
     default: break;
   }
+  
 }
 
 
@@ -98,12 +100,12 @@ __interrupt void TIMER0_A1_ISR(void)
 __interrupt void TIMER1_A0_ISR(void)
 {
 
-   msTimeoutCounter += 1;
-   ms2TimeoutCounter += 1;
-   sampleTimer++;
+  msTimeoutCounter += 1;
+  ms2TimeoutCounter += 1;
+  sampleTimer++;
+  
+  return;
 }
-
-
 
 
 #endif
