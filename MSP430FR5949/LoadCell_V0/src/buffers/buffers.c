@@ -46,8 +46,8 @@ int8_t BufferF_Put_Circular(CircularBufferF_s *buf, float value)
 	uint8_t NextRead = (buf->read + 1) % (ACTUAL_BUFFER_F_SIZE);
 	if(NextWrite == buf->read)
 	{
-     buf->write = buf->read;
-		 buf->read = NextRead;   
+      buf->write = buf->read;
+      buf->read = NextRead;   
 
 	}      
 	

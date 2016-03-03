@@ -407,8 +407,10 @@ static uint8_t	PopulateSensorStruct( PAXLD_t *sensor)
 		// Check for no response
 		if(sensor->pressureCount == 0)
 		{
-			sensor->pressureCount = -999;
-			sensor->pressure = -999;
+//			sensor->pressureCount = -999;
+//			sensor->pressure = -999;
+            sensor->pressureCount = NAN;
+			sensor->pressure = NAN;
 			sensor->badDataCount++;
 		}
 		else
@@ -420,7 +422,7 @@ static uint8_t	PopulateSensorStruct( PAXLD_t *sensor)
 			}
 			else
 			{
-				sensor->pressure = -999.0;
+				sensor->pressure = NAN;
 			}
 			sensor->temperature = PAxLDConvertTemperatureData(sensor->temperatureCount);
 			sensor->badDataCount = 0;
@@ -429,8 +431,8 @@ static uint8_t	PopulateSensorStruct( PAXLD_t *sensor)
 	}
 	else
 	{
-		sensor->pressureCount = -999;
-		sensor->pressure = -999;
+		sensor->pressureCount = NAN;
+		sensor->pressure = NAN;
 		sensor->badDataCount++;
 		response = INVALID_STRING;
 	}

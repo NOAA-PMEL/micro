@@ -537,7 +537,7 @@ static void CONSOLE_CalibrationInputState(void)
 {
   	uint8_t line0[] = "\r\n\r\nEnter load in LBS: ";
 
-    uint8_t CalculateString[] = "\r\nCalculate Slope & Intercept?";
+    //uint8_t CalculateString[] = "\r\nCalculate Slope & Intercept?";
     uint8_t SaveString[] = "\r\n\r\nSave new Data?";
     uint8_t rxValues[BUFFER_C_SIZE] = {0};
     uint8_t DisplayBuffer[32] = {0};

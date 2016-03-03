@@ -65,6 +65,7 @@ void STATE_Console(void);
 void STATE_Compute(void);
 void STATE_Transmit(void);
 
+void sensorInit(void);
 void sensorRead(PAXLDSensor_t *sensor);
 void sensorProcessData(PAXLDSensor_t *sensor);
 
@@ -119,6 +120,7 @@ volatile uint32_t ms2TimeoutCounter = 0;
 volatile uint32_t MenuTimeoutA = 0;
 volatile uint32_t ControlTimer = 0;
 volatile uint32_t ControlCounter = 0;
+volatile uint8_t NANCounter = 0;
 
 /*******************************  MAIN  **********************************/
 int main(void) {
@@ -158,9 +160,10 @@ int main(void) {
   I2CInit();
   
   // Initialize the Keller Sensor
-  uint16_t tempA = 0xA8;
-  I2CWrite( pxSensor.address, &tempA, 1);
-  PAxLDInit(&pxSensor,sensorAddress,sensorEOCPort,sensorEOCPin);
+  sensorInit();
+//  uint16_t tempA = 0xA8;
+//  I2CWrite( pxSensor.address, &tempA, 1);
+//  PAxLDInit(&pxSensor,sensorAddress,sensorEOCPort,sensorEOCPin);
    
   // Reset sample timer
   sampleTimer = 1000;
@@ -180,11 +183,14 @@ int main(void) {
     switch(SystemState)
     {
     case Sample:
+      I2CInit();
       FET_ON();
-      __delay_cycles(10000);
+      sampleTimer = 0;
+      while(sampleTimer < 10);
       sampleTimer = 0;
       STATE_Sample();
       FET_OFF();
+      I2CClose();
       __bis_SR_register(LPM3_bits | GIE);
       break;
 //      case Sample:
@@ -255,10 +261,13 @@ void STATE_Compute(void)
     // Convert to Load
     for(uint8_t i=0;i<sampleCount;i++)
     {
+      
       TempF[i] *= Metadata.Slope;
       TempF[i] += Metadata.Intercept;
+
     }
    
+    
     
     // Run Stats on the pressures
     STATS_CalculateMean(&TempF[0],sampleCount, &CurrentData.MeanLoad);
@@ -266,6 +275,15 @@ void STATE_Compute(void)
     STATS_FindMax(&TempF[0],sampleCount,&CurrentData.MaxLoad);
     STATS_FindMin(&TempF[0],sampleCount,&CurrentData.MinLoad);
 
+    if(CurrentData.MeanLoad != CurrentData.MeanLoad )
+    {
+      sensorInit();
+      BufferC_Clear(&ConsoleData);
+      //NANCounter = 0;
+      
+    }
+
+    
     // Retreive Temperatures from buffer
     sampleCount = 0;
     while(BufferF_IsEmpty(&TemperatureDataBuffer) == BUFFER_NOT_EMPTY)
@@ -279,6 +297,8 @@ void STATE_Compute(void)
     
     // Find mean of the temperature for reporting
     STATS_CalculateMean(&TempF[0],sampleCount,&CurrentData.MeanTemperature);
+    
+    
     
 
   
@@ -370,7 +390,7 @@ void sensorProcessData(PAXLDSensor_t *sensor)
   {
      if((sensor->dataIndex < 5))
      {
-         sensor->pressure = -999.9;
+         sensor->pressure = NAN;
      }
      else
      {
@@ -380,7 +400,17 @@ void sensorProcessData(PAXLDSensor_t *sensor)
   return;
 }
 
-
+void sensorInit(void)
+{
+  I2CInit();
+  sampleTimer = 0;
+  FET_ON();
+  while(sampleTimer < 10);
+  
+  uint16_t tempA = 0xA8;
+  I2CWrite( pxSensor.address, &tempA, 1);
+  PAxLDInit(&pxSensor,sensorAddress,sensorEOCPort,sensorEOCPin);
+}
 
 
 void SETUP_Clock(void)
