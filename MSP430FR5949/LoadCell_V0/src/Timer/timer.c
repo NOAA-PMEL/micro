@@ -89,6 +89,7 @@ __interrupt void TIMER0_A1_ISR(void)
     	{
     		ControlCounter = 0;
     	}
+        __low_power_mode_off_on_exit();
       break;
     default: break;
   }
@@ -104,6 +105,7 @@ __interrupt void TIMER1_A0_ISR(void)
   ms2TimeoutCounter += 1;
   sampleTimer++;
   
+
   return;
 }
 

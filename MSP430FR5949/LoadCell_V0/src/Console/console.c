@@ -34,9 +34,7 @@ void CONSOLE_State_Main(void)
 	CONSOLE_DisplayState_Main();
 	ConsoleState = Hold;
 
-	
-	
-
+    // Enter main console state and look for user input
 	while(ExitConsoleFlag == false)
 	{
       // Clear the buffers
@@ -137,7 +135,8 @@ void CONSOLE_State_Main(void)
 
 		}
 	}
-
+    // Clear the buffer, write to screen and exit to sampling
+    BufferC_Clear(&ConsoleData);
 	UART_Write(&OutText[0],LENGTH_OF(OutText),UART_A1);
 	SystemState = Sample;
   return;

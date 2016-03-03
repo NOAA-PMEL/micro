@@ -175,21 +175,31 @@ int main(void) {
   // Main loop
   for(;;)
   {
+   
+    __no_operation();
     switch(SystemState)
     {
-      case Sample:
-      	if(sampleTimer > 800)
-      	{
-      		FET_ON();
-      	}
-				if(sampleTimer > 1000)
-				{
-                  
-					sampleTimer = 0;
-        	STATE_Sample();
-        	FET_OFF();
-	      }
-        break;
+    case Sample:
+      FET_ON();
+      __delay_cycles(10000);
+      sampleTimer = 0;
+      STATE_Sample();
+      FET_OFF();
+      __bis_SR_register(LPM3_bits | GIE);
+      break;
+//      case Sample:
+//      	if(sampleTimer > 800)
+//      	{
+//      		FET_ON();
+//      	}
+//        if(sampleTimer > 1000)
+//        {
+//
+//          sampleTimer = 0;
+//          STATE_Sample();
+//          FET_OFF();
+//        }
+//        break;
       case Compute:
       	
           STATE_Compute();
@@ -204,14 +214,12 @@ int main(void) {
         sampleTimer = 0;
         break;
       case Console:
-				STATE_Console();
-				sampleTimer = 0;
+        STATE_Console();
+        sampleTimer = 0;
         break;
       default:
         break;
-      
     }
-    
   }
 }
 
@@ -236,7 +244,6 @@ void STATE_Sample(void)
 void STATE_Compute(void)
 {
   	float TempF[BUFFER_F_SIZE] = {0};
-    
     
     // Retreive Pressures from Buffer
     sampleCount = 0;
@@ -298,12 +305,6 @@ void STATE_Console(void)
 
   return;
 }
-
-
-
-
-
-
 
 void FRAM_RetreiveData(void)
 {
@@ -412,8 +413,7 @@ void SETUP_Clock(void)
 
 void SETUP_GPIO(void)
 {
-  
-    // Set All GPIO settings to 0
+  // Set All GPIO settings to 0
   GPIO_Init();        // Sets all Outputs Low and regs to 0
   
   // Set up the PAxLD Input Pin
@@ -427,7 +427,6 @@ void SETUP_GPIO(void)
   GPIO_SetPinAsOutput(1,6);
   GPIO_SetPinAsOutput(1,7);
 
-  
   // Configure the FET driving power to the Keller Sensor
   FET_OFF();
   FET_INIT();
