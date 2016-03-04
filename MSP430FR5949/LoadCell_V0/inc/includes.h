@@ -184,6 +184,7 @@ typedef struct _Metadata {
 	float Intercept;
 	float RecordedData[METADATA_ARRAY_SIZE];
 	float InputLoad[METADATA_ARRAY_SIZE];
+    uint16_t SerialNumber;
 	uint8_t DataCounter;
 }metadata_t;
 
@@ -198,7 +199,6 @@ typedef struct _CurrentData {
 	float MaxLoad;
 	float MinLoad;
 	float STDLoad;
-	
 	uint32_t crc;
 }CurrentData_t;
 

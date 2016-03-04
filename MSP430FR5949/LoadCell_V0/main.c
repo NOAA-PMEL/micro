@@ -74,15 +74,15 @@ void FRAM_SaveData(void);
 
 void SETUP_Clock(void);
 void SETUP_GPIO(void);
+
 /***********************  Constants (In FRAM)  *****************************/
 const uint8_t sensorAddress = 0x46;
 const uint8_t sensorEOCPort = 3;
 const uint8_t sensorEOCPin = 7;
 
+/***********************  Persistents (In FRAM)  *****************************/
 __persistent uint8_t counterValTestWhee = 0;
 __persistent metadata_t FRAM_Metadata;
-
-
 
 /*************************  Global variables  *****************************/
 // Variables
@@ -91,12 +91,15 @@ volatile uint16_t sampleCount = 0;
 volatile uint32_t sampleTimer = 0;
 volatile uint8_t errorCounter = 0;
 volatile double pressure = 0.0;
-
-
-
-
-//float Temperatures[BUFFER_F_SIZE] = {0};
 float TemperatureMean = 0;
+
+// Counters
+volatile uint32_t msTimeoutCounter = 0;
+volatile uint32_t ms2TimeoutCounter = 0;
+volatile uint32_t MenuTimeoutA = 0;
+volatile uint32_t ControlTimer = 0;
+volatile uint32_t ControlCounter = 0;
+volatile uint8_t NANCounter = 0;
 
 // Structures
 PAXLDSensor_t pxSensor;
@@ -109,127 +112,107 @@ CurrentData_t CurrentData;
 SystemState_t SystemState;
 CalibrationState_t CalibrationState;
 state_t ConsoleState;
-// Character Arrays
-char sendData[128];
 
-// Counters
-//volatile uint8_t TimeoutCounter_1 = 0;
-//volatile uint8_t TimeoutCounter_2 = 0;
-volatile uint32_t msTimeoutCounter = 0;
-volatile uint32_t ms2TimeoutCounter = 0;
-volatile uint32_t MenuTimeoutA = 0;
-volatile uint32_t ControlTimer = 0;
-volatile uint32_t ControlCounter = 0;
-volatile uint8_t NANCounter = 0;
+// Character Arrays
+
 
 /*******************************  MAIN  **********************************/
 int main(void) {
-  
 
-
-	// Configure MPU		
+  // Configure MPU		
   __low_level_init();				// Setup FRAM
-	
+
   // Load Saved (FRAM) metadata into local RAM
   FRAM_RetreiveData();
-  
-	// Set the sensor I2C address -> Change for production
+
+  // Set the sensor I2C address -> Change for production
   pxSensor.address = 0x46;
-	
+
   // Configure GPIO
   SETUP_GPIO();
-  
-    // Configure the UART
+
+  // Configure the UART
   UART_Init(UART_A1,UART_BAUD_9600,CLK_32768,UART_CLK_SMCLK);
 
   // Turn the Keller ON
   FET_ON();
-  
+
   // Initialize the timer for 1 Second
   TIMER_A1_Init();
   TIMER_A0_Init();
-  
+
   // Set interrupts
   P3IFG &= ~BIT7;
-  
+
   // Enable the interrupts
   __bis_SR_register(GIE);
   __no_operation();                         // For debugger
 
   // Initialize I2C
   I2CInit();
-  
+
   // Initialize the Keller Sensor
   sensorInit();
-//  uint16_t tempA = 0xA8;
-//  I2CWrite( pxSensor.address, &tempA, 1);
-//  PAxLDInit(&pxSensor,sensorAddress,sensorEOCPort,sensorEOCPin);
-   
+
   // Reset sample timer
   sampleTimer = 1000;
-   
+
   // Clear the data buffer
   BufferF_Clear(&PressureDataBuffer);
   BufferF_Clear(&TemperatureDataBuffer);
-   
-   // Set the startup State
-   SystemState = Sample;
+
+  // Set the startup State
+  SystemState = Sample;
    
   // Main loop
   for(;;)
   {
-   
-    __no_operation();
     switch(SystemState)
     {
-    case Sample:
-      I2CInit();
-      FET_ON();
-      sampleTimer = 0;
-      while(sampleTimer < 10);
-      sampleTimer = 0;
-      STATE_Sample();
-      FET_OFF();
-      I2CClose();
-      __bis_SR_register(LPM3_bits | GIE);
-      break;
-//      case Sample:
-//      	if(sampleTimer > 800)
-//      	{
-//      		FET_ON();
-//      	}
-//        if(sampleTimer > 1000)
-//        {
-//
-//          sampleTimer = 0;
-//          STATE_Sample();
-//          FET_OFF();
-//        }
-//        break;
-      case Compute:
-      	
-          STATE_Compute();
-          sampleCount = 0;
-          SystemState = Transmit;
+      case Sample:
+        I2CInit();
+        FET_ON();
+        sampleTimer = 0;
+        while(sampleTimer < 10);
+        sampleTimer = 0;
+        STATE_Sample();
+        FET_OFF();
+        I2CClose();
+        __bis_SR_register(LPM3_bits | GIE); // Set LPM and wait for timer interrupt
         break;
+        
+      case Compute:
+        STATE_Compute();
+        sampleCount = 0;
+        SystemState = Transmit;
+        break;
+        
       case Transmit:
         STATE_Transmit();
-        //FET_ON();
         SystemState = Sample;
         sampleCount = 0;
         sampleTimer = 0;
         break;
+        
       case Console:
         STATE_Console();
         sampleTimer = 0;
         break;
+        
       default:
         break;
     }
   }
 }
 
-
+/** @brief Enters Sampling State
+ *
+ *  Requests data from the PAxLD sensor and puts it in the circular buffer
+ *
+ *  @param None
+ *
+ *  @return Void
+ */
 void STATE_Sample(void)
 {
     // Request data from sensor
@@ -247,6 +230,16 @@ void STATE_Sample(void)
  
 }
 
+/** @brief Enters Compute State
+ *
+ *  Retreives all the stored data, performs statistical calculations. 
+ *  Also looks for error in the data, and resets the sensor if there
+ *  is a problem.
+ *
+ *  @param None
+ *
+ *  @return Void
+ */
 void STATE_Compute(void)
 {
   	float TempF[BUFFER_F_SIZE] = {0};
@@ -266,24 +259,20 @@ void STATE_Compute(void)
       TempF[i] += Metadata.Intercept;
 
     }
-   
-    
-    
+
     // Run Stats on the pressures
     STATS_CalculateMean(&TempF[0],sampleCount, &CurrentData.MeanLoad);
     STATS_ComputeSTD(&TempF[0],sampleCount,CurrentData.MeanLoad,&CurrentData.STDLoad);
     STATS_FindMax(&TempF[0],sampleCount,&CurrentData.MaxLoad);
     STATS_FindMin(&TempF[0],sampleCount,&CurrentData.MinLoad);
 
+    // Look for NAN in data and reset the sensor if there is one
     if(CurrentData.MeanLoad != CurrentData.MeanLoad )
     {
       sensorInit();
       BufferC_Clear(&ConsoleData);
-      //NANCounter = 0;
-      
     }
 
-    
     // Retreive Temperatures from buffer
     sampleCount = 0;
     while(BufferF_IsEmpty(&TemperatureDataBuffer) == BUFFER_NOT_EMPTY)
@@ -298,12 +287,16 @@ void STATE_Compute(void)
     // Find mean of the temperature for reporting
     STATS_CalculateMean(&TempF[0],sampleCount,&CurrentData.MeanTemperature);
     
-    
-    
-
-  
 }
 
+/** @brief Enters Transmit State
+ *
+ *  Preps the data for transmission and sends over the UART
+ *
+ *  @param None
+ *
+ *  @return Void
+ */
 void STATE_Transmit(void)
 {
   char sendString[64] = {0};
@@ -317,18 +310,40 @@ void STATE_Transmit(void)
   return;
 }
 
-
+/** @brief Enter Console 
+ *
+ *  Initalizes and enters the console
+ *
+ *  @param None
+ *
+ *  @return Void
+ */
 void STATE_Console(void)
 {
   MenuTimeoutA = 0;
+  
+  // Show the console
   CONSOLE_State_Main();
 
   return;
 }
 
+/** @brief Read data from FRAM
+ *
+ *  Retreives the Metadata to FRAM 
+ *  Slope
+ *  Intercept
+ *  Data in Array
+ *  DataCounter value
+ *
+ *  @param None
+ *
+ *  @return Void
+ */
 void FRAM_RetreiveData(void)
 {
-	
+	// Retreive metadata from FRAM persistent variables
+    Metadata.SerialNumber = FRAM_Metadata.SerialNumber;
 	Metadata.Slope = FRAM_Metadata.Slope;
 	Metadata.Intercept = FRAM_Metadata.Intercept;
 	Metadata.DataCounter = FRAM_Metadata.DataCounter;
@@ -340,8 +355,21 @@ void FRAM_RetreiveData(void)
 	return;
 }
 
+/** @brief Saves data to FRAM
+ *
+ *  Saves the Metadata to FRAM 
+ *  Slope
+ *  Intercept
+ *  Data in Array
+ *  DataCounter value
+ *
+ *  @param None
+ *
+ *  @return Void
+ */
 void FRAM_SaveData(void)
 {
+    // Save metadata to FRAM persistent variables
 	FRAM_Metadata.Slope = Metadata.Slope;
 	FRAM_Metadata.Intercept = Metadata.Intercept;
 	FRAM_Metadata.DataCounter = Metadata.DataCounter;
@@ -353,9 +381,17 @@ void FRAM_SaveData(void)
 	return;
 }
 
+/** @brief Read the PAxLD Sensor
+ *
+ *  Reads the data from the PAxLD sensor or waits for a timeout
+ *
+ *  @param None
+ *
+ *  @return Void
+ */
 void sensorRead(PAXLDSensor_t *sensor)
 {
-
+  
   ms2TimeoutCounter = 0;
   while(sensor->dataAvailableFlag != true && ms2TimeoutCounter < 15);
   if(sensor->dataAvailableFlag != true)
@@ -400,6 +436,15 @@ void sensorProcessData(PAXLDSensor_t *sensor)
   return;
 }
 
+/** @brief Init the PAxLD sensor
+ *
+ *  Reinitializes the I2C bus and the Keller PAxLD sensor
+ *  and 
+ *
+ *  @param None
+ *
+ *  @return Void
+ */
 void sensorInit(void)
 {
   I2CInit();
@@ -412,22 +457,31 @@ void sensorInit(void)
   PAxLDInit(&pxSensor,sensorAddress,sensorEOCPort,sensorEOCPin);
 }
 
-
+/** @brief Set the system clock
+ *
+ *  Set the system clock for DCO @ 1MHz, 
+ *  SMCLK @500MHSz
+ *  MCLK @ 1MHz
+ *  ACLK @32.768kHz
+ *  LFXT driver on Low Power
+ *
+ *  @param None
+ *
+ *  @return Void
+ */
 void SETUP_Clock(void)
 {
-    // Configure the clock 
+  // Configure the clock 
   // DCO running at 1MHz
   // ACLK running on LFXT 32768Hz
   // SMCLK running on DCOCLK, 500MHz
   // MCLK running on DCOCLK, 1MHz
   // LFXT Driver on low power
-  CSCTL0_H = CSKEY >> 8;					// Unlock registers
+  CSCTL0_H = CSKEY >> 8;		// Unlock registers
   CSCTL1 = DCOFSEL_1;			// Set DCO to 8Mhz
-  //CSCTL2 = SELA__LFXTCLK | SELS__LFXTCLK | SELM__LFXTCLK;
   CSCTL2 = SELA__LFXTCLK | SELS__DCOCLK | SELM__DCOCLK;
-  //CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;	// Divide 8 all reg
-  CSCTL3 = DIVA__1 | DIVS__2 | DIVM__1;	// Divide 8 all reg
-  CSCTL4 =   LFXTDRIVE_0 | VLOOFF;;
+  CSCTL3 = DIVA__1 | DIVS__2 | DIVM__1;	
+  CSCTL4 =   LFXTDRIVE_0 | VLOOFF;
   CSCTL4 &= ~LFXTOFF;
   
   //   Wait for the clock to lock

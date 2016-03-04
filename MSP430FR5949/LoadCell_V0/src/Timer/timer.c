@@ -30,7 +30,7 @@
 
 void TIMER_A0_Init ( void )
 {
-	// Set up for 1 second using 32768 Crystal
+  // Set up for 1 second using 32768 Crystal
   TA0CCR0 = 0x7FFF;
   TA0CTL = TASSEL__ACLK | MC__UP | TACLR | TAIE; // ACLK, contmode, clear TAR
 
