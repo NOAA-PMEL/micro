@@ -600,7 +600,10 @@ __interrupt void Port_3 (void)
 		case P3IV_NONE:
 			break;			//Vector 0 - No Interrupt
 		case P3IV_P3IFG0:
-          SensorCounter++;
+          if(SensorCounter < 0xFFFFFFFF)
+          {
+            SensorCounter++;
+          }
           P3IFG &= ~BIT0;
 			break;		// Vector 2 - Interrupt on Pin 1
 		case P3IV_P3IFG1:

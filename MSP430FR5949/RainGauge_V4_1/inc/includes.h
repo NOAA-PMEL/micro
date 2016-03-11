@@ -18,7 +18,7 @@
 
 
 /*****************************  DEBUG  *********************************/
-#define DEBUG 	(true)
+// #define DEBUG 	(true)
 #define PMEL
 /************************************************************************
 *						STANDARD LIBRARIES
@@ -28,6 +28,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <float.h>
+//#include <inttypes.h>
 
 #ifndef PMEL
 //#include "../test/msp430fr5969.h"

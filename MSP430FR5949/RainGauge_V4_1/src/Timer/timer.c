@@ -112,7 +112,9 @@ __interrupt void RTC_ISR(void)
       SumOfCount += SensorCounter;
       SensorCounter = 0;
       SecondCounter ++;
+#ifdef DEBUG
       GPIO_TogglePin(DEBUG_PORT,DEBUG_PIN);
+#endif
       break;
     case RTCIV_RTCTEVIFG:   // RTC Interval Timer Flag
       break;

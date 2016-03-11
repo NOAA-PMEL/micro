@@ -139,18 +139,18 @@ int main(void) {
     switch(SystemState)
     {
       case Sample:
-        //__bis_SR_register(LPM3_bits | GIE); // Set LPM and wait for timer interrupt
+        __bis_SR_register(LPM3_bits | GIE); // Set LPM and wait for timer interrupt
         break;
       case Transmit:
-
-        
+        temp_SecondsCounter = SecondCounter + 1;
+        while(SecondCounter < temp_SecondsCounter);
         temp_SumOfCount = SumOfCount;
-        temp_SecondsCounter = SecondCounter;
         SumOfCount = 0;
         SecondCounter = 0;
         STATE_Transmit(temp_SumOfCount,temp_SecondsCounter);
         SecondCounter = 0;
         SumOfCount = 0;
+        SystemState = Sample;
         break;
       default:
         break;
@@ -173,11 +173,13 @@ void STATE_Transmit(uint32_t count, uint32_t seconds)
   char sendString[64] = {0};
 
   // Setup the Load report string
-  sprintf(sendString,"@@@%10d,%10d\r\n",count,seconds);
+  sprintf(sendString,"@@@%10lu,",count);
   
   // Write the load string
   UART_Write(&sendString[0],64,UART_A1);
   
+  sprintf(sendString,"%10lu\r\n",seconds);
+  UART_Write(&sendString[0],64,UART_A1);
   return;
 }
 
@@ -231,7 +233,7 @@ void SETUP_Clock(void)
   // MCLK running on DCOCLK, 1MHz
   // LFXT Driver on low power
   CSCTL0_H = CSKEY >> 8;		// Unlock registers
-  CSCTL1 = DCOFSEL_1;			// Set DCO to 8Mhz
+  CSCTL1 = DCOFSEL_6;			// Set DCO to 8Mhz
   CSCTL2 = SELA__LFXTCLK | SELS__DCOCLK | SELM__DCOCLK;
   CSCTL3 = DIVA__1 | DIVS__2 | DIVM__1;	
   CSCTL4 =   LFXTDRIVE_0 | VLOOFF;
