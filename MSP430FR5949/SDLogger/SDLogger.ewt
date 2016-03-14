@@ -1955,7 +1955,52 @@
     </settings>
   </configuration>
   <group>
+    <name>inc</name>
+    <file>
+      <name>$PROJ_DIR$\inc\includes.h</name>
+    </file>
+  </group>
+  <group>
     <name>src</name>
+    <group>
+      <name>GPIO</name>
+      <file>
+        <name>$PROJ_DIR$\src\GPIO\GPIO.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\GPIO\GPIO.h</name>
+      </file>
+    </group>
+    <group>
+      <name>SPI</name>
+      <file>
+        <name>$PROJ_DIR$\src\SPI\SPI.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\SPI\SPI.h</name>
+      </file>
+    </group>
+    <group>
+      <name>Timer</name>
+      <file>
+        <name>$PROJ_DIR$\src\Timer\timer.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\Timer\timer.h</name>
+      </file>
+    </group>
+    <group>
+      <name>UART</name>
+      <file>
+        <name>$PROJ_DIR$\src\UART\UART.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\UART\UART.h</name>
+      </file>
+    </group>
+    <file>
+      <name>$PROJ_DIR$\src\low_level_init.c</name>
+    </file>
     <file>
       <name>$PROJ_DIR$\src\main.c</name>
     </file>

@@ -591,6 +591,8 @@ static uint8_t UART_ClockFrequencyIsValid(uint32_t ClkFreq)
 *					INTERRUPT VECTOR
 ************************************************************************/
 #ifdef PMEL
+
+
 #pragma vector=USCI_A0_VECTOR
 __interrupt void USCI_A0_ISR(void)
 {
@@ -613,49 +615,24 @@ __interrupt void USCI_A0_ISR(void)
 	}
 }
 
-#pragma vector=USCI_A1_VECTOR
-__interrupt void USCI_A1_ISR(void)
-{
-	switch(__even_in_range(UCA1IV, USCI_UART_UCTXCPTIFG))
-	{
-		case USCI_NONE:
-			break;
-		case USCI_UART_UCRXIFG:     
-			switch(SystemState)
-			{
-				case Sample:
-					switch(UCA1RXBUF)
-					{
-						case 'D':
-						case 'd':
-							SystemState = Compute;
-					 		break;
-						case 0x03:	// Ctrl-C
-							ControlTimer = 0;
-							if(++ControlCounter > 2)
-							{
-								SystemState = Console;
-								ControlCounter = 0;
-							}
-							break;
-						default:
-							break;
-					}
-					break;
-				case Console:
-					BufferC_Put(&ConsoleData, UCA1RXBUF);
-					break;
-      }
-      			break;
-		case USCI_UART_UCTXIFG:
-			break;
-		case USCI_UART_UCSTTIFG:
-			break;
-		case USCI_UART_UCTXCPTIFG:
-			break;
-		default:
-			break;
-	}
-}
+//#pragma vector=USCI_A1_VECTOR
+//__interrupt void USCI_A1_ISR(void)
+//{
+//	switch(__even_in_range(UCA1IV, USCI_UART_UCTXCPTIFG))
+//	{
+//		case USCI_NONE:
+//			break;
+//		case USCI_UART_UCRXIFG:     
+//            break;
+//		case USCI_UART_UCTXIFG:
+//			break;
+//		case USCI_UART_UCSTTIFG:
+//			break;
+//		case USCI_UART_UCTXCPTIFG:
+//			break;
+//		default:
+//			break;
+//	}
+//}
 
 #endif

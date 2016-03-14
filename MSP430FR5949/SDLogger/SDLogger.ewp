@@ -62,7 +62,7 @@
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\lib\dlib\dl430fn.r43</state>
+          <state>$TOOLKIT_DIR$\lib\dlib\dl430xlsfn.r43</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -804,7 +804,7 @@
         </option>
         <option>
           <name>XclFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\lnk430F149.xcl</state>
+          <state>$TOOLKIT_DIR$\config\linker\lnk430fr5949.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -932,7 +932,7 @@
         </option>
         <option>
           <name>ExtraOutputFile</name>
-          <state>templproj.a43</state>
+          <state>SDLogger.a43</state>
         </option>
         <option>
           <name>ExtraOutputFormat</name>
@@ -2251,7 +2251,52 @@
     </settings>
   </configuration>
   <group>
+    <name>inc</name>
+    <file>
+      <name>$PROJ_DIR$\inc\includes.h</name>
+    </file>
+  </group>
+  <group>
     <name>src</name>
+    <group>
+      <name>GPIO</name>
+      <file>
+        <name>$PROJ_DIR$\src\GPIO\GPIO.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\GPIO\GPIO.h</name>
+      </file>
+    </group>
+    <group>
+      <name>SPI</name>
+      <file>
+        <name>$PROJ_DIR$\src\SPI\SPI.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\SPI\SPI.h</name>
+      </file>
+    </group>
+    <group>
+      <name>Timer</name>
+      <file>
+        <name>$PROJ_DIR$\src\Timer\timer.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\Timer\timer.h</name>
+      </file>
+    </group>
+    <group>
+      <name>UART</name>
+      <file>
+        <name>$PROJ_DIR$\src\UART\UART.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\UART\UART.h</name>
+      </file>
+    </group>
+    <file>
+      <name>$PROJ_DIR$\src\low_level_init.c</name>
+    </file>
     <file>
       <name>$PROJ_DIR$\src\main.c</name>
     </file>

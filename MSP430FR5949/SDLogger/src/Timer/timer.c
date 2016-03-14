@@ -53,13 +53,7 @@ void TIMER_A1_Init ( void )
 void TIMER_B_MilliSecond( uint16_t length )
 {
 
-	for(uint16_t i=0; i<length;i++)
-	{
-		//TimerFlags.TimerB = true;
-		ResetTimerB();
-		SetTimerBInterrupt();
-		//while(TimerFlags.TimerB == true );
-	}
+
 }
 
 
@@ -84,12 +78,7 @@ __interrupt void TIMER0_A1_ISR(void)
     case TA0IV_5:      break;               // reserved
     case TA0IV_6:      break;               // reserved
     case TA0IV_TAIFG:                       // overflow
-    	MenuTimeoutA++;
-    	if(ControlTimer++ > 10)
-    	{
-    		ControlCounter = 0;
-    	}
-        __low_power_mode_off_on_exit();
+
       break;
     default: break;
   }
@@ -101,10 +90,6 @@ __interrupt void TIMER0_A1_ISR(void)
 __interrupt void TIMER1_A0_ISR(void)
 {
 
-  msTimeoutCounter += 1;
-  ms2TimeoutCounter += 1;
-  sampleTimer++;
-  
 
   return;
 }
