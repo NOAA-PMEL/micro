@@ -22,8 +22,7 @@
 *							HEADER FILES
 ************************************************************************/
 #include <stdint.h>
-
-#include "buffers.h"
+#include "../../inc/includes.h"
 
 #ifndef PMEL
 #include "../../test/msp430fr5969.h"

@@ -193,6 +193,71 @@ uint8_t UART_WriteIncludeNull(uint8_t *value, uint8_t length, uint8_t Port)
 	return UART_OK;
   
 }
+
+uint8_t UART_putc(char value,uint8_t Port)
+{
+	switch(Port)
+	{
+		case UART_A0:
+			UCA0TXBUF = value;
+			break;
+		case UART_A1:
+			UCA1TXBUF = value;
+			break;
+		default:
+			return UART_FAIL;
+			break;
+	}
+	return UART_OK;
+
+}
+
+uint8_t UART_puts(char *value, uint16_t size, uint8_t Port)
+{
+	uint16_t i =0;
+	uint8_t response = 0;
+	
+	
+	switch(Port)
+	{
+		case UART_A0:
+		case UART_A1:
+			for(i=0;i<size;i++)
+			{
+				if(value[i] == '\0')
+				{
+					return UART_OK;
+				}
+				UART_putc(value[i],Port);
+			}
+			break;
+		default:
+			return UART_FAIL;
+			break;
+		
+	}
+	
+	
+	return UART_OK;
+}
+
+
+uint8_t UART_getc(uint8_t Port)
+{
+	switch(Port)
+	{
+		case UART_A0:
+			return UCA0RXBUF;
+			break;
+		case UART_A1:
+			return UCA1RXBUF;
+			break;
+		default:
+			return 0;
+			break;
+	}
+}
+
 /************************************************************************
 *					STATIC FUNCTIONS
 ************************************************************************/

@@ -26,7 +26,7 @@
 #ifndef PMEL
 #include "../test/msp430fr5969.h"
 #else
-#include <msp430fr5949.h>
+#include <msp430fr5969.h>
 #endif
 
 
@@ -136,5 +136,11 @@ uint8_t UART_WriteChar(uint8_t value, uint8_t Port);
 uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port);
 
 uint8_t UART_WriteIncludeNull(uint8_t *value, uint8_t length, uint8_t Port);
+
+uint8_t UART_putc(char value,uint8_t Port);
+
+uint8_t UART_puts(char *value, uint16_t size, uint8_t Port);
+
+uint8_t UART_getc(uint8_t Port);
 #endif
 

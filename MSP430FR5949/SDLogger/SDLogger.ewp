@@ -97,7 +97,7 @@
         </option>
         <option>
           <name>OGChipSelectMenu</name>
-          <state>MSP430FR5949	MSP430FR5949</state>
+          <state>MSP430FR5969	MSP430FR5969</state>
         </option>
         <option>
           <name>GStackHeapOverride</name>
@@ -237,7 +237,7 @@
         <debug>1</debug>
         <option>
           <name>CCDefines</name>
-          <state></state>
+          <state>PMEL</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -772,7 +772,7 @@
         </option>
         <option>
           <name>XList</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>SegmentMap</name>
@@ -804,7 +804,7 @@
         </option>
         <option>
           <name>XclFile</name>
-          <state>$TOOLKIT_DIR$\config\linker\lnk430fr5949.xcl</state>
+          <state>$TOOLKIT_DIR$\config\linker\lnk430fr5969.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -1047,7 +1047,7 @@
         </option>
         <option>
           <name>XlinkLogStackDepth</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>XlinkStackUsageEnable</name>
@@ -2259,6 +2259,33 @@
   <group>
     <name>src</name>
     <group>
+      <name>Buffers</name>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer16.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer16.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer32.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer32.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer8.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer8.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer_c.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer_c.h</name>
+      </file>
+    </group>
+    <group>
       <name>GPIO</name>
       <file>
         <name>$PROJ_DIR$\src\GPIO\GPIO.c</name>
@@ -2288,10 +2315,10 @@
     <group>
       <name>UART</name>
       <file>
-        <name>$PROJ_DIR$\src\UART\UART.c</name>
+        <name>$PROJ_DIR$\src\UART\uart.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\src\UART\UART.h</name>
+        <name>$PROJ_DIR$\src\UART\uart.h</name>
       </file>
     </group>
     <file>

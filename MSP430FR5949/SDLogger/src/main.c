@@ -77,7 +77,8 @@ void SETUP_GPIO(void);
 // Counters
 
 // Structures
-
+CircularBuffer8_s Buf8_Output;
+CircularBuffer8_s Buf8_Input;
 // Enum types
 
 // Character Arrays
@@ -95,9 +96,9 @@ int main(void) {
   // Configure the UART
   UART_Init(UART_A1,UART_BAUD_9600,CLK_32768,UART_CLK_SMCLK);
 
-   // Configure SPI
+  // Configure SPI
   SPI_Master_3W_Init(SPI_B0, 250000,8000000, UCSSEL__SMCLK);
-  
+
   // Initialize the timer for 1 Second
   TIMER_A1_Init();
   TIMER_A0_Init();
@@ -106,12 +107,41 @@ int main(void) {
   __bis_SR_register(GIE);
   __no_operation();                         // For debugger
 
-   
+  Buffer8_Clear(&Buf8_Output);
+  Buffer8_Clear(&Buf8_Input);
+
+  for(uint8_t i=0;i<255;i++)
+  {
+    Buffer8_Put(&Buf8_Output,i);
+  }
+  uint8_t value = 0;
+  
+  while(Buffer8_IsEmpty(&Buf8_Output) != BUFFER8_IS_EMPTY)
+  {
+    Buffer8_Get(&Buf8_Output,&value);
+    UCB0TXBUF = value;
+  }
+    
+    
   // Main loopD
   for(;;)
   {
-    UCB0TXBUF = 0xA0;
-    __delay_cycles(10000);
+    //__delay_cycles(10000);
+    
+    Buffer8_Clear(&Buf8_Output);
+    while(Buffer8_IsEmpty(&Buf8_Input) != BUFFER8_IS_EMPTY)
+    {
+      Buffer8_Get(&Buf8_Input,&value);
+      Buffer8_Put(&Buf8_Output,value);
+      __delay_cycles(1000);
+    }
+    Buffer8_Clear(&Buf8_Input);
+    while(Buffer8_IsEmpty(&Buf8_Output) != BUFFER8_IS_EMPTY)
+    {    
+      Buffer8_Get(&Buf8_Output,&value);
+      UCB0TXBUF = value;
+    }
+    
   }
 }
 
@@ -174,10 +204,10 @@ void SETUP_Clock(void)
   // MCLK running on DCOCLK, 1MHz
   // LFXT Driver on low power
   CSCTL0_H = CSKEY >> 8;		// Unlock registers
-  CSCTL1 = DCOFSEL_7;			// Set DCO to 8Mhz
+  CSCTL1 = DCOFSEL_6;			// Set DCO to 8Mhz
   CSCTL2 = SELA__LFXTCLK | SELS__DCOCLK | SELM__DCOCLK;
   CSCTL3 = DIVA__1 | DIVS__1 | DIVM__8;	
-  CSCTL4 =   LFXTDRIVE_0 | VLOOFF;
+//  CSCTL4 =   LFXTDRIVE_0 | VLOOFF;
   CSCTL4 &= ~LFXTOFF;
   
   //   Wait for the clock to lock
@@ -194,6 +224,8 @@ void SETUP_GPIO(void)
 {
   // Set All GPIO settings to 0
   GPIO_Init();        // Sets all Outputs Low and regs to 0
+  
+  GPIO_SetPinAsInput(1,7);
 
   // Configure Selection bits for UART
   P2SEL1 |= BIT5 | BIT6;                    // USCI_A0 UART operation

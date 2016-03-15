@@ -68,6 +68,8 @@ uint8_t SPI_Master_3W_Init(uint8_t Port,uint32_t Baud,uint32_t ClkFreq, uint16_t
       /* Initialize USCI State Machine */
       UCB0CTLW0 &= ~UCSWRST;
       
+      UCB0IE |= UCRXIE;
+      
       break;
     default:
       return SPI_FAIL;
@@ -149,6 +151,55 @@ uint8_t SPI_Master_EnableInterrupts(uint8_t Port,uint8_t TxInt, uint8_t RxInt)
 }
 
 
+uint8_t SPI_putc(uint8_t value, uint8_t Port)
+{
+	switch(Port)
+	{
+		case SPI_A0:
+			UCA0TXBUF = value;
+			break;
+		case SPI_A1:
+			UCA1TXBUF = value;
+			break;
+		case SPI_B0:
+			UCB0TXBUF = value;
+			break;
+		default:
+			return SPI_FAIL;
+			break;
+	}
+	
+	return SPI_OK;
+}
+
+
+uint8_t SPI_puts(uint8_t *value,uint16_t length, uint8_t Port)
+{
+	uint8_t i=0;
+	
+	for(i=0;i<length;i++)
+	{
+		switch(Port)
+		{
+			case SPI_A0:
+			case SPI_A1:
+			case SPI_B0:
+				SPI_putc(value[i],Port);
+				break;
+			default:
+				return SPI_FAIL;
+				break;
+		}
+		
+	}
+	
+	return SPI_OK;
+}
+
+
+
+
+
 static uint16_t SPI_Calculate_BitRate(uint32_t Baud,uint32_t ClkFreq)
 {
   uint32_t Divisor = 0;
@@ -212,9 +263,9 @@ __interrupt void USCI_B0_ISR(void)
   {
     case USCI_NONE: break;
     case USCI_SPI_UCRXIFG:
+      Buffer8_Put(&Buf8_Input,UCB0RXBUF);
       //RXData = UCB0RXBUF;
       UCB0IFG &= ~UCRXIFG;
-      __bic_SR_register_on_exit(LPM0_bits); // Wake up to setup next TX
       break;
     case USCI_SPI_UCTXIFG:
       UCB0TXBUF = 0xAA;                   // Transmit characters

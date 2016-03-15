@@ -108,8 +108,15 @@ __interrupt void RTC_ISR(void)
     case RTCIV_RTCOFIFG:    // Oscillator Failure
       break;
     case RTCIV_RTCRDYIFG:   // RTC Ready
-      // Set Routine Here
-      SumOfCount += SensorCounter;
+      // Check for overflow and lock to max
+      if( (0xFFFFFFFF - SumOfCount) > SensorCounter)
+      {
+        SumOfCount += SensorCounter;
+      }
+      else
+      {
+        SumOfCount = 0xFFFFFFFF;
+      }
       SensorCounter = 0;
       SecondCounter ++;
 #ifdef DEBUG

@@ -89,7 +89,7 @@ __persistent uint32_t SecondCounter = 0;
 // Variables
 
 // Counters
-uint32_t SensorCounter;
+volatile uint32_t SensorCounter;
 
 // Structures
 

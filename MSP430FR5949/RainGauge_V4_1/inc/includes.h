@@ -86,7 +86,7 @@ typedef enum SysState {
 #ifdef PMEL
 
 // Flags and counters
-extern uint32_t SensorCounter;
+extern volatile uint32_t SensorCounter;
 extern uint32_t SecondCounter;
 extern uint32_t SumOfCount;
 

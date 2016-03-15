@@ -29,7 +29,7 @@
 #include "../../inc/includes.h"
 
 #ifdef PMEL
-#include <msp430fr5949.h>
+#include <msp430fr5969.h>
 #else
 #include "../../test/msp430fr5969.h"
 #endif

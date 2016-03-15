@@ -19,7 +19,7 @@
 
 /*****************************  DEBUG  *********************************/
 #define DEBUG 	(true)
-#define PMEL
+//#define PMEL
 /************************************************************************
 *						STANDARD LIBRARIES
 ************************************************************************/
@@ -33,7 +33,7 @@
 #ifndef PMEL
 #include "../test/msp430fr5969.h"
 #else
-#include <msp430fr5949.h>		// Device Specific Header File
+#include <msp430fr5969.h>		// Device Specific Header File
 #endif
 
 /************************************************************************
@@ -43,6 +43,10 @@
 #include "../src/UART/uart.h"	  		// UART Driver Header file
 #include "../src/Timer/timer.h" 		// Timer Driver Header file
 #include "../src/SPI/SPI.h"
+#include "../src/buffers/buffer_c.h"
+#include "../src/buffers/buffer8.h"
+#include "../src/buffers/buffer16.h"
+#include "../src/buffers/buffer32.h"
 
 /************************************************************************
 *							CONSTANTS
@@ -99,6 +103,10 @@
 // Flags and counters
 
 // Structures
+typedef struct _CircularBuffer8_s CircularBuffer_s;
+
+extern CircularBuffer_s Buf8_Input;
+extern CircularBuffer_s Buf8_Output;
 
 // functions
 

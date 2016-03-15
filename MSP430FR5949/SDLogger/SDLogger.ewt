@@ -1963,6 +1963,33 @@
   <group>
     <name>src</name>
     <group>
+      <name>Buffers</name>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer16.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer16.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer32.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer32.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer8.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer8.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer_c.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer_c.h</name>
+      </file>
+    </group>
+    <group>
       <name>GPIO</name>
       <file>
         <name>$PROJ_DIR$\src\GPIO\GPIO.c</name>
