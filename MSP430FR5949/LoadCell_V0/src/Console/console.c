@@ -158,8 +158,8 @@ static void CONSOLE_State_ManualCalibration(void)
   float intercept = 0.0;
   
   // Display Slope input command
-	CONSOLE_DisplayState_ManualCalibrationInput(0,0);
-    
+  CONSOLE_DisplayState_ManualCalibrationInput(0,0);
+  MenuTimeoutA = 0; 
   // Wait for user input SLOPE
   while(ExitFlag == false)
   {
@@ -172,10 +172,9 @@ static void CONSOLE_State_ManualCalibration(void)
       if(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
       {
         ExitFlag = RetreiveData(&rxValues[dataCount++],&dataCount);
+        MenuTimeoutA = 0;
 
       }
-
-
   }
 
   // Check string for valid ascii values

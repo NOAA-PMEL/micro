@@ -165,7 +165,7 @@ uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port)
 		if(value[i] != 0x00)
 		{
 			UART_WriteChar(value[i],Port);
-            __delay_cycles(7000);
+            __delay_cycles(25000);
 		}
 		else
 		{
@@ -187,7 +187,7 @@ uint8_t UART_WriteIncludeNull(uint8_t *value, uint8_t length, uint8_t Port)
 	for(i=0;i<length;i++)
 	{
       UART_WriteChar(value[i],Port);
-      __delay_cycles(5000);
+      __delay_cycles(25000);
 	}
 	
 	return UART_OK;
@@ -614,6 +614,7 @@ __interrupt void USCI_A0_ISR(void)
 #pragma vector=USCI_A1_VECTOR
 __interrupt void USCI_A1_ISR(void)
 {
+  char inputVal = 0;
 	switch(__even_in_range(UCA1IV, USCI_UART_UCTXCPTIFG))
 	{
 		case USCI_NONE:
@@ -622,17 +623,34 @@ __interrupt void USCI_A1_ISR(void)
 			switch(SystemState)
 			{
               case Sample:
-                  switch(UCA1RXBUF)
-                  {
-                      case 'D':
-                      case 'd':
-                          SystemState = Transmit;
-                          __low_power_mode_off_on_exit();
-                          break;
-                      default:
-                          break;
-                  }
-                  break;
+                switch(UCA1RXBUF)
+                {
+                    case 'D':
+                      SystemState = Transmit;
+                      TxSubState = Volume;
+                      __low_power_mode_off_on_exit();
+                      break;
+                    case 'd':
+                      SystemState = Transmit;
+                      TxSubState = Counts;
+                      __low_power_mode_off_on_exit();
+                      break;
+                    case 0x03:
+                      if(++ConsoleCounter >= 3)
+                      {
+                        SystemState = Console;
+                      }
+                      __low_power_mode_off_on_exit();
+                      break;
+                    default:
+                        break;
+                }
+                break;
+              case Console:
+                inputVal = UCA1RXBUF;
+                UCA1TXBUF = inputVal;
+                BufferC_Put(&ConsoleData,inputVal);
+                break;
               default:
                 break;
             }

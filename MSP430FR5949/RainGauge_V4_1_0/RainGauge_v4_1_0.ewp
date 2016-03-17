@@ -237,7 +237,7 @@
         <debug>1</debug>
         <option>
           <name>CCDefines</name>
-          <state></state>
+          <state>PMEL</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -804,7 +804,7 @@
         </option>
         <option>
           <name>XclFile</name>
-          <state>$TOOLKIT_DIR$\config\linker\lnk430fr5969.xcl</state>
+          <state>$TOOLKIT_DIR$\config\linker\lnk430fr5949.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -2258,6 +2258,24 @@
   </group>
   <group>
     <name>src</name>
+    <group>
+      <name>buffers</name>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer_c.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer_c.h</name>
+      </file>
+    </group>
+    <group>
+      <name>Console</name>
+      <file>
+        <name>$PROJ_DIR$\src\Console\console.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\Console\console.h</name>
+      </file>
+    </group>
     <group>
       <name>GPIO</name>
       <file>

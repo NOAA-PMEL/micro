@@ -53,13 +53,6 @@ void TIMER_A1_Init ( void )
 void TIMER_B_MilliSecond( uint16_t length )
 {
 
-	for(uint16_t i=0; i<length;i++)
-	{
-		//TimerFlags.TimerB = true;
-		ResetTimerB();
-		SetTimerBInterrupt();
-		//while(TimerFlags.TimerB == true );
-	}
 }
 
 
@@ -119,6 +112,7 @@ __interrupt void RTC_ISR(void)
       }
       SensorCounter = 0;
       SecondCounter ++;
+      ConsoleTimeoutCounter++;
 #ifdef DEBUG
       GPIO_TogglePin(DEBUG_PORT,DEBUG_PIN);
 #endif

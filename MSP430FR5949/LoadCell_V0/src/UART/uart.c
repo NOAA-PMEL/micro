@@ -165,7 +165,7 @@ uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port)
 		if(value[i] != 0x00)
 		{
 			UART_WriteChar(value[i],Port);
-            __delay_cycles(5000);
+            __delay_cycles(7000);
 		}
 		else
 		{
@@ -615,7 +615,8 @@ __interrupt void USCI_A0_ISR(void)
 
 #pragma vector=USCI_A1_VECTOR
 __interrupt void USCI_A1_ISR(void)
-{
+{   
+  
 	switch(__even_in_range(UCA1IV, USCI_UART_UCTXCPTIFG))
 	{
 		case USCI_NONE:
@@ -624,7 +625,8 @@ __interrupt void USCI_A1_ISR(void)
 			switch(SystemState)
 			{
 				case Sample:
-					switch(UCA1RXBUF)
+                    char rxVal = UCA1RXBUF;
+					switch(rxVal)
 					{
 						case 'D':
 						case 'd':
@@ -639,6 +641,7 @@ __interrupt void USCI_A1_ISR(void)
 							}
 							break;
 						default:
+                            UCA1TXBUF = rxVal;
 							break;
 					}
 					break;

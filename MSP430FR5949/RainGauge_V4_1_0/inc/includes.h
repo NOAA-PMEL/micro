@@ -19,7 +19,7 @@
 
 /*****************************  DEBUG  *********************************/
 // #define DEBUG 	(true)
-#define PMEL
+
 /************************************************************************
 *						STANDARD LIBRARIES
 ************************************************************************/
@@ -42,7 +42,8 @@
 #include "../src/GPIO/gpio.h"				// GPIO Driver Header file
 #include "../src/UART/uart.h"	  		// UART Driver Header file
 #include "../src/Timer/timer.h" 		// Timer Driver Header file
-
+#include "../src/Console/console.h"     // Console header file
+#include "../src/buffers/buffer_c.h"    // Char buffer header file
 
 
 /************************************************************************
@@ -75,12 +76,19 @@
 /************************************************************************
 *							STRUCTURES
 ************************************************************************/
+typedef struct _CircularBufferC_s CircularBuffer_t ;
+
 typedef enum SysState {
   Sample,
   Console,
   Transmit,
 } SystemState_t;
 
+
+typedef enum TransSubState{
+  Counts,
+  Volume
+} TransSubState_t;
 /************************************************************************
 *							GLOBAL VARIABLES
 ************************************************************************/
@@ -90,10 +98,15 @@ typedef enum SysState {
 extern volatile uint32_t SensorCounter;
 extern uint32_t SecondCounter;
 extern uint32_t SumOfCount;
+extern volatile uint8_t ConsoleTimeoutCounter;
+extern volatile uint8_t ConsoleCounter;
+extern float slope;
+extern float intercept;
 
 // Structures
 extern SystemState_t SystemState;
-
+extern TransSubState_t TxSubState;
+extern CircularBuffer_t ConsoleData;
 // Functions
 
 
