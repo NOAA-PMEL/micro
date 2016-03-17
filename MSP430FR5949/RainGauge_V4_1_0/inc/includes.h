@@ -77,10 +77,24 @@
 *							STRUCTURES
 ************************************************************************/
 typedef struct _CircularBufferC_s CircularBuffer_t ;
+typedef struct _RTCStruct_s RTCStruct_t;
+
+typedef struct _SampleData_s {
+  CircularBufferF_s Mean;
+  CircularBufferF_s STD;
+  CircularBufferF_s Min;
+  CircularBufferF_s Max;
+  CircularBufferC_s Year;
+  CircularBufferC_s Mon;
+  CircularBufferC_s Day;
+  CircularBufferC_s Hour;
+  CircularBufferC_s Min;
+}SampleData_t;
 
 typedef enum SysState {
   Sample,
   Console,
+  CalculateStats,
   Transmit,
 } SystemState_t;
 
@@ -108,6 +122,7 @@ extern float intercept;
 extern SystemState_t SystemState;
 extern TransSubState_t TxSubState;
 extern CircularBuffer_t ConsoleData;
+extern RTCStruct_t RTC; 
 // Functions
 
 

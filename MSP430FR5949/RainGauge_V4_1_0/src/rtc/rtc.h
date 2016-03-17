@@ -18,6 +18,21 @@
 ************************************************************************/
 #include <stdint.h>
 
+#define RTC_OK      (0)
+#define RTC_FAIL    (1)
+
+typedef struct _RTCStruct_s
+{
+  uint16_t Year;
+  uint8_t Mon;
+  uint8_t Day;
+  uint8_t Hour;
+  uint8_t Min;
+  uint8_t Sec;
+  uint8_t UpdateFlag;
+  uint8_t TimeAtCommand;
+}RTCStruct_s;
+
 
 /** @brief Initialize the RTC
  *
