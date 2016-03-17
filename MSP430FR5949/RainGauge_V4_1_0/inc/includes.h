@@ -44,7 +44,7 @@
 #include "../src/Timer/timer.h" 		// Timer Driver Header file
 #include "../src/Console/console.h"     // Console header file
 #include "../src/buffers/buffer_c.h"    // Char buffer header file
-
+#include "../src/rtc/rtc.h"
 
 /************************************************************************
 *							CONSTANTS
@@ -87,7 +87,8 @@ typedef enum SysState {
 
 typedef enum TransSubState{
   Counts,
-  Volume
+  Volume,
+  Report
 } TransSubState_t;
 /************************************************************************
 *							GLOBAL VARIABLES

@@ -91,44 +91,7 @@ __interrupt void TIMER1_A0_ISR(void)
   return;
 }
 
-#pragma vector=RTC_VECTOR
-__interrupt void RTC_ISR(void)
-{
-  switch(__even_in_range(RTCIV, RTCIV_RT1PSIFG))
-  {
-    case RTCIV_NONE:
-      break;
-    case RTCIV_RTCOFIFG:    // Oscillator Failure
-      break;
-    case RTCIV_RTCRDYIFG:   // RTC Ready
-      // Check for overflow and lock to max
-      if( (0xFFFFFFFF - SumOfCount) > SensorCounter)
-      {
-        SumOfCount += SensorCounter;
-      }
-      else
-      {
-        SumOfCount = 0xFFFFFFFF;
-      }
-      SensorCounter = 0;
-      SecondCounter ++;
-      ConsoleTimeoutCounter++;
-#ifdef DEBUG
-      GPIO_TogglePin(DEBUG_PORT,DEBUG_PIN);
-#endif
-      break;
-    case RTCIV_RTCTEVIFG:   // RTC Interval Timer Flag
-      break;
-    case RTCIV_RTCAIFG:     // RTC User Alarm
-      break;
-    case RTCIV_RT0PSIFG:    // RTC Prescaler 0
-      break;
-    case RTCIV_RT1PSIFG:    // RTC Prescalser 1
-      break;
-    default:
-      break;   
-  }
-}
+
 
 
 #endif

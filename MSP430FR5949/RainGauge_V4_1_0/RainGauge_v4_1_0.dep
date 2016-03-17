@@ -2,10 +2,14 @@
 
 <project>
   <fileVersion>2</fileVersion>
-  <fileChecksum>1220425814</fileChecksum>
+  <fileChecksum>92913781</fileChecksum>
   <configuration>
     <name>Debug</name>
     <outputs>
+      <file>$PROJ_DIR$\src\rtc\rtc.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\rtc.r43</file>
+      <file>$PROJ_DIR$\Debug\Obj\rtc.pbi</file>
+      <file>$PROJ_DIR$\src\rtc\rtc.h</file>
       <file>$PROJ_DIR$\src\Timer\timer.h</file>
       <file>$PROJ_DIR$\src\UART\uart.c</file>
       <file>$PROJ_DIR$\src\UART\uart.h</file>
@@ -54,66 +58,34 @@
       <file>$PROJ_DIR$\src\Timer\timer.c</file>
     </outputs>
     <file>
+      <name>$PROJ_DIR$\src\rtc\rtc.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 1</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 2</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 3 46 29 33 13 17 20 36 41 14 28 18 12 34 15 16 32 37 23 48 6 4 47 42 30</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 30 13 47 14 34 17 28 37 32 12 46 29 16 6 18 33 15 48 4 42 41 20 36 3 23</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
       <name>$PROJ_DIR$\src\UART\uart.c</name>
       <outputs>
         <tool>
           <name>ICC430</name>
-          <file> 7</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 27</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>ICC430</name>
-          <file> 2 42 25 29 9 13 16 32 37 10 24 14 8 30 11 12 28 33 19 44 0 43 38 26</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 29 0 33 8 9 32 11 44 38 24 37 16 28 42 25 30 12 2 43 14 13 10 26 19</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\main.c</name>
-      <outputs>
-        <tool>
-          <name>ICC430</name>
-          <file> 6</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 5</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>ICC430</name>
-          <file> 42 25 29 9 13 16 32 37 10 24 14 8 30 11 12 28 33 19 44 2 0 43 38 26</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 26 43 9 30 28 33 8 42 25 12 2 14 13 10 29 37 11 44 0 38 24 16 32 19</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\Debug\Exe\RainGauge_v4_1_0.d43</name>
-      <inputs>
-        <tool>
-          <name>XLINK</name>
-          <file> 34 17 21 6 4 7 23</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\GPIO\gpio.c</name>
-      <outputs>
-        <tool>
-          <name>ICC430</name>
-          <file> 21</file>
+          <file> 11</file>
         </tool>
         <tool>
           <name>BICOMP</name>
@@ -123,11 +95,66 @@
       <inputs>
         <tool>
           <name>ICC430</name>
-          <file> 44 8 29 9 13 16 32 37 10 42 25 24 14 30 11 12 28 33 19 2 0 43 38 26</file>
+          <file> 6 46 29 33 13 17 20 36 41 14 28 18 12 34 15 16 32 37 23 48 4 47 42 30 3</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 32 29 30 43 8 42 28 9 33 37 16 25 12 2 14 24 13 10 11 44 0 38 26 19</file>
+          <file> 4 37 12 33 17 14 13 41 15 48 42 28 32 46 29 34 16 6 47 18 20 36 30 23</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 10</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 9</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 46 29 33 13 17 20 36 41 14 28 18 12 34 15 16 32 37 23 48 6 4 47 42 30 3</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 30 42 13 15 48 28 37 12 46 4 33 17 14 41 32 29 34 16 6 47 18 20 36 23</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\RainGauge_v4_1_0.d43</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 38 21 25 10 1 8 11 27</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\src\GPIO\gpio.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 25</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 35</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 48 12 33 13 17 20 36 41 14 46 29 28 18 34 15 16 32 37 23 6 4 47 42 30 3</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 36 33 34 47 12 46 32 13 37 41 20 29 16 6 18 28 17 14 15 48 4 42 30 23</file>
         </tool>
       </inputs>
     </file>
@@ -136,21 +163,21 @@
       <outputs>
         <tool>
           <name>ICC430</name>
-          <file> 34</file>
+          <file> 38</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 15</file>
+          <file> 19</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICC430</name>
-          <file> 38 8 29 9 13 16 32 37 10 26 33 19</file>
+          <file> 42 12 33 13 17 20 36 41 14 30 37 23</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 26 8 29 32 33 9 37 16 19 38 13 10</file>
+          <file> 30 12 33 36 37 13 41 20 23 42 17 14</file>
         </tool>
       </inputs>
     </file>
@@ -159,30 +186,7 @@
       <outputs>
         <tool>
           <name>ICC430</name>
-          <file> 17</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 18</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>ICC430</name>
-          <file> 43 42 25 29 9 13 16 32 37 10 24 14 8 30 11 12 28 33 19 44 2 0 38 26</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 33 9 2 25 14 12 8 30 28 43 13 10 29 37 42 11 44 0 38 24 16 32 26 19</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\Timer\timer.c</name>
-      <outputs>
-        <tool>
-          <name>ICC430</name>
-          <file> 4</file>
+          <file> 21</file>
         </tool>
         <tool>
           <name>BICOMP</name>
@@ -192,11 +196,34 @@
       <inputs>
         <tool>
           <name>ICC430</name>
-          <file> 0 8 29 9 13 16 32 37 10 42 25 24 14 30 11 12 28 33 19 44 2 43 38 26</file>
+          <file> 47 46 29 33 13 17 20 36 41 14 28 18 12 34 15 16 32 37 23 48 6 4 42 30 3</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 9 29 28 26 42 32 30 43 37 16 25 12 2 14 24 33 8 13 10 11 44 0 38 19</file>
+          <file> 37 6 29 18 33 16 36 41 12 34 32 47 13 20 46 15 48 4 42 28 17 14 30 23</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\src\Timer\timer.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 8</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 26</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 4 12 33 13 17 20 36 41 14 46 29 28 18 34 15 16 32 37 23 48 6 47 42 30 3</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 36 33 34 47 30 46 32 13 41 20 29 16 6 18 28 37 12 17 14 15 48 4 42 23</file>
         </tool>
       </inputs>
     </file>
@@ -205,11 +232,11 @@
       <outputs>
         <tool>
           <name>XLINK</name>
-          <file> 36</file>
+          <file> 40</file>
         </tool>
         <tool>
           <name>ULP430</name>
-          <file> 35</file>
+          <file> 39</file>
         </tool>
       </outputs>
     </file>

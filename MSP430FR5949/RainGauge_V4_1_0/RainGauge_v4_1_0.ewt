@@ -1990,6 +1990,15 @@
       </file>
     </group>
     <group>
+      <name>rtc</name>
+      <file>
+        <name>$PROJ_DIR$\src\rtc\rtc.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\rtc\rtc.h</name>
+      </file>
+    </group>
+    <group>
       <name>Timer</name>
       <file>
         <name>$PROJ_DIR$\src\Timer\timer.c</name>
