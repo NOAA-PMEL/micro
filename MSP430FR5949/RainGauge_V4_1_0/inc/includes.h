@@ -45,6 +45,8 @@
 #include "../src/Console/console.h"     // Console header file
 #include "../src/buffers/buffer_c.h"    // Char buffer header file
 #include "../src/buffers/buffer_f.h"
+#include "../src/buffers/buffer8.h"
+#include "../src/buffers/buffer16.h"
 #include "../src/rtc/rtc.h"
 #include "../src/Stats/statistics.h"
 /************************************************************************
@@ -78,6 +80,7 @@
 *							STRUCTURES
 ************************************************************************/
 typedef struct _CircularBufferC_s CircularBuffer_t ;
+
 typedef struct _RTCStruct_s RTCStruct_t;
 
 typedef struct _SampleData_s {
@@ -85,22 +88,29 @@ typedef struct _SampleData_s {
   CircularBufferF_s STD;
   CircularBufferF_s Min;
   CircularBufferF_s Max;
-  CircularBufferC_s Year;
-  CircularBufferC_s Month;
-  CircularBufferC_s Day;
-  CircularBufferC_s Hour;
-  CircularBufferC_s Minute;
+  CircularBuffer16_s Year;
+  CircularBuffer8_s Month;
+  CircularBuffer8_s Day;
+  CircularBuffer8_s Hour;
+  CircularBuffer8_s Minute;
 }SampleData_t;
 
 typedef struct _CurrentData_s {
-  uint32_t Counts;
-  uint32_t Seconds;
+  uint32_t Counts[5][60];
+  uint16_t Year[5];
+  uint8_t Mon[5];
+  uint8_t Day[5];
+  uint8_t Hour[5];
+  uint8_t Min[5];
+  uint8_t min;
+  uint8_t sec;
+  uint8_t numSamples;
 }CurrentData_t;
 
 typedef enum SysState {
   Sample,
   Console,
-  CalculateStats,
+  MinuteTimerRoutine,
   Transmit,
 } SystemState_t;
 
@@ -119,6 +129,7 @@ typedef enum TransSubState{
 extern volatile uint32_t SensorCounter;
 extern uint32_t SecondCounter;
 extern uint32_t SumOfCount;
+extern uint32_t MinuteSensorCounter;
 extern volatile uint8_t ConsoleTimeoutCounter;
 extern volatile uint8_t ConsoleCounter;
 extern float slope;

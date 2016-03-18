@@ -326,39 +326,56 @@ __interrupt void RTC_ISR(void)
       break;
     case RTCIV_RTCOFIFG:    // Oscillator Failure
       break;
-    case RTCIV_RTCRDYIFG:   // RTC Ready
-      // Check for overflow and lock to max
+    case RTCIV_RTCRDYIFG:   // Second Timer
+      MinuteData.sec++;
       if( (0xFFFFFFFF - SumOfCount) > SensorCounter)
       {
         SumOfCount += SensorCounter;
+       
       }
       else
       {
         SumOfCount = 0xFFFFFFFF;
       }
+      
       // Update Counters
       SensorCounter = 0;
+      
       SecondCounter ++;
       ConsoleTimeoutCounter++;
-      
-      // Change RTC values if flagged
-      if(RTC.UpdateFlag == true)
-      {
-        RTCYEAR = RTC.Year;
-        RTCMON = RTC.Mon;
-        RTCDAY = RTC.Day;
-        RTCHOUR = RTC.Hour;
-        RTCMIN = RTC.Min;
-        RTCSEC = RTC.Sec;
-        RTC.UpdateFlag = false;
-      }
 #ifdef DEBUG
       GPIO_TogglePin(DEBUG_PORT,DEBUG_PIN);
+      
 #endif
       break;
+      
+    /*  Minute Timer */
     case RTCIV_RTCTEVIFG:   // RTC Interval Timer Flag
       // Minute timer
       __no_operation();
+      if(SystemState == Sample)
+      {
+        /* Clear the Seconds counter and increment the minute in the temp data buffer */
+        MinuteData.sec = 0;
+        MinuteData.min++;
+        if(MinuteData.min > 4)
+        {
+          MinuteData.min = 0;
+        }
+        /* Grab the date/time */
+        MinuteData.Year[MinuteData.numSamples] = RTCYEAR;
+        MinuteData.Mon[MinuteData.numSamples] = RTCMON;
+        MinuteData.Day[MinuteData.numSamples] = RTCDAY;
+        MinuteData.Hour[MinuteData.numSamples] = RTCHOUR;
+        MinuteData.Min[MinuteData.numSamples] = RTCMIN;
+        
+        /* Increment the number of temp samples collected counter */
+        MinuteData.numSamples++;
+        
+        /* Set to Run Minute Routine */
+        SystemState = MinuteTimerRoutine;
+        __low_power_mode_off_on_exit();
+      }
       break;
     case RTCIV_RTCAIFG:     // RTC User Alarm
       __no_operation();
