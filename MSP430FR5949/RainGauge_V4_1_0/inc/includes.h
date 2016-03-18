@@ -44,8 +44,9 @@
 #include "../src/Timer/timer.h" 		// Timer Driver Header file
 #include "../src/Console/console.h"     // Console header file
 #include "../src/buffers/buffer_c.h"    // Char buffer header file
+#include "../src/buffers/buffer_f.h"
 #include "../src/rtc/rtc.h"
-
+#include "../src/Stats/statistics.h"
 /************************************************************************
 *							CONSTANTS
 ************************************************************************/
@@ -85,11 +86,16 @@ typedef struct _SampleData_s {
   CircularBufferF_s Min;
   CircularBufferF_s Max;
   CircularBufferC_s Year;
-  CircularBufferC_s Mon;
+  CircularBufferC_s Month;
   CircularBufferC_s Day;
   CircularBufferC_s Hour;
-  CircularBufferC_s Min;
+  CircularBufferC_s Minute;
 }SampleData_t;
+
+typedef struct _CurrentData_s {
+  uint32_t Counts;
+  uint32_t Seconds;
+}CurrentData_t;
 
 typedef enum SysState {
   Sample,
@@ -123,6 +129,7 @@ extern SystemState_t SystemState;
 extern TransSubState_t TxSubState;
 extern CircularBuffer_t ConsoleData;
 extern RTCStruct_t RTC; 
+extern CurrentData_t MinuteData;
 // Functions
 
 

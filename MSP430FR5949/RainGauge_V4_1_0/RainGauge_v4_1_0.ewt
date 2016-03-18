@@ -1970,6 +1970,12 @@
       <file>
         <name>$PROJ_DIR$\src\buffers\buffer_c.h</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer_f.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer_f.h</name>
+      </file>
     </group>
     <group>
       <name>Console</name>
@@ -1996,6 +2002,15 @@
       </file>
       <file>
         <name>$PROJ_DIR$\src\rtc\rtc.h</name>
+      </file>
+    </group>
+    <group>
+      <name>Stats</name>
+      <file>
+        <name>$PROJ_DIR$\src\Stats\statistics.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\Stats\statistics.h</name>
       </file>
     </group>
     <group>
