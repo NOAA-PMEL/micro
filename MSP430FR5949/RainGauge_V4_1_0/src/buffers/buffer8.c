@@ -80,7 +80,7 @@ int8_t Buffer8_GetRequested(CircularBuffer8_s *buf, uint8_t requested, uint8_t *
   
   if(requested > buf->write)
   {
-    readIdx = BUFFER8_SIZE - (buf->write) - requested;
+    readIdx = BUFFER8_SIZE + (buf->write) - requested;
   } else {
     readIdx = (buf->write) - requested;
   }

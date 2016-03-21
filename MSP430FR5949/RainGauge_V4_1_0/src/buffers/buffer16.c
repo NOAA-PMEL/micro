@@ -81,7 +81,7 @@ int8_t Buffer16_GetRequested(CircularBuffer16_s *buf, uint8_t requested, uint16_
   
   if(requested > buf->write)
   {
-    readIdx = BUFFER16_SIZE - (buf->write) - requested;
+    readIdx = BUFFER16_SIZE + (buf->write) - requested;
   } else {
     readIdx = (buf->write) - requested;
   }

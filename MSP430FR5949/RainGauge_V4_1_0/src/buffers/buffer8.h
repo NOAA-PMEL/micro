@@ -38,7 +38,7 @@
 *							MACROS
 ************************************************************************/
 
-#define BUFFER8_SIZE				(255)
+#define BUFFER8_SIZE				(60)
 #define ACTUAL_BUFFER8_SIZE		(BUFFER8_SIZE + 1)
 
 

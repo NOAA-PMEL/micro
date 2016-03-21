@@ -105,6 +105,7 @@ typedef struct _CurrentData_s {
   uint8_t min;
   uint8_t sec;
   uint8_t numSamples;
+  uint8_t lastSampleRecorded;
 }CurrentData_t;
 
 typedef enum SysState {
@@ -134,6 +135,8 @@ extern volatile uint8_t ConsoleTimeoutCounter;
 extern volatile uint8_t ConsoleCounter;
 extern float slope;
 extern float intercept;
+extern float dmMin;
+extern float dmMax;
 
 // Structures
 extern SystemState_t SystemState;

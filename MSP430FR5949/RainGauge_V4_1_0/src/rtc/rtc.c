@@ -13,8 +13,8 @@ void RTC_Init(void)
 
   RTCYEAR = 0x2016;
   RTCMON = 0x3;
-  RTCDAY = 0x08;
-  RTCDOW = 0x02;
+  RTCDAY = 0x21;
+  RTCDOW = 0x01;
   RTCHOUR = 0x16;
   RTCMIN = 0x57;
   RTCSEC = 0x58;
@@ -338,6 +338,16 @@ __interrupt void RTC_ISR(void)
         SumOfCount = 0xFFFFFFFF;
       }
       
+      if(RTC.UpdateFlag == true)
+      {
+        RTCYEAR = RTC.Year;
+        RTCMON = RTC.Mon;
+        RTCDAY = RTC.Day;
+        RTCHOUR = RTC.Hour;
+        RTCMIN = RTC.Min;
+        RTCSEC = RTC.Sec;
+        RTC.UpdateFlag = false;
+      }
       // Update Counters
       SensorCounter = 0;
       
@@ -353,8 +363,17 @@ __interrupt void RTC_ISR(void)
     case RTCIV_RTCTEVIFG:   // RTC Interval Timer Flag
       // Minute timer
       __no_operation();
+      
+      /* Change RTC values if flagged */
       if(SystemState == Sample)
       {
+        /* Grab the date/time */
+        MinuteData.Year[MinuteData.min] = RTCYEAR;
+        MinuteData.Mon[MinuteData.min] = RTCMON;
+        MinuteData.Day[MinuteData.min] = RTCDAY;
+        MinuteData.Hour[MinuteData.min] = RTCHOUR;
+        MinuteData.Min[MinuteData.min] = RTCMIN;
+        
         /* Clear the Seconds counter and increment the minute in the temp data buffer */
         MinuteData.sec = 0;
         MinuteData.min++;
@@ -362,15 +381,15 @@ __interrupt void RTC_ISR(void)
         {
           MinuteData.min = 0;
         }
-        /* Grab the date/time */
-        MinuteData.Year[MinuteData.numSamples] = RTCYEAR;
-        MinuteData.Mon[MinuteData.numSamples] = RTCMON;
-        MinuteData.Day[MinuteData.numSamples] = RTCDAY;
-        MinuteData.Hour[MinuteData.numSamples] = RTCHOUR;
-        MinuteData.Min[MinuteData.numSamples] = RTCMIN;
+        
         
         /* Increment the number of temp samples collected counter */
         MinuteData.numSamples++;
+//        if(MinuteData.numSamples >= 5)
+//        {
+//          MinuteData.numSamples = 0;
+//        }
+        
         
         /* Set to Run Minute Routine */
         SystemState = MinuteTimerRoutine;
