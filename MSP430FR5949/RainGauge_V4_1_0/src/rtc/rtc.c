@@ -367,6 +367,9 @@ __interrupt void RTC_ISR(void)
       /* Change RTC values if flagged */
       if(SystemState == Sample)
       {
+        /* Set to Run Minute Routine */
+        SystemState = MinuteTimerRoutine;
+      }
         /* Grab the date/time */
         MinuteData.Year[MinuteData.min] = RTCYEAR;
         MinuteData.Mon[MinuteData.min] = RTCMON;
@@ -385,16 +388,12 @@ __interrupt void RTC_ISR(void)
         
         /* Increment the number of temp samples collected counter */
         MinuteData.numSamples++;
-//        if(MinuteData.numSamples >= 5)
-//        {
-//          MinuteData.numSamples = 0;
-//        }
+
         
         
-        /* Set to Run Minute Routine */
-        SystemState = MinuteTimerRoutine;
+        
         __low_power_mode_off_on_exit();
-      }
+//      }
       break;
     case RTCIV_RTCAIFG:     // RTC User Alarm
       __no_operation();

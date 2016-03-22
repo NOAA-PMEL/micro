@@ -79,15 +79,15 @@ int8_t Buffer16_GetRequested(CircularBuffer16_s *buf, uint8_t requested, uint16_
 {
   uint8_t readIdx = 0;
   
-  if(requested > buf->write)
-  {
-    readIdx = BUFFER16_SIZE + (buf->write) - requested;
-  } else {
-    readIdx = (buf->write) - requested;
-  }
-  
-  *value = buf->buffer[readIdx];
-  
+//  if(requested > buf->write)
+//  {
+//    readIdx = BUFFER16_SIZE + (buf->write) - requested;
+//  } else {
+//    readIdx = (buf->write) - requested;
+//  }
+//  
+//  *value = buf->buffer[readIdx];
+  *value = buf->buffer[requested];
   return 0;
 }
 
