@@ -77,15 +77,7 @@ int8_t Buffer8_Get(CircularBuffer8_s *buf, uint8_t *value)
 int8_t Buffer8_GetRequested(CircularBuffer8_s *buf, uint8_t requested, uint8_t *value)
 {
   uint8_t readIdx = 0;
-  
-//  if(requested > buf->write)
-//  {
-//    readIdx = BUFFER8_SIZE + (buf->write) - requested;
-//  } else {
-//    readIdx = (buf->write) - requested;
-//  }
-//  
-//  *value = buf->buffer[readIdx];
+ 
   *value = buf->buffer[requested];
   return 0;
 }

@@ -1,9 +1,9 @@
 /** @file timer.h
- *  @brief Drivers for MSP430FR5969 Timers
+ *  @brief Drivers for MSP430FR5949 Timers
  *
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date September 21, 2015
- *  @version 0.0.1
+ *  @date March 23, 2016
+ *  @version 0.1.2
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab

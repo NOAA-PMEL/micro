@@ -2,8 +2,8 @@
  *  @brief
  *
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date Dec 4, 2015
- *  @version 0.0.1
+ *  @date March 23, 2016
+ *  @version 0.1.1
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
@@ -33,24 +33,31 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 	uint16_t UCBRx;
 	uint16_t MCTLWReg;
 
+    /* Check for valid Port # */
 	if(UartPort > 1)
 	{
 		return UART_FAIL;
 	}
+    
+    /* Check for valid Baudrate */
 	if(UART_BaudrateIsValid(Baudrate) == BAUDRATE_FAIL)
 	{
 		return UART_FAIL;
 	}
+    
+    /* Check for valid Clock Frequency */
 	if(UART_ClockFrequencyIsValid(ClkFreq) == CLOCK_FAIL)
 	{
 		return UART_FAIL;
 	}
+    
+    /* Check for valid clock source */
 	if(Clk > UART_CLK_SMCLK)
 	{
 		return UART_FAIL;
 	}
 
-	// Configure Pins
+	/* Configure Pins for UART */
 	switch(UartPort)
 	{
 		case UART_A0:
@@ -67,7 +74,7 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 			break;
 	}
 
-	// Configure Port for UART Mode
+	/* Configure Port for UART Mode */
 	switch(UartPort)
 	{
 		case UART_A0:
@@ -82,7 +89,7 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 			break;
 	}
 
-	// Perform the UCBRS lookup and fail out if invalid
+	/* Perform the UCBRS lookup and set or fail out if invalid */
 	if( (UCBRSLookup( ClkFreq, Baudrate, &UCBRx, &MCTLWReg)) == BAUDRATE_FAIL)
 	{
 		return UART_FAIL;
@@ -115,6 +122,13 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 
 uint8_t UART_Read(uint8_t *value, uint8_t Port)
 {
+    /* Check for valid Port # */
+	if(UartPort > 1)
+	{
+		return UART_FAIL;
+	}
+    
+    /* Read selected port */
 	switch(Port)
 	{
 		case UART_A0:
@@ -135,6 +149,13 @@ uint8_t UART_Read(uint8_t *value, uint8_t Port)
 
 uint8_t UART_WriteChar(uint8_t value, uint8_t Port)
 {
+    /* Check for valid Port # */
+	if(UartPort > 1)
+	{
+		return UART_FAIL;
+	}
+    
+    /* Write value to selected port */
 	switch(Port)
 	{
 		case UART_A0:
@@ -155,11 +176,14 @@ uint8_t UART_WriteChar(uint8_t value, uint8_t Port)
 uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port)
 {
 	uint8_t i=0;
-
+    
+    /* Check for valid Port # */
 	if(Port != UART_A0 && Port != UART_A1)
 	{
 		return UART_FAIL;
 	}
+    
+    /* Write the character array to the selected port until \0 reached*/
 	for(i=0;i<length;i++)
 	{
 		if(value[i] != 0x00)
@@ -179,11 +203,13 @@ uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port)
 uint8_t UART_WriteIncludeNull(uint8_t *value, uint8_t length, uint8_t Port)
 {
   	uint8_t i=0;
-
+    /* Check for valid Port # */
 	if(Port != UART_A0 && Port != UART_A1)
 	{
 		return UART_FAIL;
 	}
+    
+    /* Write all values character array to the selected port */
 	for(i=0;i<length;i++)
 	{
       UART_WriteChar(value[i],Port);
@@ -213,269 +239,270 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 	uint16_t ucbrf = 0u;
 	uint16_t ucbrs = 0u;
 	uint8_t response = BAUDRATE_FAIL;
+    
+    /* Choose UCBRS value based on clock frequency and Baudrate */
 	switch( clkFreq)
 	{
-		case CLK_32768:
-			switch( baudRate){
-				case UART_BAUD_1200:
-					osval = 0x01;
-					*UCBRx = 1;
-					ucbrf = UCBRF_11;
-					ucbrs = 0x25;
-					break;
-				case UART_BAUD_2400:
-					osval = 0x00;
-					*UCBRx = 13;
-					ucbrf = UCBRF_0;
-					ucbrs = 0xB6;
-					break;
-				case UART_BAUD_4800:
-					osval = 0x00;
-					*UCBRx = 6;
-					ucbrf = UCBRF_0;
-					ucbrs = 0xEE;
-					break;
-				case UART_BAUD_9600:
-					osval = 0x00u;
-					*UCBRx = 3;
-					ucbrf = UCBRF_0;
-					ucbrs = 0x92;
-					break;
-				default:
-//					// Log error
-					response = BAUDRATE_FAIL;
-					break;
-			}
-			break;
+      case CLK_32768:
+        switch( baudRate){
+          case UART_BAUD_1200:
+            osval = 0x01;
+            *UCBRx = 1;
+            ucbrf = UCBRF_11;
+            ucbrs = 0x25;
+            break;
+          case UART_BAUD_2400:
+            osval = 0x00;
+            *UCBRx = 13;
+            ucbrf = UCBRF_0;
+            ucbrs = 0xB6;
+            break;
+          case UART_BAUD_4800:
+            osval = 0x00;
+            *UCBRx = 6;
+            ucbrf = UCBRF_0;
+            ucbrs = 0xEE;
+            break;
+          case UART_BAUD_9600:
+            osval = 0x00u;
+            *UCBRx = 3;
+            ucbrf = UCBRF_0;
+            ucbrs = 0x92;
+            break;
+          default:
+            /* Log error */
+            response = BAUDRATE_FAIL;
+            break;
+          }
+          break;
 		case CLK_1000000:
-			switch( baudRate){
-				case UART_BAUD_9600:
-					osval = 1;
-					*UCBRx = 6;
-					ucbrf = 8;
-					ucbrs = 0x20;
-					break;
-				case UART_BAUD_19200:
-					osval = 1;
-					*UCBRx = 3;
-					ucbrf = 4;
-					ucbrs = 0x2;
-					break;
-				case UART_BAUD_38400:
-					osval = 1;
-					*UCBRx = 1;
-					ucbrf = 10;
-					ucbrs = 0x00;
-					break;
-				case UART_BAUD_57600:
-					osval = 0;
-					*UCBRx = 17;
-					ucbrf = 0;
-					ucbrs = 0x4A;
-					break;
-				case UART_BAUD_115200:
-					osval = 0;
-					*UCBRx = 8;
-					ucbrf = 0;
-					ucbrs = 0xD6;
-					break;
-				default:
-					// Log error
-					response = BAUDRATE_FAIL;
-					break;
+          switch( baudRate){
+            case UART_BAUD_9600:
+              osval = 1;
+              *UCBRx = 6;
+              ucbrf = 8;
+              ucbrs = 0x20;
+              break;
+            case UART_BAUD_19200:
+              osval = 1;
+              *UCBRx = 3;
+              ucbrf = 4;
+              ucbrs = 0x2;
+              break;
+            case UART_BAUD_38400:
+              osval = 1;
+              *UCBRx = 1;
+              ucbrf = 10;
+              ucbrs = 0x00;
+              break;
+            case UART_BAUD_57600:
+              osval = 0;
+              *UCBRx = 17;
+              ucbrf = 0;
+              ucbrs = 0x4A;
+              break;
+            case UART_BAUD_115200:
+              osval = 0;
+              *UCBRx = 8;
+              ucbrf = 0;
+              ucbrs = 0xD6;
+              break;
+            default:
+              /*  Log error */
+              response = BAUDRATE_FAIL;
+              break;
 			}
 			break;
 		case CLK_1048576:
-			switch( baudRate){
-				case UART_BAUD_9600:
-					osval = 1;
-					*UCBRx = 6;
-					ucbrf = 13;
-					ucbrs = 0x22;
-					break;
-				case UART_BAUD_19200:
-					osval = 1;
-					*UCBRx = 3;
-					ucbrf = 6;
-					ucbrs = 0xAD;
-					break;
-				case UART_BAUD_38400:
-					osval = 1;
-					*UCBRx = 1;
-					ucbrf = 11;
-					ucbrs = 0x25;
-					break;
-				case UART_BAUD_57600:
-					osval = 0;
-					*UCBRx = 18;
-					ucbrf = 0;
-					ucbrs = 0x11;
-					break;
-				case UART_BAUD_115200:
-					osval = 0;
-					*UCBRx = 9;
-					ucbrf = 0;
-					ucbrs = 0x08;
-					break;
-				default:
-					// Log error
-					response = BAUDRATE_FAIL;
-					break;
-			}
+          switch( baudRate){
+            case UART_BAUD_9600:
+              osval = 1;
+              *UCBRx = 6;
+              ucbrf = 13;
+              ucbrs = 0x22;
+              break;
+            case UART_BAUD_19200:
+              osval = 1;
+              *UCBRx = 3;
+              ucbrf = 6;
+              ucbrs = 0xAD;
+              break;
+            case UART_BAUD_38400:
+              osval = 1;
+              *UCBRx = 1;
+              ucbrf = 11;
+              ucbrs = 0x25;
+              break;
+            case UART_BAUD_57600:
+              osval = 0;
+              *UCBRx = 18;
+              ucbrf = 0;
+              ucbrs = 0x11;
+              break;
+            case UART_BAUD_115200:
+              osval = 0;
+              *UCBRx = 9;
+              ucbrf = 0;
+              ucbrs = 0x08;
+              break;
+            default:
+              /* Log error */
+              response = BAUDRATE_FAIL;
+              break;
+            }
 			break;
 		case CLK_4000000:
-			switch( baudRate){
-				case UART_BAUD_9600:
-					osval = 1;
-					*UCBRx = 26;
-					ucbrf = 0;
-					ucbrs = 0xB6;
-					break;
-				case UART_BAUD_19200:
-					osval = 1;
-					*UCBRx = 13;
-					ucbrf = 0;
-					ucbrs = 0x84;
-					break;
-				case UART_BAUD_38400:
-					osval = 1;
-					*UCBRx = 6;
-					ucbrf = 8;
-					ucbrs = 0x20;
-					break;
-				case UART_BAUD_57600:
-					osval = 1;
-					*UCBRx = 4;
-					ucbrf = 5;
-					ucbrs = 0x55;
-					break;
-				case UART_BAUD_115200:
-					osval = 1;
-					*UCBRx = 2;
-					ucbrf = 2;
-					ucbrs = 0xBB;
-					break;
-				case UART_BAUD_230400:
-					osval = 0;
-					*UCBRx = 17;
-					ucbrf = 0;
-					ucbrs = 0x4A;
-					break;
-
-				default:
-					// Log error
-					response = BAUDRATE_FAIL;
-					break;
+          switch( baudRate){
+            case UART_BAUD_9600:
+              osval = 1;
+              *UCBRx = 26;
+              ucbrf = 0;
+              ucbrs = 0xB6;
+              break;
+            case UART_BAUD_19200:
+              osval = 1;
+              *UCBRx = 13;
+              ucbrf = 0;
+              ucbrs = 0x84;
+              break;
+            case UART_BAUD_38400:
+              osval = 1;
+              *UCBRx = 6;
+              ucbrf = 8;
+              ucbrs = 0x20;
+              break;
+            case UART_BAUD_57600:
+              osval = 1;
+              *UCBRx = 4;
+              ucbrf = 5;
+              ucbrs = 0x55;
+              break;
+            case UART_BAUD_115200:
+              osval = 1;
+              *UCBRx = 2;
+              ucbrf = 2;
+              ucbrs = 0xBB;
+              break;
+            case UART_BAUD_230400:
+              osval = 0;
+              *UCBRx = 17;
+              ucbrf = 0;
+              ucbrs = 0x4A;
+              break;
+            default:
+              /* Log error */
+              response = BAUDRATE_FAIL;
+              break;
 			}
 			break;
 		case CLK_4194304:
-			switch( baudRate){
-				case UART_BAUD_9600:
-					osval = 1;
-					*UCBRx = 27;
-					ucbrf = 4;
-					ucbrs = 0xFB;
-					break;
-				case UART_BAUD_19200:
-					osval = 1;
-					*UCBRx = 13;
-					ucbrf = 10;
-					ucbrs = 0x55;
-					break;
-				case UART_BAUD_38400:
-					osval = 1;
-					*UCBRx = 6;
-					ucbrf = 13;
-					ucbrs = 0x22;
-					break;
-				case UART_BAUD_57600:
-					osval = 1;
-					*UCBRx = 4;
-					ucbrf = 8;
-					ucbrs = 0xEE;
-					break;
-				case UART_BAUD_115200:
-					osval = 1;
-					*UCBRx = 2;
-					ucbrf = 4;
-					ucbrs = 0x92;
-					break;
-				case UART_BAUD_230400:
-					osval = 0;
-					*UCBRx = 18;
-					ucbrf = 0;
-					ucbrs = 0x11;
-					break;
-
-				default:
-					// Log error
-					response = BAUDRATE_FAIL;
-					break;
+          switch( baudRate){
+            case UART_BAUD_9600:
+              osval = 1;
+              *UCBRx = 27;
+              ucbrf = 4;
+              ucbrs = 0xFB;
+              break;
+            case UART_BAUD_19200:
+              osval = 1;
+              *UCBRx = 13;
+              ucbrf = 10;
+              ucbrs = 0x55;
+              break;
+            case UART_BAUD_38400:
+              osval = 1;
+              *UCBRx = 6;
+              ucbrf = 13;
+              ucbrs = 0x22;
+              break;
+            case UART_BAUD_57600:
+              osval = 1;
+              *UCBRx = 4;
+              ucbrf = 8;
+              ucbrs = 0xEE;
+              break;
+            case UART_BAUD_115200:
+              osval = 1;
+              *UCBRx = 2;
+              ucbrf = 4;
+              ucbrs = 0x92;
+              break;
+            case UART_BAUD_230400:
+              osval = 0;
+              *UCBRx = 18;
+              ucbrf = 0;
+              ucbrs = 0x11;
+              break;
+            default:
+              /* Log error */
+              response = BAUDRATE_FAIL;
+              break;
 			}
 			break;
 		case CLK_8000000:
-			switch( baudRate){
-				case UART_BAUD_9600:
-					osval = UCOS16;
-					*UCBRx = 52;
-					ucbrf = UCBRF_1;
-					ucbrs = 0x49;
-					//ucbrs = 0;
-                    break;
-				case UART_BAUD_19200:
-					osval = 1;
-					*UCBRx = 26;
-					ucbrf = 0;
-					ucbrs = 0xB6;
-					break;
-				case UART_BAUD_38400:
-					osval = 1;
-					*UCBRx = 6;
-					ucbrf = 0;
-					ucbrs = 0x84;
-					break;
-				case UART_BAUD_57600:
-					osval = 1;
-					*UCBRx = 4;
-					ucbrf = 10;
-					ucbrs = 0xF7;
-					break;
-				case UART_BAUD_115200:
-					osval = 1;
-					*UCBRx = 2;
-					ucbrf = 5;
-					ucbrs = 0x55;
-					break;
-				case UART_BAUD_230400:
-					osval = 0;
-					*UCBRx = 18;
-					ucbrf = 2;
-					ucbrs = 0xBB;
-					break;
-				case UART_BAUD_460800:
-					osval = 0;
-					*UCBRx = 18;
-					ucbrf = 0;
-					ucbrs = 0x4A;
-					break;
-				default:
-					// Log error
-					response = BAUDRATE_FAIL;
-					break;
+          switch( baudRate){
+            case UART_BAUD_9600:
+              osval = UCOS16;
+              *UCBRx = 52;
+              ucbrf = UCBRF_1;
+              ucbrs = 0x49;
+              //ucbrs = 0;
+              break;
+            case UART_BAUD_19200:
+              osval = 1;
+              *UCBRx = 26;
+              ucbrf = 0;
+              ucbrs = 0xB6;
+              break;
+            case UART_BAUD_38400:
+              osval = 1;
+              *UCBRx = 6;
+              ucbrf = 0;
+              ucbrs = 0x84;
+              break;
+            case UART_BAUD_57600:
+              osval = 1;
+              *UCBRx = 4;
+              ucbrf = 10;
+              ucbrs = 0xF7;
+              break;
+            case UART_BAUD_115200:
+              osval = 1;
+              *UCBRx = 2;
+              ucbrf = 5;
+              ucbrs = 0x55;
+              break;
+            case UART_BAUD_230400:
+              osval = 0;
+              *UCBRx = 18;
+              ucbrf = 2;
+              ucbrs = 0xBB;
+              break;
+            case UART_BAUD_460800:
+              osval = 0;
+              *UCBRx = 18;
+              ucbrf = 0;
+              ucbrs = 0x4A;
+              break;
+            default:
+              /* Log error */
+              response = BAUDRATE_FAIL;
+              break;
 			}
 			break;
 		default:
 			// Log error
 			break;
-
 	}
 
-    // Shift the UCBR second byte to left by 8 bits for register
+    /* Shift the UCBR second byte to left by 8 bits for register */
 	ucbrs = (ucbrs << 8);
 
-    // Clear and populate the Modulation Control Register
+    /* Clear and populate the Modulation Control Register */
 	*MCTLWReg = 0x0000;
 	*MCTLWReg = ucbrf | ucbrs | osval;
+    
+    /* If bad respone, fail out */
 	if(response == BAUDRATE_FAIL)
 	{
 		if( MCTLWReg == 0 && UCBRx == 0)
@@ -484,9 +511,7 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 		}
 	}
     
-
 	return BAUDRATE_OK;
-
 }
 
 
@@ -503,46 +528,45 @@ static uint8_t UART_BaudrateIsValid(uint32_t Baudrate)
 	uint8_t response = BAUDRATE_FAIL;
 	switch(Baudrate)
 	{
-		case UART_BAUD_1200:
-			response = BAUDRATE_OK;
-			break;
-		case UART_BAUD_2400:
-			response = BAUDRATE_OK;
-			break;
-		case UART_BAUD_4800:
-			response = BAUDRATE_OK;
-			break;
-
-		case UART_BAUD_9600:
-			response = BAUDRATE_OK;
-			break;
-		case UART_BAUD_14400:
-			response = BAUDRATE_OK;
-			break;
-		case UART_BAUD_19200:
-			response = BAUDRATE_OK;
-			break;
-		case UART_BAUD_28800:
-			response = BAUDRATE_OK;
-			break;
-		case UART_BAUD_38400:
-			response = BAUDRATE_OK;
-			break;
-		case UART_BAUD_57600:
-			response = BAUDRATE_OK;
-			break;
-		case UART_BAUD_115200:
-			response = BAUDRATE_OK;
-			break;
-		case UART_BAUD_230400:
-			response = BAUDRATE_OK;
-			break;
-		case UART_BAUD_460800:
-			response = BAUDRATE_OK;
-			break;
-		default:
-			response = BAUDRATE_FAIL;
-			break;
+      case UART_BAUD_1200:
+        response = BAUDRATE_OK;
+        break;
+      case UART_BAUD_2400:
+        response = BAUDRATE_OK;
+        break;
+      case UART_BAUD_4800:
+        response = BAUDRATE_OK;
+        break;
+      case UART_BAUD_9600:
+        response = BAUDRATE_OK;
+        break;
+      case UART_BAUD_14400:
+        response = BAUDRATE_OK;
+        break;
+      case UART_BAUD_19200:
+        response = BAUDRATE_OK;
+        break;
+      case UART_BAUD_28800:
+        response = BAUDRATE_OK;
+        break;
+      case UART_BAUD_38400:
+        response = BAUDRATE_OK;
+        break;
+      case UART_BAUD_57600:
+        response = BAUDRATE_OK;
+        break;
+      case UART_BAUD_115200:
+        response = BAUDRATE_OK;
+        break;
+      case UART_BAUD_230400:
+        response = BAUDRATE_OK;
+        break;
+      case UART_BAUD_460800:
+        response = BAUDRATE_OK;
+        break;
+      default:
+        response = BAUDRATE_FAIL;
+        break;
 	}
 
 	return response;

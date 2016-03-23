@@ -1,9 +1,9 @@
 /** @file timer.c
- *  @brief 	Timer configurations for MSP430FR5969
+ *  @brief 	Timer configurations for MSP430FR5949
  *
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date October 7, 2015
- *  @version 0.1.1
+ *  @date March 23, 2016
+ *  @version 0.1.2
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
@@ -30,7 +30,7 @@
 
 void TIMER_A0_Init ( void )
 {
-  // Set up for 1 second using 32768 Crystal
+  /* Set up for 1 second using 32768 Crystal */
   TA0CCR0 = 0x7FFF;
   TA0CTL = TASSEL__ACLK | MC__UP | TACLR | TAIE; // ACLK, contmode, clear TAR
 
@@ -41,7 +41,7 @@ void TIMER_A0_Init ( void )
 void TIMER_A1_Init ( void )
 {
 
-  // Set up for 1mS using 32768Hz Crystal
+  /* Set up for 1mS using 32768Hz Crystal */
   TA1CCR0 =33;
   TA1CTL = TASSEL__ACLK | MC__UP;
   TA1CCTL0 = CCIE;

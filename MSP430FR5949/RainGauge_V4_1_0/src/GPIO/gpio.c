@@ -2,8 +2,8 @@
  *  @brief
  *
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date Dec 4, 2015
- *  @version 0.0.1
+ *  @date March 23, 2016
+ *  @version 0.1.0
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
@@ -27,19 +27,19 @@
 ************************************************************************/
 uint8_t GPIO_Init(void)
 {
-	// Set all outputs low
+	/* Set all outputs low */
 	P1OUT = 0;
 	P2OUT = 0;
 	P3OUT = 0;
 	P4OUT = 0;
 
-	// Set all directions as input
+	/* Set all directions as input */
 	P1DIR = 0;
 	P2DIR = 0;
 	P3DIR = 0;
 	P4DIR = 0;
 
-	// Clear all secondary registers (make GPIO)
+	/* Clear all secondary registers (make GPIO) */
 	P1SEL0 = 0;
 	P2SEL0 = 0;
 	P3SEL0 = 0;
@@ -49,7 +49,7 @@ uint8_t GPIO_Init(void)
 	P3SEL1 = 0;
 	P4SEL1 = 0;
 
-	// Turn off pull-up resistors
+	/* Turn off pull-up resistors */
 	P1REN = 0;
 	P2REN = 0;
 	P3REN = 0;
@@ -61,18 +61,19 @@ uint8_t GPIO_Init(void)
 
 uint8_t GPIO_SetPinAsOutput(uint8_t Port, uint8_t Pin)
 {
-	// Check for valid port
+	/* Check for valid port */
 	if(Port < 1 || Port > 4)
 	{
 		return (GPIO_FAIL);
 	}
 
-	// Check for valid pin
+	/* Check for valid pin */
 	if(Pin > 15)
 	{
 		return (GPIO_FAIL);
 	}
-
+  
+    /* Set Pin as Output */
 	switch(Port)
 	{
 		case GPIO_PORTP1:
@@ -99,12 +100,13 @@ uint8_t GPIO_SetPinAsOutput(uint8_t Port, uint8_t Pin)
 
 uint8_t GPIO_SetPinAsInput( uint8_t Port, uint16_t Pin )
 {
-	// Check for valid port
+	/* Check for valid port */
 	if(Port < 1 || Port > 4)
 	{
 		return (GPIO_FAIL);
 	}
 
+    /* Set pin as input */
 	switch(Port)
 	{
 		case GPIO_PORTP1:
@@ -129,19 +131,19 @@ uint8_t GPIO_SetPinAsInput( uint8_t Port, uint16_t Pin )
 
 uint8_t GPIO_SetPin(uint8_t Port, uint8_t Pin)
 {
-	// Check for valid port
+	/* Check for valid port */
 	if(Port < 1 || Port > 4)
 	{
 		return (GPIO_FAIL);
 	}
 
-	// Check for valid pin
+	/* Check for valid pin */
 	if( Pin > 16)
 	{
 		return (GPIO_FAIL);
 	}
 
-
+    /* Set Requested Pin */
 	switch(Port)
 	{
 		case GPIO_PORTP1:
@@ -166,18 +168,19 @@ uint8_t GPIO_SetPin(uint8_t Port, uint8_t Pin)
 
 uint8_t GPIO_ClearPin(uint8_t Port, uint8_t Pin)
 {
-	// Check for valid port
+	/* Check for valid port */
 	if(Port < 1 || Port > 4)
 	{
 		return (GPIO_FAIL);
 	}
 	
-	// Check for valid pin
+	/* Check for valid pin */
 	if( Pin > 16)
 	{
 		return (GPIO_FAIL);
 	}
 
+    /* Clear Requested Pin */
 	switch(Port)
 	{
 		case GPIO_PORTP1:
@@ -217,11 +220,14 @@ uint8_t GPIO_ClearPin(uint8_t Port, uint8_t Pin)
 uint8_t GPIO_SetAllPortOutputPinsLow(uint8_t Port)
 {
 	uint16_t dir;
-	// Check for valid port
+    
+	/* Check for valid port */
 	if(Port < 1 || Port > 4)
 	{
 		return (GPIO_FAIL);
 	}
+    
+    /* Clear all pins on port */
 	switch(Port)
 	{
 		case GPIO_PORTP1:
@@ -248,12 +254,13 @@ uint8_t GPIO_SetAllPortOutputPinsHigh(uint8_t Port)
 {
 	uint16_t dir;
 	
-	// Check for valid port
+	/* Check for valid port */
 	if(Port < 1 || Port > 4)
 	{
 		return (GPIO_FAIL);
 	}
 
+    /* Set all pins on port high */
 	switch(Port)
 	{
 		case GPIO_PORTP1:
@@ -280,13 +287,14 @@ uint8_t GPIO_SetAllPortOutputPinsHigh(uint8_t Port)
 
 int8_t GPIO_ReadInputPin( uint8_t Port, uint8_t Pin)
 {
-	// Check for valid port
+	/* Check for valid port */
 	int response;
 	if( Port < 1 || Port > 4 )
 	{
 		return (GPIO_PORT_FAIL);
 	}
 
+    /* Read Requested Pin value */
 	switch(Port)
 	{
 		case GPIO_PORTP1:
@@ -311,12 +319,14 @@ int32_t GPIO_ReadInputPort(uint8_t Port)
 {
 	int32_t response = 0;
 	uint16_t dir;
-	// Check for valid port
+    
+	/* Check for valid port */
 	if( Port < 1 || Port > 4)
 	{
 		return (GPIO_PORT_FAIL);
 	}
 
+    /* Read value of all pins on port */
 	switch(Port)
 	{
 		case GPIO_PORTP1:
@@ -347,18 +357,19 @@ uint8_t GPIO_TogglePin(uint8_t Port, uint8_t Pin)
 {
 	uint16_t dir;
 	
-	// Check for valid port
+	/* Check for valid port */
 	if( Port < 1 || Port > 4)
 	{
 		return (GPIO_FAIL);
 	}
 
-	// Check for valid pin
+	/* Check for valid pin */
 	if(Pin > 15)
 	{
 		return (GPIO_FAIL);
 	}
 
+    /* Toggle selected pin */
 	switch(Port)
 	{
 		case GPIO_PORTP1:
@@ -390,24 +401,25 @@ uint8_t GPIO_AttachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin, uint8_t ed
 	uint8_t response = GPIO_OK;
 	uint16_t dir;
 	
-	// Check for valid port
+	/* Check for valid port */
 	if(gpioPort < 1 || gpioPort > 4)
 	{
 		return GPIO_FAIL;
 	}
 	
-	// Check for valid pin
+	/* Check for valid pin */
 	if(gpioPin > 15)
 	{
 		return GPIO_FAIL;
 	}
 
+    /* Attach an interrupt to specified pin */
 	switch(gpioPort)
 	{
 		case GPIO_PORTP1:
-			// Clear Interrupt Flag
+			/* Clear Interrupt Flag */
 			P1IFG = 0;
-			// Set edge for interrupt
+			/* Set edge for interrupt */
 			if(edge == 0)
 			{
 				P1IES &= ~BIT_TO_MASK(gpioPin);
@@ -416,14 +428,14 @@ uint8_t GPIO_AttachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin, uint8_t ed
 			{
 				P1IES |= BIT_TO_MASK(gpioPin);
 			}
-			// Set Interrupt
+			/* Set Interrupt */
 			dir = P1DIR;
 			P1IE |= (BIT_TO_MASK(gpioPin) & ~dir);
 			break;
 		case GPIO_PORTP2:
-			// Clear Interrupt Flag
+			/* Clear Interrupt Flag */
 			P2IFG = 0;
-			// Set edge for interrupt
+			/* Set edge for interrupt */
 			if(edge == 0)
 			{
 				P2IES &= ~BIT_TO_MASK(gpioPin);
@@ -432,14 +444,14 @@ uint8_t GPIO_AttachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin, uint8_t ed
 			{
 				P2IES |= BIT_TO_MASK(gpioPin);
 			}
-			// Set Interrupt
+			/* Set Interrupt */
 			dir = P2DIR;
 			P2IE |= (BIT_TO_MASK(gpioPin) & ~dir);
 			break;
 		case GPIO_PORTP3:
-			// Clear Interrupt Flag
+			/* Clear Interrupt Flag */
 			P3IFG = 0;
-			// Set edge for interrupt
+			/* Set edge for interrupt */
 			if(edge == 0)
 			{
 				P3IES &= ~BIT_TO_MASK(gpioPin);
@@ -448,15 +460,15 @@ uint8_t GPIO_AttachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin, uint8_t ed
 			{
 				P3IES |= BIT_TO_MASK(gpioPin);
 			}
-			// Set Interrupt
+			/* Set Interrupt */
 			dir = P3DIR;
 			P3IE |= (BIT_TO_MASK(gpioPin) & ~dir);
 			break;
 		case GPIO_PORTP4:
-			// Clear Interrupt Flag
+			/* Clear Interrupt Flag */
 			P4IFG = 0;
-			// Set edge for interrupt
-			if(edge == 0)
+			/* Set edge for interrupt */
+			if(edge == 0) 
 			{
 				P4IES &= ~BIT_TO_MASK(gpioPin);
 			}
@@ -464,13 +476,13 @@ uint8_t GPIO_AttachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin, uint8_t ed
 			{
 				P4IES |= BIT_TO_MASK(gpioPin);
 			}
-			// Set Interrupt
+			/* Set Interrupt */
 			dir = P4DIR;
 			P4IE |= (BIT_TO_MASK(gpioPin) & ~dir);
 			break;
 		default:
 			response = GPIO_FAIL;
-			// Log error
+			/* Log error */
 			break;
 	}
 
@@ -479,17 +491,19 @@ uint8_t GPIO_AttachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin, uint8_t ed
 
 uint8_t GPIO_DetachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin)
 {
-	// Check for valid port
+	/* Check for valid port */
 	if(gpioPort < 1 || gpioPort > 4)
 	{
 		return GPIO_FAIL;
 	}
-
+    
+    /* Check for valid pin */
 	if(gpioPin > 15)
 	{
 		return GPIO_FAIL;
 	}
-
+    
+    /* Remove interrupt on requested pin */
 	switch(gpioPort)
 	{
 		case GPIO_PORTP1:
@@ -510,24 +524,6 @@ uint8_t GPIO_DetachInputInterrupt(uint8_t gpioPort, uint16_t gpioPin)
 	}
 	return GPIO_OK;
 }
-/************************************************************************
-*						MAIN
-************************************************************************/
-
-/************************************************************************
-*					STATIC FUNCTIONS
-************************************************************************/
-/** @brief
- *
- *	Add full description here
- *
- *  @param none
- *
- *  @return none
- */
-
-
-
 
 /************************************************************************
 *					INTERRUPT VECTOR
@@ -599,10 +595,11 @@ __interrupt void Port_3 (void)
 	{
 		case P3IV_NONE:
 			break;			//Vector 0 - No Interrupt
-		case P3IV_P3IFG0:
+		case P3IV_P3IFG0:   /* Frequency Count Pin */
+          /* Update the individual counter & minute counter */
           SensorCounter++;
-          //MinuteSensorCounter++;
           MinuteData.Counts[MinuteData.min][MinuteData.sec]++;
+          /* Clear the interrupt */
           P3IFG &= ~BIT0;
 			break;		// Vector 2 - Interrupt on Pin 1
 		case P3IV_P3IFG1:

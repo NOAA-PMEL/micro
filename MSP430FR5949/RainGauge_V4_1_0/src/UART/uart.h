@@ -2,8 +2,8 @@
  *  @brief
  *
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date Dec 4, 2015
- *  @version
+ *  @date March 23, 2016
+ *  @version 0.1.1
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
@@ -40,23 +40,22 @@
 #define UART_OK		(0)
 #define UART_FAIL	(1)
 
-// UART USCI Port Definitions
+/* UART USCI Port Definitions */
 #define UART_A0			(0)
 #define UART_A1			(1)
 
-// UART Pin Definitions
+/* UART Pin Definitions */
 #define UART_A0_TX		(BIT0)
 #define UART_A0_RX		(BIT1)
 #define UART_A1_TX		(BIT5)
 #define UART_A1_RX		(BIT6)
 
-// Clk Definitions
+/* Clk Definitions */
 #define UART_CLK_UCLK	(0)
 #define UART_CLK_ACLK	(1)
 #define UART_CLK_SMCLK	(2)
 
-
-// Baudrate Definitions
+/* Baudrate Definitions */
 #define UART_BAUD_1200		(1200)
 #define UART_BAUD_2400		(2400)
 #define UART_BAUD_4800		(4800)
@@ -73,7 +72,7 @@
 #define BAUDRATE_OK			(0)
 #define BAUDRATE_FAIL		(1)
 
-// Clock Definitions
+/* Clock Definitions */
 #define CLK_32768			(32768)
 #define CLK_1000000			(1000000)
 #define CLK_1048576			(1048576)
@@ -135,6 +134,17 @@ uint8_t UART_WriteChar(uint8_t value, uint8_t Port);
  */
 uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port);
 
+/** @brief Write string to UART with terminating Null
+ *
+ *	Write a char array to the selected UART port
+ *  and follow with a NULL value
+ *
+ *  @param *value Pointer to the character array
+ *  @param length length of string
+ *  @param Port UART port selected
+ *
+ *  @return none
+ */
 uint8_t UART_WriteIncludeNull(uint8_t *value, uint8_t length, uint8_t Port);
 #endif
 
