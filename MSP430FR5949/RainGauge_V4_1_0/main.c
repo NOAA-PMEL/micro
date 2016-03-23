@@ -1,0 +1,578 @@
+
+/** @file main.c
+ *
+ *  @brief Main Function
+ *
+ *  @author Matt Casari, matthew.casari@noaa.org
+ *  @date November 2, 2015
+ *  @version 0.1.2
+ *
+ *  @copyright National Oceanic and Atmospheric Administration
+ *  @copyright Pacific Marine Environmental Lab
+ *  @copyright Environmental Development Division
+ *
+ *	@mainpage
+ *
+ *
+ *  This Rain Gauge program takes the counter ouput from PMEL Rain Gauge v4.0
+ *  capacitance sensor, counts the number of toggles per second and stores
+ *  the counts and the number of elapsed seconds in seperate buffers until 
+ *  the user commands a data retreival by passing a 'D' or 'd' character over
+ *  the UART.  
+ *  Return message is:
+ *  @@@COUNT,TIME\r\n
+ *  Where:
+ *  @@@ is the message header
+ *  COUNT is the 10 digit sensor count
+ *  TIME is the 10 digit number of seconds integrated over
+ *  
+ *  RS-232 Info:
+ *  Buad Rate - 9600
+ *  Bits - 8
+ *  Stop Bits - 1
+ *  Parity - None 
+ *
+ *  @note To add FRAM capability, you must enable MPU in IAR (Project->Options->General Options->MPU/IPU->Support MPU)
+ * 
+ */
+
+
+/*------------------- Connection Diagram------------------------------*/
+/*
+		       						 					
+		                               
+		    MSP430FR5949             
+		 --------------------        
+		 |                  |       
+		 |                  |        
+		 |              P3.0|---------------------- From Capacitance Sensor
+		 |                  |
+		 |                  |
+		 |              P2.5|---------------------- UART Tx
+ 		 |              P2.6|---------------------- UART Rx
+		 |                  | 		  
+		 |              PJ.4|----------------------   LFXIn
+		 |                  |						  32.768kHz Crystal
+         |              PJ.5|----------------------   LFXOut
+		 |                  |
+		 --------------------
+
+*/
+
+
+#define VERSION     ("4.3.0")
+/*****************************  Includes  *********************************/
+#include "./inc/includes.h"
+
+/************************ Function Prototypes *****************************/
+void STATE_Sample(void);
+void STATE_MinuteTimerRoutine(void);
+void STATE_Transmit(uint32_t count, uint32_t seconds);
+void STATE_TransmitVolume(float volume, uint32_t seconds);
+void STATE_TransmitReport(SampleData_t *Data);
+void SETUP_Clock(void);
+void SETUP_GPIO(void);
+float CalculateVolume(uint32_t count, uint32_t seconds);
+
+#ifdef DEBUG
+void BufferTest(void);
+#endif
+
+/***********************  Constants (In FRAM)  *****************************/
+const uint8_t SensorPort = 3;
+const uint8_t SensorPin = 0;
+
+#ifdef DEBUG
+const uint8_t DebugPort = 1;
+const uint8_t DebugPin = 6;
+#endif
+
+/***********************  Persistents (In FRAM)  *****************************/
+__persistent uint32_t SumOfCount = 0;
+__persistent uint32_t MinuteSensorCounter = 0;
+__persistent uint32_t SecondCounter = 0;
+__persistent float slope = 1.412e12;
+__persistent float intercept = -493.25;
+__persistent float dmMin = 3.704e4;    /* Value dm connot be less than */
+__persistent float dmMax = 5.304e4;    /*  Value dm cannot exceed */
+__persistent SampleData_t HourData;
+__persistent RTCStruct_t RTC;
+
+
+/*************************  Global variables  *****************************/
+/* Counters */
+volatile uint32_t SensorCounter;
+volatile uint8_t ConsoleTimeoutCounter;
+volatile uint8_t ConsoleCounter;
+
+/* Structures */
+CircularBufferC_s ConsoleData;
+CurrentData_t MinuteData;
+
+/* Enum types */
+SystemState_t SystemState;
+TransSubState_t TxSubState;
+
+
+
+/*******************************  MAIN  **********************************/
+int main(void) {
+
+  /* Configure MPU */
+  __low_level_init();				// Setup FRAM
+  WDTCTL = WDTPW | WDTHOLD;	
+
+  /* Debug Conditions */
+#ifdef DEBUG
+  BufferTest();
+  MinuteData.lastSampleRecorded  = 0;
+  MinuteData.numSamples = 0;
+  MinuteData.min = 4;
+  
+  slope = 1.412e12;
+  intercept = -493.25;
+  dmMax = 5.304e4;
+  dmMin = 3.704e4;
+#endif 
+  
+  /* Configure GPIO */
+  SETUP_GPIO();
+
+  /* Setup the Clock */
+  SETUP_Clock();
+  
+  /* Setup the RTC */
+  RTC_Init();
+
+  
+  /* Configure the UART */
+  UART_Init(UART_A1,UART_BAUD_9600,CLK_32768,UART_CLK_SMCLK);
+ 
+  /* Initialize the timers */
+  TIMER_A1_Init();
+  TIMER_A0_Init();
+
+  /* Enable the interrupts */
+  __bis_SR_register(GIE);
+  __no_operation();                         // For debugger
+
+  /* Set the startup State */
+  SystemState = Sample;
+  SensorCounter = 0;
+  SecondCounter = 0;
+  RTC.TimeAtCommand = SecondCounter;
+   
+  /* Main loop */
+  for(;;)
+  {
+    uint32_t temp_SumOfCount = 0;
+    uint32_t temp_SecondsCounter = 0;
+    float volume = 0.0;
+    
+    switch(SystemState)
+    {
+      case Sample:
+        __bis_SR_register(LPM3_bits | GIE); /* Set LPM and wait for timer interrupt */
+        break;
+      case Console:
+        CONSOLE_Main();
+        if(SystemState != MinuteTimerRoutine)
+        {
+          SystemState = Sample;
+        }
+        SumOfCount = 0;
+        SecondCounter = 0;
+        ConsoleCounter = 0;
+        break;
+      case MinuteTimerRoutine:
+         STATE_MinuteTimerRoutine();
+        /* Set back to sampling state */
+        SystemState = Sample;
+        break;
+      case Transmit:
+        temp_SecondsCounter = SecondCounter + 1;
+        while(SecondCounter < temp_SecondsCounter);
+        temp_SumOfCount = SumOfCount;
+        SumOfCount = 0;
+        SecondCounter = 0;
+        switch(TxSubState)
+        {
+          case Counts:
+            STATE_Transmit(temp_SumOfCount,temp_SecondsCounter);
+            break;
+          case Volume:
+            volume = CalculateVolume(temp_SumOfCount, temp_SecondsCounter);
+            STATE_TransmitVolume(volume,temp_SecondsCounter);
+            break;
+          case Report:
+            STATE_TransmitReport(&HourData);
+            if(SystemState != MinuteTimerRoutine) {
+              SystemState = Sample;
+            }
+            break;
+          default:
+            SystemState = Sample;
+            break;
+        }
+        SecondCounter = 0;
+        SumOfCount = 0;
+        SystemState = Sample;
+        break;
+      default:
+        break;
+    }
+    
+  }
+}
+
+/** @brief Enters Minute Timer State    
+ *
+ *  Updates RTC values (if requested) and calculates stats
+ *  on last 60 seconds of data.  Saves to associated buffer.
+ *
+ *  @param count Frequency count sum from sensor
+ *  @param seconds Number of seconds of integration
+ *
+ *  @return Void
+ */
+void STATE_MinuteTimerRoutine(void)
+{
+  float vol[60] = {0.0};
+  float Mean = 0.0;
+  float STD = 0.0;
+  float Min = 0.0;
+  float Max = 0.0;
+
+  int8_t StartIdx = 0;
+  uint8_t numSamples = 0;
+  uint8_t idx = 0;
+  
+  uint8_t minIdx = MinuteData.min;
+    
+  /* Calculate the Statistical Data */
+  /* Find the start index of the temp data */
+  if(MinuteData.numSamples > (5-1))
+  {
+    numSamples = 5;
+  } else {
+    numSamples = MinuteData.numSamples;
+  }
+
+  /* Check for index wrap-around */
+  if((minIdx - numSamples) >= 0)
+  {
+    StartIdx = minIdx - numSamples;
+  } else {
+    StartIdx = (5 + minIdx - numSamples);
+  }
+
+  /* Update index of last sampled */
+  MinuteData.lastSampleRecorded = StartIdx;
+  
+  /* Prep all the data to save in the buffers */
+  for(uint8_t i=0;i<numSamples;i++)
+  {
+    MinuteData.numSamples--;
+    if((StartIdx + i) > 4)
+    {
+      idx = StartIdx + i - 5;
+    } else {
+      idx = StartIdx + i;
+    }
+    
+    /* Convert array to volumes */
+    for(uint8_t j=0;j<60;j++)
+    {
+      vol[j] = CalculateVolume(MinuteData.Counts[idx][j],1);
+      
+      /* Clear the Buffer for next go-round */
+      MinuteData.Counts[idx][j] = 0;
+    }
+    
+    /* Calculate Stats */
+    STATS_CalculateMean(&vol[0], 60, &Mean);
+    STATS_ComputeSTD(&vol[0],60,Mean,&STD);
+    STATS_FindMin(&vol[0],60,&Min);
+    STATS_FindMax(&vol[0],60,&Max);
+
+     /* Stuff the buffers */
+    BufferF_Put_Circular(&HourData.Mean, Mean);
+    BufferF_Put_Circular(&HourData.STD, STD);
+    BufferF_Put_Circular(&HourData.Min, Min);
+    BufferF_Put_Circular(&HourData.Max, Max);
+    Buffer16_Put_Circular(&HourData.Year, MinuteData.Year[idx]);
+    Buffer8_Put_Circular(&HourData.Month, MinuteData.Mon[idx]);
+    Buffer8_Put_Circular(&HourData.Day, MinuteData.Day[idx]);
+    Buffer8_Put_Circular(&HourData.Hour, MinuteData.Hour[idx]);
+    Buffer8_Put_Circular(&HourData.Minute, MinuteData.Min[idx]);
+
+    
+  }
+ 
+  /* Send a . to indicate minute elapse, and then CR/NL */
+  UART_WriteChar('.',UART_A1);
+  __delay_cycles(5000);
+  UART_WriteChar('\r',UART_A1);
+  __delay_cycles(5000);
+  UART_WriteChar('\n',UART_A1);
+}
+
+/** @brief Enters Transmit State
+ *
+ *  Preps the data for transmission and sends over the UART
+ *
+ *  @param count Frequency count sum from sensor
+ *  @param seconds Number of seconds of integration
+ *
+ *  @return Void
+ */
+void STATE_Transmit(uint32_t count, uint32_t seconds){
+  char sendString[64] = {0};
+
+  /* Setup the Load report string */
+  sprintf(sendString,"@@@%10lu,",count);
+  UART_Write(&sendString[0],64,UART_A1);
+  /* Write the second part of the load string */
+  sprintf(sendString,"%10lu\r\n",seconds);
+  UART_Write(&sendString[0],64,UART_A1);
+  return;
+}
+
+/** @brief Enters Transmit State
+ *
+ *  Preps the data for transmission and sends over the UART
+ *
+ *  @param volume Volume (in mL)
+ *  @param seconds Numer of seconds of integration
+ *
+ *  @return Void
+ */
+void STATE_TransmitVolume(float volume, uint32_t seconds){
+  char sendString[64] = {0};
+  
+  // Setup the Load report string
+  sprintf(sendString,"@@@%12.6fmL,",volume);
+  
+  // Write the load string
+  UART_Write(&sendString[0],64,UART_A1);
+  sprintf(sendString,"%10lu\r\n",seconds);
+  UART_Write(&sendString[0],64,UART_A1);
+  
+}
+
+/** @brief Enters Transmit Report State
+ *
+ *  Preps 60 minutes of data to transmit over UART
+ *
+ *  Format is:
+ *    YYYYMMDD,HH:MM,Mean,STD,Min,Max\r\n
+ *    Where:
+ *      YYYY - 4-digit Year
+ *      MM   - 2-digit Month
+ *      DD   - 2-digit Day
+ *      HH   - 2-digit Hour (24 hour clock)
+ *      MM   - 2-digit Minute
+ *      Mean - 2 decimal point, 6 character Mean Volume (mL)
+ *      STD - 2 decimal point, 6 character Volume Standard Deviation (mL)
+ *      Min - 2 decimal point, 6 character Minimum Volume (mL)
+ *      Max - 2 decimal point, 6 character Maximum Volume (mL)
+ *
+ *  @param volume Volume (in mL)
+ *  @param seconds Numer of seconds of integration
+ *
+ *  @return Void
+ */
+void STATE_TransmitReport(SampleData_t *Data)
+{
+  uint16_t year;
+  uint8_t mon;
+  uint8_t day;
+  uint8_t hr;
+  uint8_t minute;
+  uint8_t currentIdx = 0;
+  int8_t idx = 0;
+  float mean;
+  float std;
+  float min;
+  float max;
+  char line[128] = {0};  
+
+
+  /* Set the index up*/
+  currentIdx = HourData.Hour.write;
+  
+  /* Retreive buffered data and transmit to UART A1 */
+  for(uint8_t i=60;i>0;i--)
+  {
+    idx = currentIdx;
+    idx -= i;
+    //idx = currentIdx - i;
+    if(idx < 0)
+    {
+      idx += 61;
+    }
+    
+    /* Modulo to keep on 60 second buffer */
+    idx = idx % 60;
+   
+    /* Retreive the last 60 minutes worth of data from buffers */
+    Buffer16_GetRequested(&HourData.Year, idx, &year);
+    Buffer8_GetRequested(&HourData.Month, idx, &mon);
+    Buffer8_GetRequested(&HourData.Day, idx, &day);
+    Buffer8_GetRequested(&HourData.Hour, idx, &hr);
+    Buffer8_GetRequested(&HourData.Minute, idx, &minute);
+    BufferF_GetRequested(&HourData.Mean,idx,&mean);
+    BufferF_GetRequested(&HourData.STD,idx,&std);
+    BufferF_GetRequested(&HourData.Min,idx,&min);
+    BufferF_GetRequested(&HourData.Max,idx,&max);
+    
+    /* RTC values are in hex, so print hex values to UART*/
+    sprintf(line,"@@@%04x%02x%02x,%02x:%02x,%7.2f,%7.2f,%7.2f,%7.2f\r\n",year,mon,day,hr,minute,mean,std,min,max);
+    UART_Write(&line[0],LENGTH_OF(line),UART_A1);
+  } 
+  
+  return;
+}
+
+/** @brief Calculates the Volume 
+ *
+ *  Calculates volume based on formula:
+ *  dm = n * 60/tsec
+ *  Volume = (A1 /(dm^2)) + A0
+ * 
+ *  where:
+ *  A0 = Sensor Offset
+ *  A1 = Sensor Slope
+ *  n = Sum of Counts
+ *  tsec = Total number of seconds
+ *
+ *  @param count Frequency count from sensor
+ *  @param seconds Number of seconds integrated over
+ *
+ *  @return Volume
+ */
+float CalculateVolume(uint32_t count, uint32_t seconds){
+  float dm = 0;
+  float vol = 0.0;
+  
+  dm = (float) count * 60;
+  dm /= (float) seconds;
+ 
+  /* Look for invalid dms */
+  if(( dm > dmMax ) || (dm < dmMin))
+  {
+    return NAN;
+  }
+  
+  dm *= dm;
+  
+  vol = (float) (slope / dm);
+  vol += intercept;
+  
+  return vol;
+  
+}
+
+/** @brief Set the system clock
+ *
+ *  Set the system clock for DCO @ 1MHz, 
+ *  SMCLK @500MHSz
+ *  MCLK @ 1MHz
+ *  ACLK @32.768kHz
+ *  LFXT driver on Low Power
+ *
+ *  @param None
+ *
+ *  @return Void
+ */
+void SETUP_Clock(void)
+{
+  /* Configure the clock                */
+  /* DCO running at 8MHz                */
+  /* ACLK running on LFXT 32768Hz       */
+  /* SMCLK running on DCOCLK, 4MHz    */
+  /* MCLK running on DCOCLK, 1MHz       */
+  /* LFXT Driver on low power           */
+  CSCTL0_H = CSKEY >> 8;		// Unlock registers
+  CSCTL1 = DCOFSEL_6;			// Set DCO to 8Mhz
+  CSCTL2 = SELA__LFXTCLK | SELS__DCOCLK | SELM__DCOCLK;
+  CSCTL3 = DIVA__1 | DIVS__2 | DIVM__1;	
+  CSCTL4 =   LFXTDRIVE_0 | VLOOFF;
+  CSCTL4 &= ~LFXTOFF;
+  
+  /* Wait for the clock to lock   */
+  do
+  {
+    CSCTL5 &= ~LFXTOFFG;
+    SFRIFG1 &= ~OFIFG;
+  }while(SFRIFG1 & OFIFG);
+  
+  /* Lock CS Register */
+  CSCTL0_H = 0;							
+  
+}
+
+/** @brief Configure GPIO
+ *
+ *  Initialize the GPIO and set an interrupt on P3.0
+ *  Set selection bits for UART
+ *  Set selection bits for 32kHz crystal
+ * 
+ *  @param None
+ *
+ *  @return Void
+ */
+void SETUP_GPIO(void)
+{
+  /* Set All GPIO settings to 0 */
+  GPIO_Init();        
+  
+  /* Set up the Capacitance Sensor (counter) Input Pin  */
+  GPIO_ClearPin(SensorPort, SensorPin);
+  GPIO_SetPinAsInput(SensorPort, SensorPin);
+  GPIO_AttachInputInterrupt(SensorPort, SensorPin,GPIO_EDGE_LOW_TO_HIGH);
+  
+#ifdef DEBUG
+  GPIO_ClearPin(DEBUG_PORT,DEBUG_PIN);
+  GPIO_SetPinAsOutput(DEBUG_PORT,DEBUG_PIN);
+#endif 
+  
+  /* Configure Selection bits for UART */
+  P2SEL1 |= BIT5 | BIT6;                    /* USCI_A0 UART operation */
+  P2SEL0 &= ~(BIT5 | BIT6);
+
+  /* LFXIN */
+  PJSEL1 &= ~BIT4;
+  PJSEL0 |= BIT4;
+  
+  /* Unlock GPIO */
+  PM5CTL0 &= ~LOCKLPM5;		/* Needs to be done after config GPIO & Pins! */
+  
+   /* Set interrupts */
+  P3IFG &= ~BIT0;
+
+  return;
+}
+
+
+#ifdef DEBUG
+void BufferTest(void)
+{
+  
+  for(uint8_t i=0;i<59;i++)
+  {
+    Buffer16_Put(&HourData.Year,i);
+    Buffer8_Put(&HourData.Month,i);
+    Buffer8_Put(&HourData.Day,i);
+    Buffer8_Put(&HourData.Hour,i);
+    Buffer8_Put(&HourData.Minute,i);
+    BufferF_Put(&HourData.Mean,(i*10.0));
+    BufferF_Put(&HourData.STD,(i*1.0));
+    BufferF_Put(&HourData.Min,(i*0.1));
+    BufferF_Put(&HourData.Max,(i*2.0));
+    
+  }
+  
+}
+#endif
+
