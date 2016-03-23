@@ -123,7 +123,7 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 uint8_t UART_Read(uint8_t *value, uint8_t Port)
 {
     /* Check for valid Port # */
-	if(UartPort > 1)
+	if(Port > 1)
 	{
 		return UART_FAIL;
 	}
@@ -150,7 +150,7 @@ uint8_t UART_Read(uint8_t *value, uint8_t Port)
 uint8_t UART_WriteChar(uint8_t value, uint8_t Port)
 {
     /* Check for valid Port # */
-	if(UartPort > 1)
+	if(Port > 1)
 	{
 		return UART_FAIL;
 	}
