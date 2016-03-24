@@ -142,12 +142,17 @@ typedef enum SysState {
 typedef enum TransSubState{
   Counts,               /** Counts SubState - Transmit Counts & Seconds to user */
   Volume,               /** Volume SubState - Transmit Volume(mL) to user */
-  Report                /** Report SubState - Transmit 60 minute statistical data to user */
+  Report,               /** Report SubState - Transmit 60 minute statistical data to user */
+  CurrentTime           /** Current Time SubState - Transmit DateTime from RTC to user */    
 } TransSubState_t;
 /************************************************************************
 *							GLOBAL VARIABLES
 ************************************************************************/
 #ifdef PMEL
+
+/* Variables */
+extern uint8_t serialNumber[];
+extern uint8_t version[];
 
 /* Flags and counters */
 extern volatile uint32_t SensorCounter;

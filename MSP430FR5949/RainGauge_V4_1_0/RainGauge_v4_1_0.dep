@@ -196,6 +196,10 @@
       <name>$PROJ_DIR$\src\Console\console.c</name>
       <outputs>
         <tool>
+          <name>ICC430</name>
+          <file> 39</file>
+        </tool>
+        <tool>
           <name>__cstat</name>
           <file> 60</file>
         </tool>
@@ -265,7 +269,7 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 33 10 30 50 69 51 78 62 46 27 44 43 49 57 13 47 14 25 6 70 40 21 16 28 73</file>
+          <file> 33 25 51 50 78 47 14 6 57 43 49 13 69 62 30 46 27 10 44 70 40 21 16 28 73</file>
         </tool>
       </inputs>
     </file>
@@ -292,7 +296,7 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 25 57 51 33 43 49 50 13 78 47 14 6 69 62 30 46 27 10 44 70 40 21 18 28 73</file>
+          <file> 33 25 51 50 78 47 14 6 57 43 49 13 69 62 30 46 27 10 44 70 40 21 18 28 73</file>
         </tool>
       </inputs>
     </file>
@@ -346,7 +350,7 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 33 25 51 50 21 13 47 14 6 57 70 40 69 78 62 30 46 27 10 44 43 49 28 73</file>
+          <file> 13 50 25 51 33 47 14 6 57 43 49 70 69 78 62 30 46 27 10 44 40 21 28 73</file>
         </tool>
       </inputs>
     </file>
@@ -373,7 +377,7 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 13 50 10 30 69 51 78 62 46 27 44 43 49 33 70 47 14 25 6 57 40 21 28 73</file>
+          <file> 70 10 50 30 33 69 40 13 51 78 62 46 27 44 21 47 14 25 6 57 43 49 28 73</file>
         </tool>
       </inputs>
     </file>

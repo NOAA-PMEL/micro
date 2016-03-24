@@ -70,6 +70,7 @@ void STATE_MinuteTimerRoutine(void);
 void STATE_Transmit(uint32_t count, uint32_t seconds);
 void STATE_TransmitVolume(float volume, uint32_t seconds);
 void STATE_TransmitReport(SampleData_t *Data);
+void STATE_TransmitCurrentTime(void);
 void SETUP_Clock(void);
 void SETUP_GPIO(void);
 float CalculateVolume(uint32_t count, uint32_t seconds);
@@ -97,8 +98,8 @@ __persistent float dmMin = 3.704e4;    /* Value dm connot be less than */
 __persistent float dmMax = 5.304e4;    /*  Value dm cannot exceed */
 __persistent SampleData_t HourData;
 __persistent RTCStruct_t RTC;
-
-
+__persistent uint8_t version[] = VERSION;
+__persistent uint8_t serialNumber[16] = "";
 /*************************  Global variables  *****************************/
 /* Counters */
 volatile uint32_t SensorCounter;
@@ -209,6 +210,9 @@ int main(void) {
             if(SystemState != MinuteTimerRoutine) {
               SystemState = Sample;
             }
+            break;
+          case CurrentTime:
+            STATE_TransmitCurrentTime();
             break;
           default:
             SystemState = Sample;
@@ -436,6 +440,24 @@ void STATE_TransmitReport(SampleData_t *Data)
     memcpy(line_u,line,128);
     UART_Write(&line_u[0],LENGTH_OF(line_u),UART_A1);
   } 
+  
+  return;
+}
+
+/** @brief Enters Transmit Current Time
+ *
+ *  Reports the RTC Date & time to user
+ *
+ *  @return Void
+ */
+void STATE_TransmitCurrentTime(void)
+{
+  char OutputStr[64] = {0};
+  uint8_t OutputStr_u[64] = {0};
+  
+  sprintf(OutputStr, "%04x,%02x,%02x,%02x:%02x:%02x\r\n",RTCYEAR,RTCMON,RTCDAY,RTCHOUR,RTCMIN,RTCSEC);
+  memcpy(OutputStr_u,OutputStr,64);
+  UART_Write(&OutputStr_u[0],LENGTH_OF(OutputStr_u),UART_A1);
   
   return;
 }

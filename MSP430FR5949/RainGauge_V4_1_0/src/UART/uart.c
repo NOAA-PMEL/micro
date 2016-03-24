@@ -662,6 +662,12 @@ __interrupt void USCI_A1_ISR(void)
                       TxSubState = Report;
                       __low_power_mode_off_on_exit();
                       break;
+                    case 'T':
+                    case 't':
+                      SystemState = Transmit; 
+                      TxSubState = CurrentTime;
+                      __low_power_mode_off_on_exit();
+                      break;
                     case 0x03:
                       if(++ConsoleCounter >= 3)
                       {
