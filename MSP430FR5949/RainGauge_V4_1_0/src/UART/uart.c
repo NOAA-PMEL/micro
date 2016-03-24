@@ -22,9 +22,6 @@ static uint8_t UART_BaudrateIsValid(uint32_t Baudrate);
 static uint8_t UART_ClockFrequencyIsValid(uint32_t ClkFreq);
 
 /************************************************************************
-*					STATIC VARIABLES
-************************************************************************/
-/************************************************************************
 *					GLOBAL FUNCTIONS
 ************************************************************************/
 uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t Clk)

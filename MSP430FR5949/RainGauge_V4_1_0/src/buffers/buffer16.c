@@ -2,8 +2,8 @@
  *  @brief
  *
  *  @author Matt Casari, matthew.casari@noaa.gov
- *  @date Dec 4, 2015
- *  @version 0.0.1
+ *  @date March 23, 2016
+ *  @version 0.1.0
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
@@ -18,9 +18,6 @@
 *					STATIC FUNCTION PROTOTYPES
 ************************************************************************/
 #include "buffer16.h"
-/************************************************************************
-*					STATIC VARIABLES
-************************************************************************/
 
 /************************************************************************
 *					GLOBAL FUNCTIONS
@@ -40,7 +37,7 @@ int8_t Buffer16_Put(CircularBuffer16_s *buf, uint16_t value)
 	return 0;
 }
 
-int8_t Buffer16_Put_Circular(CircularBuffer16_s *buf, float value)
+int8_t Buffer16_Put_Circular(CircularBuffer16_s *buf, uint16_t value)
 {
 	uint8_t NextWrite = (buf->write + 1) % (ACTUAL_BUFFER16_SIZE);                                                                          
 	uint8_t NextRead = (buf->read + 1) % (ACTUAL_BUFFER16_SIZE);
@@ -61,7 +58,6 @@ int8_t Buffer16_Put_Circular(CircularBuffer16_s *buf, float value)
 	return 0;
 }
 
-
 int8_t Buffer16_Get(CircularBuffer16_s *buf, uint16_t *value)
 {
 	if(buf->read == buf->write)
@@ -76,17 +72,7 @@ int8_t Buffer16_Get(CircularBuffer16_s *buf, uint16_t *value)
 }
 
 int8_t Buffer16_GetRequested(CircularBuffer16_s *buf, uint8_t requested, uint16_t *value)
-{
-  uint8_t readIdx = 0;
-  
-//  if(requested > buf->write)
-//  {
-//    readIdx = BUFFER16_SIZE + (buf->write) - requested;
-//  } else {
-//    readIdx = (buf->write) - requested;
-//  }
-//  
-//  *value = buf->buffer[readIdx];
+{ 
   *value = buf->buffer[requested];
   return 0;
 }
@@ -126,24 +112,3 @@ int8_t Buffer16_IsEmpty(CircularBuffer16_s *buf)
 
 	return BUFFER16_NOT_EMPTY;
 }
-
-
-/************************************************************************
-*					STATIC FUNCTIONS
-************************************************************************/
-/** @brief
- *
- *	Add full description here
- *
- *  @param none
- *
- *  @return none
- */
-
-
-
-
-/************************************************************************
-*					INTERRUPT VECTOR
-************************************************************************/
-

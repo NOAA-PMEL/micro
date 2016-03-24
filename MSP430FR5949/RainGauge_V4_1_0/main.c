@@ -351,7 +351,7 @@ void STATE_TransmitVolume(float volume, uint32_t seconds){
   char sendString[64] = {0};
   
   // Setup the Load report string
-  sprintf(sendString,"@@@%12.6fmL,",volume);
+  sprintf(sendString,"@@@%7.2fmL,",volume);
   
   // Write the load string
   UART_Write(&sendString[0],64,UART_A1);

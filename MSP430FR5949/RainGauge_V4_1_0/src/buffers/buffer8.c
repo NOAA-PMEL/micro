@@ -1,9 +1,9 @@
-/** @file BUFFER8.c
+/** @file buffer8.c
  *  @brief
  *
  *  @author Matt Casari, matthew.casari@noaa.gov
- *  @date Dec 4, 2015
- *  @version 0.0.1
+ *  @date March 23, 2016
+ *  @version 0.1.0
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
@@ -18,9 +18,6 @@
 *					STATIC FUNCTION PROTOTYPES
 ************************************************************************/
 #include "buffer8.h"
-/************************************************************************
-*					STATIC VARIABLES
-************************************************************************/
 
 /************************************************************************
 *					GLOBAL FUNCTIONS
@@ -40,7 +37,7 @@ int8_t Buffer8_Put(CircularBuffer8_s *buf, uint8_t value)
 	return 0;
 }
 
-int8_t Buffer8_Put_Circular(CircularBuffer8_s *buf, float value)
+int8_t Buffer8_Put_Circular(CircularBuffer8_s *buf, uint8_t value)
 {
 	uint8_t NextWrite = (buf->write + 1) % (ACTUAL_BUFFER8_SIZE);                                                                          
 	uint8_t NextRead = (buf->read + 1) % (ACTUAL_BUFFER8_SIZE);
@@ -76,8 +73,6 @@ int8_t Buffer8_Get(CircularBuffer8_s *buf, uint8_t *value)
 
 int8_t Buffer8_GetRequested(CircularBuffer8_s *buf, uint8_t requested, uint8_t *value)
 {
-  uint8_t readIdx = 0;
- 
   *value = buf->buffer[requested];
   return 0;
 }
@@ -117,24 +112,3 @@ int8_t Buffer8_IsEmpty(CircularBuffer8_s *buf)
 
 	return BUFFER8_NOT_EMPTY;
 }
-
-
-/************************************************************************
-*					STATIC FUNCTIONS
-************************************************************************/
-/** @brief
- *
- *	Add full description here
- *
- *  @param none
- *
- *  @return none
- */
-
-
-
-
-/************************************************************************
-*					INTERRUPT VECTOR
-************************************************************************/
-
