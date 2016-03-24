@@ -328,13 +328,16 @@ void STATE_MinuteTimerRoutine(void)
  */
 void STATE_Transmit(uint32_t count, uint32_t seconds){
   char sendString[64] = {0};
-
+  uint8_t sendString_u[64] = {0};
+  
   /* Setup the Load report string */
   sprintf(sendString,"@@@%10lu,",count);
-  UART_Write(&sendString[0],64,UART_A1);
+  memcpy(sendString_u,sendString,64);
+  UART_Write(&sendString_u[0],64,UART_A1);
   /* Write the second part of the load string */
   sprintf(sendString,"%10lu\r\n",seconds);
-  UART_Write(&sendString[0],64,UART_A1);
+  memcpy(sendString_u,sendString,64);
+  UART_Write(&sendString_u[0],64,UART_A1);
   return;
 }
 
@@ -349,14 +352,16 @@ void STATE_Transmit(uint32_t count, uint32_t seconds){
  */
 void STATE_TransmitVolume(float volume, uint32_t seconds){
   char sendString[64] = {0};
+  uint8_t sendString_u[64] = {0};
   
-  // Setup the Load report string
+  /*  Setup the Load report string */
   sprintf(sendString,"@@@%7.2fmL,",volume);
-  
-  // Write the load string
-  UART_Write(&sendString[0],64,UART_A1);
+  memcpy(sendString_u,sendString,64);
+  /* Write the load string */
+  UART_Write(&sendString_u[0],64,UART_A1);
   sprintf(sendString,"%10lu\r\n",seconds);
-  UART_Write(&sendString[0],64,UART_A1);
+  memcpy(sendString_u,sendString,64);
+  UART_Write(&sendString_u[0],64,UART_A1);
   
 }
 
@@ -396,7 +401,7 @@ void STATE_TransmitReport(SampleData_t *Data)
   float min;
   float max;
   char line[128] = {0};  
-
+  uint8_t line_u[128] = {0};
 
   /* Set the index up*/
   currentIdx = HourData.Hour.write;
@@ -406,7 +411,7 @@ void STATE_TransmitReport(SampleData_t *Data)
   {
     idx = currentIdx;
     idx -= i;
-    //idx = currentIdx - i;
+
     if(idx < 0)
     {
       idx += 61;
@@ -428,7 +433,8 @@ void STATE_TransmitReport(SampleData_t *Data)
     
     /* RTC values are in hex, so print hex values to UART*/
     sprintf(line,"@@@%04x%02x%02x,%02x:%02x,%7.2f,%7.2f,%7.2f,%7.2f\r\n",year,mon,day,hr,minute,mean,std,min,max);
-    UART_Write(&line[0],LENGTH_OF(line),UART_A1);
+    memcpy(line_u,line,128);
+    UART_Write(&line_u[0],LENGTH_OF(line_u),UART_A1);
   } 
   
   return;

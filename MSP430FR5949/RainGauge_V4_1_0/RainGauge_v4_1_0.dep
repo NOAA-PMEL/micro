@@ -86,7 +86,6 @@
       <file>$TOOLKIT_DIR$\lib\dlib\dl430xlsfn.h</file>
       <file>$PROJ_DIR$\Debug\Obj\console.r43</file>
       <file>$PROJ_DIR$\Debug\Obj\console.pbi</file>
-      <file>$PROJ_DIR$\Debug\Exe\RainGauge_v4_1_0.ulp</file>
     </outputs>
     <file>
       <name>[ROOT_NODE]</name>
@@ -94,10 +93,6 @@
         <tool>
           <name>XLINK</name>
           <file> 16 26</file>
-        </tool>
-        <tool>
-          <name>ULP430</name>
-          <file> 80</file>
         </tool>
       </outputs>
     </file>
@@ -247,7 +242,7 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 14 70 45 69 10 72 39 33 5 74 71 17 9 28 6 11 73 47 37 75 77 13 0 7</file>
+          <file> 47 6 75 10 73 74 71 70 17 69 14 11 9 37 28 72 39 45 33 5 77 13 0 7</file>
         </tool>
       </inputs>
     </file>
@@ -274,7 +269,7 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 77 75 6 5 14 47 28 10 17 73 70 13 11 9 37 69 74 71 72 39 45 33 0 7</file>
+          <file> 77 75 6 5 14 10 47 28 17 73 70 13 11 9 37 69 74 71 72 39 45 33 0 7</file>
         </tool>
       </inputs>
     </file>
@@ -301,7 +296,7 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 10 45 77 69 5 14 17 28 72 39 33 13 70 9 6 11 73 47 37 75 74 71 41 0 7</file>
+          <file> 10 37 11 70 9 69 28 6 73 47 75 74 71 5 14 72 39 45 33 17 77 13 41 0 7</file>
         </tool>
       </inputs>
     </file>
@@ -328,7 +323,7 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 10 37 77 11 5 14 9 70 17 69 28 6 73 47 75 13 72 39 45 33 74 71 43 0 7</file>
+          <file> 45 5 69 10 74 71 70 14 28 72 39 33 9 6 11 73 47 37 75 17 77 13 43 0 7</file>
         </tool>
       </inputs>
     </file>
@@ -382,7 +377,7 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 14 70 45 69 10 72 39 33 5 74 71 17 9 28 6 11 73 47 37 75 77 13 0 7</file>
+          <file> 10 45 69 70 13 14 72 39 33 5 17 77 9 28 6 11 73 47 37 75 74 71 0 7</file>
         </tool>
       </inputs>
     </file>
@@ -409,7 +404,7 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 17 33 70 72 10 39 5 77 14 69 28 45 13 9 6 11 73 47 37 75 74 71 0 7</file>
+          <file> 14 70 37 11 9 69 28 6 73 47 75 74 71 10 17 72 39 45 33 5 77 13 0 7</file>
         </tool>
       </inputs>
     </file>

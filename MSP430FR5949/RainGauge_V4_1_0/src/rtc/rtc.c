@@ -1,13 +1,35 @@
+/** @file console.c
+ *  @brief
+ *
+ *  @author Matt Casari, matthew.casari@noaa.org
+ *  @date March 23, 2016
+ *  @version 0.1.0
+ *
+ *  @copyright National Oceanic and Atmospheric Administration
+ *  @copyright Pacific Marine Environmental Lab
+ *  @copyright Environmental Development Division
+ *
+ *	@note
+ *
+ *  @bug  No known bugs
+ */
 #include "rtc.h"
 
+/************************************************************************
+*					STATIC FUNCTION PROTOTYPES
+************************************************************************/
 static uint8_t RTC_ParseString(char *RTCString,uint16_t *Year,uint8_t *Mon,uint8_t *Day,uint8_t *Hour,uint8_t *Min,uint8_t *Sec);
+   
+/************************************************************************
+*					GLOBAL FUNCTIONS
+************************************************************************/
 void RTC_Init(void)
 {
-  // Configure RTC C
-  // RTCTEIVE - Event Interrupt Enable
-  // RTCRDYIE - Ready Interrupt Enable
-  // RTCBCD - Timer on BCD Mode
-  // RTCHOLD - RTC Hold
+  /* Configure RTC C                    */
+  /* RTCTEIVE - Event Interrupt Enable  */
+  /* RTCRDYIE - Ready Interrupt Enable  */
+  /* RTCBCD - Timer on BCD Mode         */
+  /* RTCHOLD - RTC Hold                 */
   RTCCTL01 = RTCTEVIE | RTCRDYIE | RTCBCD | RTCHOLD;  
 
 
@@ -19,16 +41,16 @@ void RTC_Init(void)
   RTCMIN = 0x57;
   RTCSEC = 0x58;
   
-  RTCAMIN = 0x01;                         // Set 1 Minute Alarm
-  RTCAMIN |= 0x80;                        // Enable Alaarm
+  RTCAMIN = 0x01;                         /* Set 1 Minute Alarm */
+  RTCAMIN |= 0x80;                        /* Enable Alaarm      */
   
-  RTCCTL01 &= ~(RTCHOLD);                 // Start RTC
+  RTCCTL01 &= ~(RTCHOLD);                 /* Start RTC          */
 }
   
   
   
   
-uint8_t RTC_Set(uint8_t *RTCString)
+uint8_t RTC_Set(char *RTCString)
 {
   uint8_t InvalidString[] = "\r\nInvalid Date/Time String\r\n";
   uint16_t Year;
@@ -172,7 +194,7 @@ uint8_t RTC_Set(uint8_t *RTCString)
   RTC.Mon = high + low;
  
   
-  // Convert Year to Hex
+  /* Convert Year to Hex    */
   LowYear = Year % 10;
   Decade = (Year - LowYear) / 10;
   LowCentury = Decade / 10;
@@ -187,7 +209,7 @@ uint8_t RTC_Set(uint8_t *RTCString)
   
   RTC.Year = HighCentury + LowCentury + Decade + LowYear;
 
-  // Set the flag to update
+  /* Set the flag to update */
   RTC.UpdateFlag = true;
   
   return true;
@@ -212,7 +234,7 @@ static uint8_t RTC_ParseString(char *RTCString,uint16_t *Year,uint8_t *Mon,uint8
     
   }
   
-  // Parse Year & look for valid (Anything greater than last year, 2016+)
+  /* Parse Year & look for valid (Anything greater than last year, 2016+)   */
   memcpy(&temp,&RTCString[0],4);
   tYear = (uint16_t) atoi(temp);
   if(tYear > 2015)
@@ -223,7 +245,7 @@ static uint8_t RTC_ParseString(char *RTCString,uint16_t *Year,uint8_t *Mon,uint8
   }
   memset(&temp,0,4);
   
-  // Parse Month & look for valid (1 - 12)
+  /* Parse Month & look for valid (1 - 12)  */
   memcpy(&temp,&RTCString[4],2);
   t0 = (uint8_t) atoi(temp);
   if(t0 > 12 || t0 < 1)
@@ -232,8 +254,8 @@ static uint8_t RTC_ParseString(char *RTCString,uint16_t *Year,uint8_t *Mon,uint8
   }
   *Mon = t0;
   memset(&temp,0,4);
-  
-  // Parse Day & look for valid (based on month & year)
+    
+  /* Parse Day & look for valid (based on month & year) */
   memcpy(&temp,&RTCString[6],2);
   t0 = (uint8_t) atoi(temp);
   switch(*Mon)
@@ -281,7 +303,7 @@ static uint8_t RTC_ParseString(char *RTCString,uint16_t *Year,uint8_t *Mon,uint8
   *Day = t0;
   memset(&temp,0,4);
 
-  // Parse Hour & look for valid (0 - 23)
+  /* Parse Hour & look for valid (0 - 23) */
   memcpy(&temp,&RTCString[8],2);
   t0 = (uint8_t) atoi(temp);
   if(t0 > 23)
@@ -291,7 +313,7 @@ static uint8_t RTC_ParseString(char *RTCString,uint16_t *Year,uint8_t *Mon,uint8
   *Hour = t0;
   memset(&temp,0,4);
 
-  // Parse Min & look for valid (0 - 59)
+  /* Parse Min & look for valid (0 - 59) */
   memcpy(&temp,&RTCString[10],2);
   t0 = (uint8_t) atoi(temp);
   if(t0 > 59 )
@@ -301,7 +323,7 @@ static uint8_t RTC_ParseString(char *RTCString,uint16_t *Year,uint8_t *Mon,uint8
   *Min = t0;
   memset(&temp,0,4);
   
-  // Parse Sec & look for valid (0 - 59)
+  /* Parse Sec & look for valid (0 - 59) */
   memcpy(&temp,&RTCString[12],2);
   t0 = (uint8_t) atoi(temp);
   if(t0 > 59)
@@ -324,9 +346,9 @@ __interrupt void RTC_ISR(void)
   {
     case RTCIV_NONE:
       break;
-    case RTCIV_RTCOFIFG:    // Oscillator Failure
+    case RTCIV_RTCOFIFG:    /* Oscillator Failure   */
       break;
-    case RTCIV_RTCRDYIFG:   // Second Timer
+    case RTCIV_RTCRDYIFG:   /* Second Timer         */       
       MinuteData.sec++;
       if( (0xFFFFFFFF - SumOfCount) > SensorCounter)
       {
@@ -348,7 +370,7 @@ __interrupt void RTC_ISR(void)
         RTCSEC = RTC.Sec;
         RTC.UpdateFlag = false;
       }
-      // Update Counters
+      /* Update Counters    */
       SensorCounter = 0;
       
       SecondCounter ++;
@@ -360,8 +382,8 @@ __interrupt void RTC_ISR(void)
       break;
       
     /*  Minute Timer */
-    case RTCIV_RTCTEVIFG:   // RTC Interval Timer Flag
-      // Minute timer
+    case RTCIV_RTCTEVIFG:   /* RTC Interval Timer Flag  */
+      /* Minute timer  */
       __no_operation();
       
       /* Change RTC values if flagged */
@@ -370,37 +392,33 @@ __interrupt void RTC_ISR(void)
         /* Set to Run Minute Routine */
         SystemState = MinuteTimerRoutine;
       }
-        /* Grab the date/time */
-        MinuteData.Year[MinuteData.min] = RTCYEAR;
-        MinuteData.Mon[MinuteData.min] = RTCMON;
-        MinuteData.Day[MinuteData.min] = RTCDAY;
-        MinuteData.Hour[MinuteData.min] = RTCHOUR;
-        MinuteData.Min[MinuteData.min] = RTCMIN;
-        
-        /* Clear the Seconds counter and increment the minute in the temp data buffer */
-        MinuteData.sec = 0;
-        MinuteData.min++;
-        if(MinuteData.min > 4)
-        {
-          MinuteData.min = 0;
-        }
-        
-        
-        /* Increment the number of temp samples collected counter */
-        MinuteData.numSamples++;
+      /* Grab the date/time */
+      MinuteData.Year[MinuteData.min] = RTCYEAR;
+      MinuteData.Mon[MinuteData.min] = RTCMON;
+      MinuteData.Day[MinuteData.min] = RTCDAY;
+      MinuteData.Hour[MinuteData.min] = RTCHOUR;
+      MinuteData.Min[MinuteData.min] = RTCMIN;
+      
+      /* Clear the Seconds counter and increment the minute in the temp data buffer */
+      MinuteData.sec = 0;
+      MinuteData.min++;
+      if(MinuteData.min > 4)
+      {
+        MinuteData.min = 0;
+      }
 
-        
-        
-        
-        __low_power_mode_off_on_exit();
-//      }
+      /* Increment the number of temp samples collected counter */
+      MinuteData.numSamples++;
+      
+      /* Exit from Low Power Mode */
+      __low_power_mode_off_on_exit();
       break;
-    case RTCIV_RTCAIFG:     // RTC User Alarm
+    case RTCIV_RTCAIFG:     /* RTC User Alarm   */
       __no_operation();
       break;
-    case RTCIV_RT0PSIFG:    // RTC Prescaler 0
+    case RTCIV_RT0PSIFG:    /* RTC Prescaler 0  */
       break;
-    case RTCIV_RT1PSIFG:    // RTC Prescalser 1
+    case RTCIV_RT1PSIFG:    /* RTC Prescalser 1 */
       break;
     default:
       break;   

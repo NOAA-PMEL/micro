@@ -1,3 +1,18 @@
+/** @file rtc.h
+ *  @brief
+ *
+ *  @author Matt Casari, matthew.casari@noaa.org
+ *  @date March 23, 2016
+ *  @version 0.1.0
+ *
+ *  @copyright National Oceanic and Atmospheric Administration
+ *  @copyright Pacific Marine Environmental Lab
+ *  @copyright Environmental Development Division
+ *
+ *	@note
+ *
+ *  @bug  No known bugs
+ */
 #ifndef rtc_H
 #define rtc_H
 
@@ -12,25 +27,34 @@
 #include <msp430fr5949.h>
 #endif
 
-
 /************************************************************************
 *						STANDARD LIBRARIES
 ************************************************************************/
 #include <stdint.h>
 
+
+/************************************************************************
+*						    MACROS 
+************************************************************************/
 #define RTC_OK      (0)
 #define RTC_FAIL    (1)
 
+
+/** @brief DateTime Structure
+ *
+ * Structure for sensor Data & Time values
+ *
+ */
 typedef struct _RTCStruct_s
 {
-  uint16_t Year;
-  uint8_t Mon;
-  uint8_t Day;
-  uint8_t Hour;
-  uint8_t Min;
-  uint8_t Sec;
-  uint8_t UpdateFlag;
-  uint8_t TimeAtCommand;
+  uint16_t Year;            /** 4 digit year to set */
+  uint8_t Mon;              /** 2 digit Month to set */
+  uint8_t Day;              /** 2 digit Day to set */
+  uint8_t Hour;             /** 2 digit Hour to set (24 hour clock)*/
+  uint8_t Min;              /** 2 digit Minute to set */
+  uint8_t Sec;              /** 2 digit second to set */
+  uint8_t UpdateFlag;       /** Flag to update RTC */
+  uint8_t TimeAtCommand;    /** RTC Time at receiving update time, used for offset */
 }RTCStruct_s;
 
 
@@ -53,6 +77,6 @@ void RTC_Init(void);
  *
  * @return Status
  */
-uint8_t RTC_Set(uint8_t *RTCString);
+uint8_t RTC_Set(char *RTCString);
 
 #endif // rtc_H

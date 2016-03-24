@@ -33,7 +33,7 @@
 #include "../../inc/includes.h"
 
 /************************************************************************
-*							CONSTANTS
+*							MACROS
 ************************************************************************/
 #ifndef true
 #define true				(1)
@@ -56,11 +56,6 @@
 #define TIMERB_FREQUENCY		(1000)							// 1millisecond timer
 #define TIMERB_TEMP_CALC1		(SMCLK/TIMERB_FREQUENCY)
 #define TIMERB_DELAY_COUNT		(TIMERB_TEMP_CALC1 / 8)
-
-
-/************************************************************************
-*						GLOBAL VARIABLES
-************************************************************************/
 
 /************************************************************************
 *						GLOBAL FUNCTION PROTOTYPES
@@ -96,11 +91,5 @@ void TIMER_A1_Init ( void );
  *  @todo This function is restricts processor until complete, should be rethought
  */
 void TIMER_B_MilliSecond( uint16_t length );
-
-/************************************************************************
-*							STRUCTURES
-************************************************************************/
-
-
 
 #endif
