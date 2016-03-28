@@ -2,8 +2,8 @@
  *  @brief Drivers for Keller-Druck PAxLD sensors
  *
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date Oct 2, 2015
- *  @version 0.1.1
+ *  @date March 28, 2016
+ *  @version 1.0.0
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
@@ -46,10 +46,10 @@
 /************************************************************************
 *							CONSTANTS
 ************************************************************************/
-// Number remapping
+/* Number remapping */
 #define NUM_SENSORS				NUM_KELLER_SENSORS
-// function re-mapping
-#define	PAxLDDelayMs(i)	delayMs(i)		//Replace delay_ms(i) with implemented millisecond delay
+/* function re-mapping */
+#define	PAxLDDelayMs(i)	delayMs(i)		
 
 #define PAXLD_POWER_ON()	FET_ON()
 #define PAXLD_POWER_OFF()	FET_OFF()
@@ -57,39 +57,39 @@
 
 #define PAXLD_BAUD_RATE (100000)
 
-// Define the number of pressure sensors on the bus
+/* Define the number of pressure sensors on the bus */
 #define NUMBER_OF_PAXLD_SENSORS (5)
 
-// PAXLD Sensor Data Retreive Max Timeout
-#define PAXLD_DELAY_MAX (25)			// Milliseconds
-#define PAXLD_TIMEOUT_MS (15)			// Millisecond timeout
+/* PAXLD Sensor Data Retreive Max Timeout */
+#define PAXLD_DELAY_MAX (25)			/* Milliseconds */ 
+#define PAXLD_TIMEOUT_MS (15)			/* Millisecond timeout */
 
-// PA7LD Sensor Error Conditions
-#define INVALID_INIT 	(0x00)			// I2C did not initialize correctly
-#define VALID_INIT		(0x01)			// I2C & Sensor correctly initialized
-#define INVALID_SENSOR	(0x02)			// I2C initialized correctly, but Sensor is registering error
+/* PA7LD Sensor Error Conditions */
+#define INVALID_INIT 	(0x00)			/* I2C did not initialize correctly */
+#define VALID_INIT		(0x01)			/* I2C & Sensor correctly initialized */
+#define INVALID_SENSOR	(0x02)			/* I2C initialized correctly, but Sensor is registering error */
 
-// PA7LD Sensor Comm Codes
+/* PA7LD Sensor Comm Codes */
 #define	PAXLD_REQUEST_DATA	(0xAC)
 
-// PA7LD Sensor Address
+/* PA7LD Sensor Address */
 #define PAXLD_ADDR 		(0x40)
 #define PAXLD_DATA_LENGTH (5)
 #define PAXLD_DATA_LENGTH_FULL	(5)
-#define PAXLD_DATA_LENGTH_P_ONLY	(3)		// Pressure only reading, no temperature
+#define PAXLD_DATA_LENGTH_P_ONLY	(3)		/* Pressure only reading, no temperature */
 
-// PA7LD Sensor Conversion Values
-#define PAXLD_PRESSURE_CONVERSION_MIN	(16384u)		// Lowest int value returned (min of range)
-#define PAXLD_PRESSURE_CONVERSION_MAX	(49152u)		// Greatest int value returned (max of range)
+/* PA7LD Sensor Conversion Values */
+#define PAXLD_PRESSURE_CONVERSION_MIN	(16384u)		/* Lowest int value returned (min of range) */
+#define PAXLD_PRESSURE_CONVERSION_MAX	(49152u)		/* Greatest int value returned (max of range) */
 
-// pa7ldstring.c
+/* pa7ldstring.c */
 #define INVALID_STRING	(-1)
 #define VALID_STRING	(0)
 #define READ_REQUEST	(1)
 #define WRITE_REQUEST	(2)
 
 
-// Scaling commands
+/* Scaling commands */
 #define PAXLD_SCALING1_CMD (0x13)
 #define PAXLD_SCALING2_CMD (0x14)
 #define PAXLD_SCALING3_CMD (0x15)

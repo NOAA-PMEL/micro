@@ -4,8 +4,8 @@
  *  @brief Main Function
  *
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date November 2, 2015
- *  @version 0.1.2
+ *  @date March 28, 2016
+ *  @version 1.0.0
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
@@ -22,10 +22,10 @@
  *
  *  @note To add FRAM capability, you must enable MPU in IAR (Project->Options->General Options->MPU/IPU->Support MPU)
  * 
- *	@todo watchdog is not setup
- *	@todo Add console
+ *	@todo 
+ *	@todo 
  *	
- *	@todo remove __delay_cycles() and replace with timer call
+ *	@todo 
  */
 
 
@@ -46,16 +46,16 @@
 		 |              P2.5|---------------------- UART Tx
  		 |              P2.6|---------------------- UART Rx
 		 |                  | 		  
-		 |              PJ.4|----------------------   LFXIn
-		 |                  |													32.768kHz Crystal
-	   |              PJ.5|---------------------- 	LFXOut
+		 |              PJ.4|---------------------- LFXIn
+		 |                  |						    32.768kHz Crystal
+         |              PJ.5|---------------------- LFXOut
 		 |                  |
 		 --------------------
 
  */
 
-#define PMEL            // For compiling outside of Unity/Ceedling
-#define VERSION     ("0.0.1")
+#define PMEL            /* For compiling outside of Unity/Ceedling */
+#define VERSION     ("1.0.0")
 /*****************************  Includes  *********************************/
 #include "./inc/includes.h"
 
@@ -85,7 +85,7 @@ __persistent uint8_t counterValTestWhee = 0;
 __persistent metadata_t FRAM_Metadata;
 
 /*************************  Global variables  *****************************/
-// Variables
+/* Variables */
 metadata_t	Metadata;
 volatile uint16_t sampleCount = 0;
 volatile uint32_t sampleTimer = 0;
@@ -93,7 +93,7 @@ volatile uint8_t errorCounter = 0;
 volatile double pressure = 0.0;
 float TemperatureMean = 0;
 
-// Counters
+/* Counters */
 volatile uint32_t msTimeoutCounter = 0;
 volatile uint32_t ms2TimeoutCounter = 0;
 volatile uint32_t MenuTimeoutA = 0;
@@ -101,75 +101,78 @@ volatile uint32_t ControlTimer = 0;
 volatile uint32_t ControlCounter = 0;
 volatile uint8_t NANCounter = 0;
 
-// Structures
+/* Structures */
 PAXLDSensor_t pxSensor;
 CircularBufferF_s PressureDataBuffer;
 CircularBufferF_s TemperatureDataBuffer;
 CircularBuffer_t ConsoleData;
 CurrentData_t CurrentData;
 
-// Enum types
+/* Enum types */
 SystemState_t SystemState;
 CalibrationState_t CalibrationState;
 state_t ConsoleState;
 
-// Character Arrays
+/* Character Arrays */
 
 
 /*******************************  MAIN  **********************************/
 int main(void) {
 
-  // Configure MPU		
-  __low_level_init();				// Setup FRAM
+  /* Configure MPU & FRAM */
+  __low_level_init();				
 
-  // Load Saved (FRAM) metadata into local RAM
+  /* Load Saved (FRAM) metadata into local RAM */
   FRAM_RetreiveData();
 
-  // Set the sensor I2C address -> Change for production
+  /* Set the sensor I2C address -> Change for production */
   pxSensor.address = 0x46;
 
-  // Configure GPIO
+  /* Configure GPIO */
   SETUP_GPIO();
 
-  // Configure the UART
+  /* Configure the UART */
   UART_Init(UART_A1,UART_BAUD_4800,CLK_32768,UART_CLK_SMCLK);
 
-  // Turn the Keller ON
+  /* Turn the Keller ON */
   FET_ON();
 
-  // Initialize the timer for 1 Second
+  /* Initialize the timer for 1 Second */
   TIMER_A1_Init();
   TIMER_A0_Init();
 
-  // Set interrupts
+  /* Set interrupts */
   P3IFG &= ~BIT7;
 
-  // Enable the interrupts
+  /* Enable the interrupts */
   __bis_SR_register(GIE);
-  __no_operation();                         // For debugger
+  __no_operation();                         /* For debugger */
 
-  // Initialize I2C
+  /* Initialize I2C */
   I2CInit();
 
-  // Initialize the Keller Sensor
+  /* Initialize the Keller Sensor */
   sensorInit();
 
-  // Reset sample timer
+  /* Reset sample timer */
   sampleTimer = 1000;
 
-  // Clear the data buffer
+  /* Clear the data buffer */
   BufferF_Clear(&PressureDataBuffer);
   BufferF_Clear(&TemperatureDataBuffer);
 
-  // Set the startup State
+  /* Set the startup State */
   SystemState = Sample;
    
-  // Main loop
+  /* Main loop */
   for(;;)
   {
+    /* State Machine for Sensor */
+    /* Sample Mode, Compute Stats Mode, Transmit mode & Console Mode */
     switch(SystemState)
     {
       case Sample:
+        /* Polls the Keller for data and stores in buffer */
         I2CInit();
         FET_ON();
         sampleTimer = 0;
@@ -178,16 +181,18 @@ int main(void) {
         STATE_Sample();
         FET_OFF();
         I2CClose();
-        __bis_SR_register(LPM3_bits | GIE); // Set LPM and wait for timer interrupt
+        __bis_SR_register(LPM3_bits | GIE); /* Set LPM and wait for timer interrupt */
         break;
         
       case Compute:
+        /* Computes statistical analysis on data in buffer */
         STATE_Compute();
         sampleCount = 0;
         SystemState = Transmit;
         break;
         
       case Transmit:
+        /* Transmits statistical data back to user */
         STATE_Transmit();
         SystemState = Sample;
         sampleCount = 0;
@@ -195,6 +200,7 @@ int main(void) {
         break;
         
       case Console:
+        /* Enters console mode */
         STATE_Console();
         sampleTimer = 0;
         break;
@@ -215,16 +221,16 @@ int main(void) {
  */
 void STATE_Sample(void)
 {
-    // Request data from sensor
+    /* Request data from sensor */
     PAxLDRequestDataOnInterrupt(&pxSensor);
     
-    // Read the sensors
+    /* Read the sensors */
     sensorRead(&pxSensor);
     
-    // Process sensor data
+    /* Process sensor data */
     sensorProcessData(&pxSensor);
     
-    //Pressures[sampleCount] = pxSensor.pressure;
+    /*Pressures[sampleCount] = pxSensor.pressure; */
     BufferF_Put_Circular(&PressureDataBuffer,pxSensor.pressure);
     BufferF_Put_Circular(&TemperatureDataBuffer,pxSensor.temperature);
  
@@ -244,14 +250,14 @@ void STATE_Compute(void)
 {
   	float TempF[BUFFER_F_SIZE] = {0};
     
-    // Retreive Pressures from Buffer
+    /* Retreive Pressures from Buffer */
     sampleCount = 0;
     while(BufferF_IsEmpty(&PressureDataBuffer) == BUFFER_NOT_EMPTY)
     {
       BufferF_Get(&PressureDataBuffer,&TempF[sampleCount++]);
     }
     
-    // Convert to Load
+    /* Convert to Load */
     for(uint8_t i=0;i<sampleCount;i++)
     {
       
@@ -260,31 +266,31 @@ void STATE_Compute(void)
 
     }
 
-    // Run Stats on the pressures
+    /* Run Stats on the pressures */
     STATS_CalculateMean(&TempF[0],sampleCount, &CurrentData.MeanLoad);
     STATS_ComputeSTD(&TempF[0],sampleCount,CurrentData.MeanLoad,&CurrentData.STDLoad);
     STATS_FindMax(&TempF[0],sampleCount,&CurrentData.MaxLoad);
     STATS_FindMin(&TempF[0],sampleCount,&CurrentData.MinLoad);
 
-    // Look for NAN in data and reset the sensor if there is one
+    /* Look for NAN in data and reset the sensor if there is one */
     if(CurrentData.MeanLoad != CurrentData.MeanLoad )
     {
       sensorInit();
       BufferC_Clear(&ConsoleData);
     }
 
-    // Retreive Temperatures from buffer
+    /* Retreive Temperatures from buffer */
     sampleCount = 0;
     while(BufferF_IsEmpty(&TemperatureDataBuffer) == BUFFER_NOT_EMPTY)
     {
     	BufferF_Get(&TemperatureDataBuffer,&TempF[sampleCount++]);
     }
     
-    // Clear the buffers
+    /* Clear the buffers */
     BufferF_Clear(&PressureDataBuffer);
     BufferF_Clear(&TemperatureDataBuffer);
     
-    // Find mean of the temperature for reporting
+    /* Find mean of the temperature for reporting */
     STATS_CalculateMean(&TempF[0],sampleCount,&CurrentData.MeanTemperature);
     
 }
@@ -301,10 +307,10 @@ void STATE_Transmit(void)
 {
   char sendString[64] = {0};
 
-  // Setup the Load report string
+  /* Setup the Load report string */
   sprintf(sendString,"@@@%6.1f,%6.1f,%6.1f,%6.1f,%6.1f\r\n",CurrentData.MeanLoad,CurrentData.STDLoad,CurrentData.MaxLoad,CurrentData.MinLoad,CurrentData.MeanTemperature);
   
-  // Write the load string
+  /* Write the load string */
   UART_Write(&sendString[0],64,UART_A1);
   
   return;
@@ -322,7 +328,7 @@ void STATE_Console(void)
 {
   MenuTimeoutA = 0;
   
-  // Show the console
+  /* Show the console */
   CONSOLE_State_Main();
 
   return;
@@ -342,7 +348,7 @@ void STATE_Console(void)
  */
 void FRAM_RetreiveData(void)
 {
-	// Retreive metadata from FRAM persistent variables
+	/* Retreive metadata from FRAM persistent variables */
     Metadata.SerialNumber = FRAM_Metadata.SerialNumber;
 	Metadata.Slope = FRAM_Metadata.Slope;
 	Metadata.Intercept = FRAM_Metadata.Intercept;
@@ -369,7 +375,7 @@ void FRAM_RetreiveData(void)
  */
 void FRAM_SaveData(void)
 {
-    // Save metadata to FRAM persistent variables
+    /* Save metadata to FRAM persistent variables */
 	FRAM_Metadata.Slope = Metadata.Slope;
 	FRAM_Metadata.Intercept = Metadata.Intercept;
 	FRAM_Metadata.DataCounter = Metadata.DataCounter;
@@ -471,65 +477,67 @@ void sensorInit(void)
  */
 void SETUP_Clock(void)
 {
-  // Configure the clock 
-  // DCO running at 1MHz
-  // ACLK running on LFXT 32768Hz
-  // SMCLK running on DCOCLK, 500MHz
-  // MCLK running on DCOCLK, 1MHz
-  // LFXT Driver on low power
-  CSCTL0_H = CSKEY >> 8;		// Unlock registers
-  CSCTL1 = DCOFSEL_1;			// Set DCO to 8Mhz
+  /*
+   Configure the clock 
+   DCO running at 1MHz
+   ACLK running on LFXT 32768Hz
+   SMCLK running on DCOCLK, 500MHz
+   MCLK running on DCOCLK, 1MHz
+   LFXT Driver on low power
+  */
+  CSCTL0_H = CSKEY >> 8;		/* Unlock registers */
+  CSCTL1 = DCOFSEL_1;			/* Set DCO to 8Mhz */
   CSCTL2 = SELA__LFXTCLK | SELS__DCOCLK | SELM__DCOCLK;
   CSCTL3 = DIVA__1 | DIVS__2 | DIVM__1;	
   CSCTL4 =   LFXTDRIVE_0 | VLOOFF;
   CSCTL4 &= ~LFXTOFF;
   
-  //   Wait for the clock to lock
+  /*   Wait for the clock to lock */
   do
   {
     CSCTL5 &= ~LFXTOFFG;
     SFRIFG1 &= ~OFIFG;
   }while(SFRIFG1 & OFIFG);
-  CSCTL0_H = 0;							// Lock CS Register
+  CSCTL0_H = 0;							/* Lock CS Register */
   
 }
 
 
 void SETUP_GPIO(void)
 {
-  // Set All GPIO settings to 0
-  GPIO_Init();        // Sets all Outputs Low and regs to 0
-  
-  // Set up the PAxLD Input Pin
+  /* Set All GPIO settings to 0 */
+  GPIO_Init();        /* Sets all Outputs Low and regs to 0 */
+   
+  /* Set up the PAxLD Input Pin */
   GPIO_ClearPin(sensorEOCPort, sensorEOCPin);
   GPIO_SetPinAsInput(sensorEOCPort, sensorEOCPin);
   GPIO_AttachInputInterrupt(sensorEOCPort,sensorEOCPin,GPIO_EDGE_HIGH_TO_LOW);
   
-  // Set up the I2C Pins
+  /* Set up the I2C Pins */
   GPIO_ClearPin(1,6);
   GPIO_ClearPin(1,7);
   GPIO_SetPinAsOutput(1,6);
   GPIO_SetPinAsOutput(1,7);
 
-  // Configure the FET driving power to the Keller Sensor
+  /* Configure the FET driving power to the Keller Sensor */
   FET_OFF();
   FET_INIT();
   
-  // Configure Selection bits for UART
-  P2SEL1 |= BIT5 | BIT6;                    // USCI_A0 UART operation
-  P2SEL0 &= ~(BIT5 | BIT6);
+  /* Configure Selection bits for UART */
+  P2SEL1 |= BIT5 | BIT6;                    /* USCI_A0 UART operation */
+  P2SEL0 &= ~(BIT5 | BIT6); 
   
-  // Configure I2C Pins
+  /* Configure I2C Pins */
   P1SEL1 |= BIT6 | BIT7;
 
-  // LFXIN
+  /* LFXIN */
   PJSEL1 &= ~BIT4;
   PJSEL0 |= BIT4;
   
-  // Unlock GPIO
-  PM5CTL0 &= ~LOCKLPM5;		// Needs to be done after config GPIO & Pins!
+  /* Unlock GPIO */
+  PM5CTL0 &= ~LOCKLPM5;		/* Needs to be done after config GPIO & Pins! */
 
-  // Setup the Clock
+  /* Setup the Clock */
   SETUP_Clock();
   
 }

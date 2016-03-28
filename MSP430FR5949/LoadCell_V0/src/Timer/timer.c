@@ -2,8 +2,8 @@
  *  @brief 	Timer configurations for MSP430FR5969
  *
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date October 7, 2015
- *  @version 0.1.1
+ *  @date March 28, 2016
+ *  @version 1.0.0
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
@@ -14,15 +14,6 @@
  */
 
 #include "timer.h"
-
-
-/************************************************************************
-*				STATIC FUNCTION PROTOTYPES
-************************************************************************/
-
-/************************************************************************
-*				STATIC VARIABLES
-************************************************************************/
 
 /************************************************************************
 *				GLOBAL FUNCTIONS
@@ -84,6 +75,7 @@ __interrupt void TIMER0_A1_ISR(void)
     case TA0IV_5:      break;               // reserved
     case TA0IV_6:      break;               // reserved
     case TA0IV_TAIFG:                       // overflow
+    /* Increment the Menu & Control Timers (1 second) */
     	MenuTimeoutA++;
     	if(ControlTimer++ > 10)
     	{
@@ -100,12 +92,10 @@ __interrupt void TIMER0_A1_ISR(void)
 #pragma vector=TIMER1_A0_VECTOR
 __interrupt void TIMER1_A0_ISR(void)
 {
-
+  /* Increment the millisecond timers */
   msTimeoutCounter += 1;
   ms2TimeoutCounter += 1;
   sampleTimer++;
-  
-
   return;
 }
 

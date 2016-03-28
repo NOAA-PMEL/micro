@@ -1,5 +1,8 @@
 #include "console.h"
 
+/*********************************************************************************
+*									STATIC FUNCTIONS
+*********************************************************************************/
 static void CONSOLE_State_ManualCalibration(void);
 static void CONSOLE_DisplayState_Main(void);
 static void CONSOLE_DisplayState_ManualCalibrationInput(uint8_t line, float value);
@@ -29,15 +32,15 @@ void CONSOLE_State_Main(void)
     uint8_t ExitFlag = false;
     uint8_t DisplayValue = 0;
     
-	// Reset the time and display the menu options
+	/* Reset the time and display the menu options */
 	MenuTimeoutA = 0;
 	CONSOLE_DisplayState_Main();
 	ConsoleState = Hold;
 
-    // Enter main console state and look for user input
+    /* Enter main console state and look for user input */
 	while(ExitConsoleFlag == false)
-	{
-      // Clear the buffers
+	{ 
+      /* Clear the buffers */
       DisplayValue = 0;
       BufferC_Clear(&ConsoleData);
       
@@ -46,20 +49,20 @@ void CONSOLE_State_Main(void)
         {
           CONSOLE_DisplayState_Main();
         }
-        // Wait for User Input or Timeout
+        /* Wait for User Input or Timeout */
         ExitFlag = false;
         while((ExitFlag == false) && (MenuTimeoutA < 10))
         {
           ExitFlag = RetreiveSingleChar( &DisplayValue);
         }
-		// Check for menu timeout, return to sampling if overflowed
+		/* Check for menu timeout, return to sampling if overflowed */
 		if(MenuTimeoutA >= 10)
 		{
 			ExitConsoleFlag = true;
 
 		}
 
-        // Convert user input into menu state selection
+        /* Convert user input into menu state selection */
         switch(DisplayValue)
         {
         case '1':
@@ -91,7 +94,7 @@ void CONSOLE_State_Main(void)
           
         }
 
-        // Run the state commanded
+        /* Run the state commanded */
 		switch(ConsoleState)
 		{
 			case Hold:
@@ -136,7 +139,7 @@ void CONSOLE_State_Main(void)
 
 		}
 	}
-    // Clear the buffer, write to screen and exit to sampling
+    /* Clear the buffer, write to screen and exit to sampling */
     BufferC_Clear(&ConsoleData);
 	UART_Write(&OutText[0],LENGTH_OF(OutText),UART_A1);
 	SystemState = Sample;
@@ -157,10 +160,10 @@ static void CONSOLE_State_ManualCalibration(void)
   float slope = 0.0;
   float intercept = 0.0;
   
-  // Display Slope input command
+  /* Display Slope input command */
   CONSOLE_DisplayState_ManualCalibrationInput(0,0);
   MenuTimeoutA = 0; 
-  // Wait for user input SLOPE
+  /* Wait for user input SLOPE */
   while(ExitFlag == false)
   {
       if(MenuTimeoutA > CALIBRATION_TIMEOUT)
@@ -168,7 +171,7 @@ static void CONSOLE_State_ManualCalibration(void)
           ExitFlag = true;
       }
 
-      // Check for newline in the buffer.  If it exists, retreive the data and process it.
+      /* Check for newline in the buffer.  If it exists, retreive the data and process it. */
       if(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
       {
         ExitFlag = RetreiveData(&rxValues[dataCount++],&dataCount);
@@ -177,7 +180,7 @@ static void CONSOLE_State_ManualCalibration(void)
       }
   }
 
-  // Check string for valid ascii values
+  /* Check string for valid ascii values */
   if(dataCount > 0){
     
     ValidFlag = StringFloatCheck(&rxValues[0],--dataCount);
@@ -187,15 +190,15 @@ static void CONSOLE_State_ManualCalibration(void)
     ValidFlag = false;
   }
 
-  // If a valid value is input, sample the sensor and ask if user wants to save
-  // Otherwise, retry
+  /* If a valid value is input, sample the sensor and ask if user wants to save */
+  /* Otherwise, retry */
   if(ValidFlag == true)
   {
-      // Convert the load string to a float variable
+      /* Convert the load string to a float variable */
       slope = atof(rxValues);
       
   }
-  // Clear the buffers & temp variables
+  /* Clear the buffers & temp variables */
   for(uint8_t i=0;i<32;i++)
   {
     rxValues[i] = 0;
@@ -205,10 +208,10 @@ static void CONSOLE_State_ManualCalibration(void)
   ExitFlag = false;
   dataCount = 0;
 
-  // Display INTERCEPT input command
+  /* Display INTERCEPT input command */
   CONSOLE_DisplayState_ManualCalibrationInput(2,0);
   
-  // Wait for user input INTERCEPT
+  /* Wait for user input INTERCEPT */
   while(ExitFlag == false)
   {
       if(MenuTimeoutA > CALIBRATION_TIMEOUT)
@@ -216,7 +219,7 @@ static void CONSOLE_State_ManualCalibration(void)
           ExitFlag = true;
       }
 
-      // Check for newline in the buffer.  If it exists, retreive the data and process it.
+      /* Check for newline in the buffer.  If it exists, retreive the data and process it. */
       if(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
       {
         ExitFlag = RetreiveData(&rxValues[dataCount++],&dataCount);
@@ -226,8 +229,8 @@ static void CONSOLE_State_ManualCalibration(void)
 
   }
 
-  // Check string for valid ascii values
-  if(dataCount > 0){
+  /* Check string for valid ascii values */
+  if(dataCount > 0){ 
     
     ValidFlag = StringFloatCheck(&rxValues[0],--dataCount);
   }
@@ -236,26 +239,26 @@ static void CONSOLE_State_ManualCalibration(void)
     ValidFlag = false;
   }
   
-  // If a valid value is input, sample the sensor and ask if user wants to save
-  // Otherwise, retry
+  /* If a valid value is input, sample the sensor and ask if user wants to save */
+  /* Otherwise, retry */
   if(ValidFlag == true)
   {
-      // Convert the load string to a float variable
+      /* Convert the load string to a float variable */
       intercept = atof(rxValues);
       
   }
   
-  // Clear the buffer
+  /* Clear the buffer */
   BufferC_Clear(&ConsoleData);
   
-  // Display User input SLOPE & INTERCEPT
+  /* Display User input SLOPE & INTERCEPT */
   CONSOLE_DisplayState_ManualCalibrationInput(1,slope);
   CONSOLE_DisplayState_ManualCalibrationInput(3,intercept);
   
-  // Wait for user or timeout
+  /* Wait for user or timeout */
   RequestAnyKey();
   
-  // Query user to save data or exit without saving
+  /* Query user to save data or exit without saving */
   UART_Write(&saveline[0],LENGTH_OF(saveline),UART_A1);
   SaveValue = CONSOLE_InquireYesOrNoSave();
 
@@ -306,7 +309,7 @@ static void CONSOLE_DisplayState_ManualCalibrationInput(uint8_t line, float valu
 	uint8_t line3[] = "Intercept = ";
 	uint8_t temp[16] = "";
 
-	// check valid input conditions
+	/* check valid input conditions */
 	if(line > 3)
 	{
 		return;
@@ -366,7 +369,7 @@ static void CONSOLE_DisplayMetadata(void)
 	UART_Write(&vals[0],LENGTH_OF(values),UART_A1);
     
 
-    // Wait for user or timeout
+    /* Wait for user or timeout */
     RequestAnyKey();
 
 	return;
@@ -399,7 +402,7 @@ static void CONSOLE_DisplayCalData(void)
 	}
 
     
-    // Wait for user to command continue,or timeout
+    /* Wait for user to command continue,or timeout */
     RequestAnyKey();
 
 }
@@ -438,10 +441,10 @@ static void CONSOLE_Calibration(void)
     
     while(MenuExitFlag == false)
     {
-      // Display the options
+      /* Display the options */
       CONSOLE_DisplayCalibration();
       
-      // Wait for a response or timeout
+      /* Wait for a response or timeout */
       MenuTimeoutA = 0;
       ExitFlag = false;
       while(ExitFlag == false && MenuTimeoutA < MENU_TIMEOUT)
@@ -484,19 +487,19 @@ static void CONSOLE_Calibration(void)
               break;
           }
           
-          // Clear the console
+          /* Clear the console */
           BufferC_Clear(&ConsoleData);
           
         }
       }
       
-      // If timeout has occured, return to main
+      /* If timeout has occured, return to main */
       if(MenuTimeoutA >= MENU_TIMEOUT)
       {
         CalibrationState = ReturnToMain;
       }
       
-      // Setup next sub-state
+      /* Setup next sub-state */
       switch(CalibrationState)
       {
         case Input:
@@ -525,7 +528,6 @@ static void CONSOLE_Calibration(void)
           MenuTimeoutA = 0;
           break;
         case ReturnToMain:
-          //ExitFlag = true;
           MenuExitFlag = true;
           break;
         default:
@@ -534,7 +536,7 @@ static void CONSOLE_Calibration(void)
       BufferC_Clear(&ConsoleData);
     }
     
-    // Clear the buffer and return
+    /* Clear the buffer and return */
     BufferC_Clear(&ConsoleData);
     return;
 }
@@ -542,26 +544,22 @@ static void CONSOLE_Calibration(void)
 static void CONSOLE_CalibrationInputState(void)
 {
   	uint8_t line0[] = "\r\n\r\nEnter load in LBS: ";
-
-    //uint8_t CalculateString[] = "\r\nCalculate Slope & Intercept?";
     uint8_t SaveString[] = "\r\n\r\nSave new Data?";
     uint8_t rxValues[BUFFER_C_SIZE] = {0};
     uint8_t DisplayBuffer[32] = {0};
 	uint8_t dataCount = 0;
-
 	uint8_t ExitFlag = false;
     uint8_t ValidFlag = false;
     uint8_t SaveValue =  false;
-
 	float UserInputLoad = NAN;
     
-    // Turn the sensor on
+    /* Turn the sensor on */
     FET_ON();
     I2CInit();
-	// Display user command
+	/* Display user command */
 	UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
 
-	// Wait for User to input data or timeout
+	/* Wait for User to input data or timeout */
 	MenuTimeoutA = 0;
 	while(ExitFlag == false)
 	{
@@ -570,7 +568,7 @@ static void CONSOLE_CalibrationInputState(void)
 			ExitFlag = true;
 		}
 
-		// Check for newline in the buffer.  If it exists, retreive the data and process it.
+		/* Check for newline in the buffer.  If it exists, retreive the data and process it. */
 		if(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
 		{
           ExitFlag = RetreiveData(&rxValues[dataCount++],&dataCount);
@@ -580,7 +578,7 @@ static void CONSOLE_CalibrationInputState(void)
 
 	}
 
-    // Check string for valid ascii values
+    /* Check string for valid ascii values */
     if(dataCount > 0){
       
       ValidFlag = StringFloatCheck(&rxValues[0],--dataCount);
@@ -590,32 +588,32 @@ static void CONSOLE_CalibrationInputState(void)
       ValidFlag = false;
     }
     
-    // If a valid value is input, sample the sensor and ask if user wants to save
-    // Otherwise, retry
+    /* If a valid value is input, sample the sensor and ask if user wants to save */
+    /* Otherwise, retry */
 	if(ValidFlag == true)
     {
-        // Convert the load string to a float variable
+        /* Convert the load string to a float variable */
       	UserInputLoad = atof(rxValues);
         
-        // Initialize float sensor
+        /* Initialize float sensor */
         float SensorAverageValue = 0.0;
         
-        // Sample the sensor
+        /* Sample the sensor */
         CONSOLE_SampleSensor(&SensorAverageValue);
         
-        // Display the average pressure recorded
+        /* Display the average pressure recorded */
         sprintf(DisplayBuffer,"\r\nAverage Pressure = %3.3f",SensorAverageValue);
         UART_Write(DisplayBuffer,LENGTH_OF(DisplayBuffer),UART_A1);
         
-         // Query user to save data or exit without saving
+         /* Query user to save data or exit without saving */
         UART_Write(&SaveString[0], LENGTH_OF(SaveString),UART_A1);
         SaveValue = CONSOLE_InquireYesOrNoSave();
         
-        // If Save requested, store to permanent structure (FRAM)
-        // Otherwise revert to original data (in FRAM).
+        /* If Save requested, store to permanent structure (FRAM) */
+        /* Otherwise revert to original data (in FRAM). */
         if(SaveValue == 'Y' || SaveValue == 'y')
         {
-          // 
+
           if((Metadata.DataCounter + 1) >= METADATA_ARRAY_SIZE)
           {
             for(uint8_t i=1;i<METADATA_ARRAY_SIZE;i++)
@@ -661,10 +659,8 @@ static void CONSOLE_CalibrationInputState(void)
     }
     
     BufferC_Clear(&ConsoleData);
-    // Query user for calculating metadata
-    //SaveValue = false;
-    //UART_Write(&CalculateString[0], LENGTH_OF(CalculateString), UART_A1);
     
+    /* Query user for calculating metadata */   
     CALCULATE_SlopeAndIntercept();
     
     FET_OFF();
@@ -683,41 +679,41 @@ static void CONSOLE_SampleSensor(float *AverageValue)
   
   BufferF_Clear(&SampleData);
 
-  // Turn the sensor ON
+  /* Turn the sensor ON */
   FET_ON();
 
-  // Display text
+  /* Display text */
   UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
 
   for(uint8_t i=0;i<CALIBRATION_SAMPLE_COUNT;i++)
   {
     MenuTimeoutA = 0;
-    // Request data from sensor
+    /* Request data from sensor */
     PAxLDRequestDataOnInterrupt(&pxSensor);
     
-    // Read the sensors
+    /* Read the sensors */
     sensorRead(&pxSensor);
     
-    // Process sensor data
-    sensorProcessData(&pxSensor);
+    /* Process sensor data */
+    sensorProcessData(&pxSensor); 
     
-    // Put the data retreived in the buffer
+    /* Put the data retreived in the buffer */
     BufferF_Put_Circular(&SampleData, pxSensor.pressure);
     UART_WriteChar('.',UART_A1);
     while(MenuTimeoutA < 1);
   }
 
-  // Turn the sensor OFF to conserve power
+  /* Turn the sensor OFF to conserve power */
   FET_OFF();
 
-  // Retreive Pressures from Buffer
+  /* Retreive Pressures from Buffer */
   sampleCount = 0;
   while(BufferF_IsEmpty(&SampleData) == BUFFER_NOT_EMPTY)
   {
       BufferF_Get(&SampleData,&TempF[sampleCount++]);
   }
 
-  // Calculate the mean pressure & transfer to variable
+  /* Calculate the mean pressure & transfer to variable */
   STATS_CalculateMean(&TempF[0],sampleCount,&PressureMean);
   *AverageValue = PressureMean;
   
@@ -736,7 +732,8 @@ static void CONSOLE_ClearAllData(void)
   
   UART_Write(&line0[0], LENGTH_OF(line0),UART_A1);
   UART_Write(&line1[0], LENGTH_OF(line1),UART_A1);
-  // Query for Y/N
+  
+  /* Query for Y/N */
   UserInput = CONSOLE_InquireYesOrNoSave();
   if(UserInput == 'Y')
   { 
@@ -748,7 +745,7 @@ static void CONSOLE_ClearAllData(void)
   }
   if(SaveFlag == true)
   {
-    // Clear Metadata in RAM
+    /* Clear Metadata in RAM */
     Metadata.Slope = 0;
     Metadata.Intercept = 0;
     Metadata.DataCounter = 0;
@@ -757,7 +754,7 @@ static void CONSOLE_ClearAllData(void)
       Metadata.RecordedData[i] = 0;
       Metadata.InputLoad[i] = 0;
     }
-    // Clear Metadata in FRAM
+    /* Clear Metadata in FRAM */
     FRAM_Metadata.Slope = 0;
     FRAM_Metadata.Intercept = 0;
     FRAM_Metadata.DataCounter = 0;
@@ -779,11 +776,11 @@ static void CONSOLE_InputSerialNumber(void)
   uint8_t ExitFlag = false;
   uint8_t ValidFlag = false;
   
-  // Write 
+  /* Write */
   UART_Write(&line0[0],LENGTH_OF(line0),UART_A1);
   
   MenuTimeoutA = 0;
-  // Wait for user input new Serial Number
+  /* Wait for user input new Serial Number */
   while(ExitFlag == false)
   {
       if(MenuTimeoutA > CALIBRATION_TIMEOUT)
@@ -791,7 +788,7 @@ static void CONSOLE_InputSerialNumber(void)
           ExitFlag = true;
       }
 
-      // Check for newline in the buffer.  If it exists, retreive the data and process it.
+      /* Check for newline in the buffer.  If it exists, retreive the data and process it. */
       if(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
       {
         ExitFlag = RetreiveData(&serialNumber[dataCount], &dataCount);
@@ -800,7 +797,7 @@ static void CONSOLE_InputSerialNumber(void)
       }
   }
 
-  // Check string for valid ascii values
+  /* Check string for valid ascii values */
   if(dataCount > 0){
     
     ValidFlag = StringFloatCheck(&serialNumber[0],--dataCount);
@@ -810,16 +807,16 @@ static void CONSOLE_InputSerialNumber(void)
     ValidFlag = false;
   }
 
-  // If a valid value is input, sample the sensor and ask if user wants to save
-  // Otherwise, retry
+  /* If a valid value is input, sample the sensor and ask if user wants to save */
+  /* Otherwise, retry */
   if(ValidFlag == true)
   {
-      // Convert the load string to a float variable
+      /* Convert the load string to a float variable */
       Metadata.SerialNumber = atof(serialNumber);
       
   }
   
-    // Query user to save data or exit without saving
+    /* Query user to save data or exit without saving */
   uint8_t saveline[] = "\r\n\nSave Serial Number?"; 
   UART_Write(&saveline[0],LENGTH_OF(saveline),UART_A1);
   ValidFlag = CONSOLE_InquireYesOrNoSave();
@@ -894,7 +891,7 @@ static uint8_t RetreiveData(char *value, uint8_t *dataCount)
 {
   uint8_t NewlineFlag = false;
 
-  // Check the buffer for data.  If there is, retreive it and display it.  If it is a newline, report the end of the entry
+  /* Check the buffer for data.  If there is, retreive it and display it.  If it is a newline, report the end of the entry */
   if(BufferC_IsEmpty(&ConsoleData) == BUFFER_NOT_EMPTY)
   {
     BufferC_Get(&ConsoleData,value);
@@ -905,7 +902,7 @@ static uint8_t RetreiveData(char *value, uint8_t *dataCount)
     }
     else
     {
-        // Echo the value and increase the
+        /* Echo the value and increase the */
         UART_WriteChar(*value,UART_A1);
     }
   }
@@ -974,7 +971,7 @@ static void CALCULATE_SlopeAndIntercept(void)
     uint8_t SaveFlag = false;
     uint8_t SaveText[] = "\r\n\r\nSave New Calculated Slope & Intercept?";
      
-	// Calculate the mean values
+	/* Calculate the mean values */
 	for(uint8_t i=0;i<Metadata.DataCounter;i++)
 	{
 		x_mean += Metadata.RecordedData[i];
@@ -984,7 +981,7 @@ static void CALCULATE_SlopeAndIntercept(void)
 	x_mean /= (Metadata.DataCounter);
 	y_mean /= (Metadata.DataCounter);
 	
-	// Calculate M value
+	/* Calculate M value */
 	for(uint8_t i=0;i<Metadata.DataCounter;i++)
 	{
 		tempX = Metadata.RecordedData[i] - x_mean;
@@ -998,7 +995,7 @@ static void CALCULATE_SlopeAndIntercept(void)
 	
 	b = y_mean - (m*x_mean);
 
-    // Round to nearest 0.001
+    /* Round to nearest 0.001 */
     m *= 1000;
     m = round(m);
     m /= 1000;

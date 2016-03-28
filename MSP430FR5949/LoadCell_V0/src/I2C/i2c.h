@@ -1,15 +1,15 @@
 /** @file i2c.h
- *  @brief Drivers for MSP430FR5969 uart
+ *  @brief Drivers for MSP430FR59xx I2C
  *  
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date September 10, 2015
- *  @version 0.0.1
+ *  @date March 28, 2016
+ *  @version 1.0.0
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab 
  *  @copyright Environmental Development Division
  *  
- *	@note Tested on MSP430FR5969
+ *	@note Tested on MSP430FR5949
  *	@note
  *
  *	@todo Need to add a baud rate generator function
@@ -35,16 +35,16 @@
 
 #define I2C_DATA_LENGTH	(5)
 
-// UART Pin Definitions
+/* UART Pin Definitions */
 #define I2C_SCL		(BIT7)
 #define I2C_SDA		(BIT6)
-
-// I2C Data Transmit Length
+ 
+/* I2C Data Transmit Length */
 #define I2C_TX_BUFFER_LENGTH	(2)
 #define I2C_RX_BUFFER_LENGTH	(6)
 
 
-// BAUD RATES
+/* BAUD RATES */
 #define I2C_BAUD_25000		(25000)
 #define I2C_BAUD_50000		(50000)
 #define I2C_BAUD_100000		(100000)

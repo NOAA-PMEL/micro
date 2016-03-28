@@ -2,24 +2,17 @@
  *  @brief Statistics functions
  *
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date Feb 18, 2016
- *  @version 0.0.1
+ *  @date March 28, 2016
+ *  @version 1.0.0
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
  *  @copyright Environmental Development Division
  *
- *	@note Tested on MSP430FR5969
+ *	@note Tested on MSP430FR5949
  *
  *  @bug  No known bugs
  */
- /************************************************************************
-*						STATIC FUNCTION PROTOTYPES
-************************************************************************/
-
-/************************************************************************
-*						GLOBAL VARIABLES
-************************************************************************/
 
 /************************************************************************
 *						GLOBAL FUNCTIONS
@@ -30,7 +23,6 @@
 uint8_t STATS_CalculateMean(float *vals, uint16_t length, float *mean)
 {
 	float sum = 0.0;
-	//float len = (float) length;
 	float CalculatedMean = 0.0;
 	uint16_t i = 0;
 	

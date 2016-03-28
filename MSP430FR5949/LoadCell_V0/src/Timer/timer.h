@@ -2,8 +2,8 @@
  *  @brief Drivers for MSP430FR5969 Timers
  *
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date September 21, 2015
- *  @version 0.0.1
+ *  @date March 28, 2016
+ *  @version 1.0.0
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
@@ -47,20 +47,16 @@
 #define	SYS_FREQ			(8000000u)
 #define SMCLK				(SYS_FREQ / 8)
 
-// Timer A Definitions
+/* Timer A Definitions */
 #define TIMERA_FREQUENCY		(1000)							// 10millisecond timer
 #define TIMERA_TEMP_CALC1		(SMCLK/TIMERA_FREQUENCY)
 #define TIMERA_DELAY_COUNT		(TIMERA_TEMP_CALC1 / 8)
 
-// Timer B Definitions
+/* Timer B Definitions */
 #define TIMERB_FREQUENCY		(1000)							// 1millisecond timer
 #define TIMERB_TEMP_CALC1		(SMCLK/TIMERB_FREQUENCY)
 #define TIMERB_DELAY_COUNT		(TIMERB_TEMP_CALC1 / 8)
 
-
-/************************************************************************
-*						GLOBAL VARIABLES
-************************************************************************/
 
 /************************************************************************
 *						GLOBAL FUNCTION PROTOTYPES

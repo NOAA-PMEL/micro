@@ -2,8 +2,8 @@
  *  @brief
  *
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date Dec 4, 2015
- *  @version
+ *  @date March 28, 2016
+ *  @version 1.0.0
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
@@ -46,7 +46,7 @@
 #define GPIO_PORT_FAIL	(-1)
 
 
-// Interrupt Edge Case
+/* Interrupt Edge Case */
 #define GPIO_EDGE_LOW_TO_HIGH	(0)
 #define GPIO_EDGE_HIGH_TO_LOW	(1)
 

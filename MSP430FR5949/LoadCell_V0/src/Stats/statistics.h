@@ -2,8 +2,8 @@
  *  @brief Statistic functions
  *  
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date February 18, 2016
- *  @version 0.0.1
+ *  @date March 28, 2016
+ *  @version 1.0.0
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab 

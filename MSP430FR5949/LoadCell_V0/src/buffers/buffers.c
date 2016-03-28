@@ -2,8 +2,8 @@
  *  @brief
  *
  *  @author Matt Casari, matthew.casari@noaa.gov
- *  @date Dec 4, 2015
- *  @version 0.0.1
+ *  @date March 28, 2016
+ *  @version 1.0.0
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
@@ -18,9 +18,6 @@
 *					STATIC FUNCTION PROTOTYPES
 ************************************************************************/
 #include "buffers.h"
-/************************************************************************
-*					STATIC VARIABLES
-************************************************************************/
 
 /************************************************************************
 *					FLOAT Buffer Functions
@@ -174,7 +171,7 @@ int8_t BufferC_IsFull(CircularBufferC_s *buf)
 
 int8_t BufferC_IsEmpty(CircularBufferC_s *buf)
 {
-	// Buffer length == 0?
+	/* Buffer length == 0? */
 	if(buf->write == buf->read)
 	{
 		return BUFFER_IS_EMPTY;
@@ -189,13 +186,13 @@ int8_t BufferC_CheckForNewline(CircularBufferC_s *buf)
 	uint16_t readNum = 0;
 	uint16_t length = 0;
 	
-	// Buffer Length == 0?
+	/* Buffer Length == 0? */
 	if(buf->write == buf->read)
 	{
 		return BUFFER_IS_EMPTY;
 	}
 	
-	// Read leading write?
+	/* Read leading write? */
 	if(buf->read > buf->write)
 	{
 		length = ACTUAL_BUFFER_C_SIZE - buf->read;
@@ -206,7 +203,7 @@ int8_t BufferC_CheckForNewline(CircularBufferC_s *buf)
 		length = buf->write - buf->read;
 	}
 
-	// Look for \n in existing buffer
+	/* Look for \n in existing buffer */
 	for(uint16_t i=0;i<length;i++)
 	{
 		readNum = ((buf->read+i) % (ACTUAL_BUFFER_C_SIZE));

@@ -2,8 +2,8 @@
  *  @brief
  *
  *  @author Matt Casari, matthew.casari@noaa.org
- *  @date Dec 4, 2015
- *  @version 0.0.1
+ *  @date March 26, 2016
+ *  @version 1.0.0
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
@@ -21,9 +21,6 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 static uint8_t UART_BaudrateIsValid(uint32_t Baudrate);
 static uint8_t UART_ClockFrequencyIsValid(uint32_t ClkFreq);
 
-/************************************************************************
-*					STATIC VARIABLES
-************************************************************************/
 /************************************************************************
 *					GLOBAL FUNCTIONS
 ************************************************************************/
@@ -50,7 +47,7 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 		return UART_FAIL;
 	}
 
-	// Configure Pins
+	/* Configure Pins */
 	switch(UartPort)
 	{
 		case UART_A0:
@@ -63,11 +60,10 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 			P2SEL0 &= ~(UART_A1_TX | UART_A1_RX);
 			break;
 		default:
-			// add logging
 			break;
 	}
 
-	// Configure Port for UART Mode
+	/* Configure Port for UART Mode */
 	switch(UartPort)
 	{
 		case UART_A0:
@@ -82,7 +78,7 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 			break;
 	}
 
-	// Perform the UCBRS lookup and fail out if invalid
+	/* Perform the UCBRS lookup and fail out if invalid */
 	if( (UCBRSLookup( ClkFreq, Baudrate, &UCBRx, &MCTLWReg)) == BAUDRATE_FAIL)
 	{
 		return UART_FAIL;
@@ -105,8 +101,8 @@ uint8_t UART_Init(uint8_t UartPort,uint32_t Baudrate,uint32_t ClkFreq, uint8_t C
 		}
 	}
 
-    UCA1CTLW0 &= ~UCSWRST;                    // Take UART out of reset
-    UCA1IE |= UCRXIE;                         // Enable USCI_A0 RX interrupt
+    UCA1CTLW0 &= ~UCSWRST;                    /* Take UART out of reset */
+    UCA1IE |= UCRXIE;                         /* Enable USCI_A0 RX interrupt */
 
 	return UART_OK;
 }
@@ -242,7 +238,6 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 					ucbrs = 0x92;
 					break;
 				default:
-//					// Log error
 					response = BAUDRATE_FAIL;
 					break;
 			}
@@ -280,7 +275,6 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 					ucbrs = 0xD6;
 					break;
 				default:
-					// Log error
 					response = BAUDRATE_FAIL;
 					break;
 			}
@@ -318,7 +312,6 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 					ucbrs = 0x08;
 					break;
 				default:
-					// Log error
 					response = BAUDRATE_FAIL;
 					break;
 			}
@@ -363,7 +356,6 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 					break;
 
 				default:
-					// Log error
 					response = BAUDRATE_FAIL;
 					break;
 			}
@@ -408,7 +400,6 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 					break;
 
 				default:
-					// Log error
 					response = BAUDRATE_FAIL;
 					break;
 			}
@@ -420,7 +411,6 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 					*UCBRx = 52;
 					ucbrf = UCBRF_1;
 					ucbrs = 0x49;
-					//ucbrs = 0;
                     break;
 				case UART_BAUD_19200:
 					osval = 1;
@@ -459,21 +449,19 @@ static uint8_t UCBRSLookup( uint32_t clkFreq, uint32_t baudRate, uint16_t *UCBRx
 					ucbrs = 0x4A;
 					break;
 				default:
-					// Log error
 					response = BAUDRATE_FAIL;
 					break;
 			}
 			break;
 		default:
-			// Log error
 			break;
 
 	}
 
-    // Shift the UCBR second byte to left by 8 bits for register
+    /* Shift the UCBR second byte to left by 8 bits for register */
 	ucbrs = (ucbrs << 8);
 
-    // Clear and populate the Modulation Control Register
+    /* Clear and populate the Modulation Control Register */
 	*MCTLWReg = 0x0000;
 	*MCTLWReg = ucbrf | ucbrs | osval;
 	if(response == BAUDRATE_FAIL)
@@ -599,8 +587,6 @@ __interrupt void USCI_A0_ISR(void)
 		case USCI_NONE:
 			break;
 		case USCI_UART_UCRXIFG:
-			//SystemState = BUFFER_RECEIVE;
-			//__bis_SR_register(GIE);
 			break;
 		case USCI_UART_UCTXIFG:
 			break;
@@ -632,7 +618,7 @@ __interrupt void USCI_A1_ISR(void)
 						case 'd':
 							SystemState = Compute;
 					 		break;
-						case 0x03:	// Ctrl-C
+						case 0x03:	/* Ctrl-C */
 							ControlTimer = 0;
 							if(++ControlCounter > 2)
 							{
