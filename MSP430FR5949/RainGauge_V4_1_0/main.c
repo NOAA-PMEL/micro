@@ -60,7 +60,7 @@
 */
 
 
-#define VERSION     ("4.1.1")
+#define VERSION     ("4.1.2")
 /*****************************  Includes  *********************************/
 #include "./inc/includes.h"
 
@@ -68,7 +68,7 @@
 void STATE_Sample(void);
 void STATE_MinuteTimerRoutine(void);
 void STATE_Transmit(uint32_t count, uint32_t seconds);
-void STATE_TransmitVolume(float volume, uint32_t seconds);
+void STATE_TransmitVolume(float volume, uint32_t count, uint32_t seconds);
 void STATE_TransmitReport(SampleData_t *Data);
 void STATE_TransmitCurrentTime(void);
 void SETUP_Clock(void);
@@ -94,8 +94,8 @@ __persistent uint32_t MinuteSensorCounter = 0;
 __persistent uint32_t SecondCounter = 0;
 __persistent float slope = 1.412e12;
 __persistent float intercept = -493.25;
-__persistent float dmMin = 3.704e4;    /* Value dm connot be less than */
-__persistent float dmMax = 5.304e4;    /*  Value dm cannot exceed */
+__persistent float dmMin = 3.5540e4;    /* Value dm connot be less than */
+__persistent float dmMax = 5.454e4;    /*  Value dm cannot exceed */
 __persistent SampleData_t HourData;
 __persistent RTCStruct_t RTC;
 __persistent uint8_t version[] = VERSION;
@@ -203,7 +203,7 @@ int main(void) {
             break;
           case Volume:
             volume = CalculateVolume(temp_SumOfCount, temp_SecondsCounter);
-            STATE_TransmitVolume(volume,temp_SecondsCounter);
+            STATE_TransmitVolume(volume,temp_SumOfCount,temp_SecondsCounter);
             break;
           case Report:
             STATE_TransmitReport(&HourData);
@@ -354,15 +354,21 @@ void STATE_Transmit(uint32_t count, uint32_t seconds){
  *
  *  @return Void
  */
-void STATE_TransmitVolume(float volume, uint32_t seconds){
+void STATE_TransmitVolume(float volume, uint32_t count, uint32_t seconds){
   char sendString[64] = {0};
   uint8_t sendString_u[64] = {0};
   
-  /*  Setup the Load report string */
+  /*  Send the volume */
   sprintf(sendString,"@@@%7.2fmL,",volume);
   memcpy(sendString_u,sendString,64);
-  /* Write the load string */
   UART_Write(&sendString_u[0],64,UART_A1);
+  
+  /*  Send the counts */
+  sprintf(sendString,"%10lu,",count);
+  memcpy(sendString_u,sendString,64);
+  UART_Write(&sendString_u[0],64,UART_A1);
+
+  /*  Send the seconds */
   sprintf(sendString,"%10lu\r\n",seconds);
   memcpy(sendString_u,sendString,64);
   UART_Write(&sendString_u[0],64,UART_A1);
@@ -487,16 +493,30 @@ float CalculateVolume(uint32_t count, uint32_t seconds){
   dm /= (float) seconds;
  
   /* Look for invalid dms */
-  if(( dm > dmMax ) || (dm < dmMin))
+  if(( dm > (dmMax) ) || (dm < (dmMin)))
   {
     return NAN;
   }
+  
+//  if(dm > (dmMax + 600))
+//  {
+//    dm = dmMax;
+//  }
+//  
+//  if(dm < (dmMin - 600))
+//  {
+//    dm = dmMin;
+//  }
   
   dm *= dm;
   
   vol = (float) (slope / dm);
   vol += intercept;
   
+  if(vol == -0.00)
+  {
+    vol = 0.0;
+  }
   return vol;
   
 }

@@ -24,7 +24,7 @@
 #ifndef PMEL
 #include "../../test/msp430fr5969.h"
 #else
-#include <msp430fr5969.h>
+#include <msp430fr5949.h>
 #endif
 /************************************************************************
 *						STANDARD LIBRARIES
