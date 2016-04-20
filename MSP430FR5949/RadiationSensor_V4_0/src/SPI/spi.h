@@ -56,8 +56,13 @@
  */
 uint8_t SPI_Init(void);
 
-
-    
+/** @brief Write to SPI
+ *
+ *	Write a single char to SPI channel
+ *
+ *  @return Status
+ */
+uint8_t SPI_Write(void);
     
     
     #endif // spi_H

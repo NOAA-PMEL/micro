@@ -87,7 +87,6 @@ uint8_t GPIO_SetPinAsOutput(uint8_t Port, uint8_t Pin)
 			break;
 		default:
 			break;
-
 	}
 
 

@@ -48,6 +48,7 @@
 #include "../src/buffers/buffer16.h"    /* uint16_t buffer header file */
 #include "../src/rtc/rtc.h"             /* Real-Time Clock header file */
 #include "../src/Stats/statistics.h"    /* Statistical Calculation header file */
+#include "../src/MAX1247/MAX1247.h"     /* MAX1247 SPI ADC header file */
 
 /************************************************************************
 *							CONSTANTS
@@ -76,6 +77,30 @@
 #define DEBUG_PIN   (6)
 #endif 
 
+/* ADC Shutdown Pin/Port Assignment */
+#define ADC_SHDN_PIN        (3)
+#define ADC_SHDN_PORT       (3)
+
+/* ADC Chip Select Pin/Port Assignment */
+#define ADC_CS_PIN          (1)
+#define ADC_CS_PORT         (3)
+
+/* ADC Strobe Pin/Port Assignment */
+#define ADC_STRB_PIN        (0)
+#define ADC_STRP_PORT       (3)
+
+/* Pin control redefinitions */
+#define ADC_SHDN_INIT()         (GPIO_Init(ADC_SHDN_PORT, ADC_SHDN_PIN))
+#define ADC_SHDN_FLOAT()        (GPIO_Clear(ADC_SHDN_PORT,ADC_SHDN_PIN))
+#define ADC_SHDN_ON()           (GPIO_Set(ADC_SHDN_PORT,ADC_SHDN_PIN))
+
+#define ADC_CS_INIT()           (GPIO_Init(ADC_CS_PORT,ADC_CS_PIN))
+#define ADC_CS_SET()            (GPIO_Init(ADC_CS_PORT,ADC_CS_PIN))
+#define ADC_CS_CLEAR()          (GPIO_Init(ADC_CS_PORT,ADC_CS_PIN))
+
+#define ADC_STRB_INIT()         (GPIO_Init(ADC_STRB_PORT,ADC_STRB_PIN))
+#define ADC_STRB_CLEAR()        (GPIO_Init(ADC_STRB_PORT,ADC_STRB_PIN))
+
 /************************************************************************
 *							STRUCTURES
 ************************************************************************/
@@ -90,7 +115,7 @@ typedef struct _RTCStruct_s RTCStruct_t;
  *
  */
 typedef struct _SampleData_s {
-  CircularBufferF_s Mean;   /** Mean Volume for 60 minuetes */
+  CircularBufferF_s Mean;   /** Mean Volume for 60 minutes */
   CircularBufferF_s STD;    /** Standard Deviation for 60 minutes */
   CircularBufferF_s Min;    /** Min Volume for 60 minutes */
   CircularBufferF_s Max;    /** Max Volume for 60 minutes */

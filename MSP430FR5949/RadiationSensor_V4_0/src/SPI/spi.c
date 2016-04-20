@@ -40,7 +40,14 @@ uint8_t SPI_Init(void)
   
   /* No modulation */
   UCB0MCTLW = 0;
+ 
   
-  /* 
+}
+
+
+uint8_t SPI_Write(void)
+{
+  
+  
   
 }
