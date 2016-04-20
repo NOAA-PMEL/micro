@@ -1,4 +1,5 @@
-/** @file spi_H
+
+/** @file MAX1247_H
   *  @brief
   *
   *  @author Matt Casari, matthew.casari@noaa.org
@@ -9,12 +10,12 @@
   *  @copyright Pacific Marine Environmental Lab
   *  @copyright Environmental Development Division
   *
-  *	 @note
+  *	@note
   *
   *  @bug  No known bugs
   */
-#ifndef SPI_H
-#define SPI_
+#ifndef MAX1247_H
+#define MAX1247_H
 /************************************************************************
 *						STANDARD LIBRARIES
 ************************************************************************/
@@ -48,16 +49,16 @@
 /************************************************************************
 *					GLOBAL FUNCTION PROTOTYPES
 ************************************************************************/
-/** @brief Init SPI Channel
+/** @brief 
  *
- *	Sets all internals for SPI comms
+ *	
  *
- *  @return Status
+ *  @param 
+ *
+ *  @return 
  */
-uint8_t SPI_Init(void);
-
-
     
     
     
-    #endif // spi_H
+    
+    #endif // MAX1247_H
