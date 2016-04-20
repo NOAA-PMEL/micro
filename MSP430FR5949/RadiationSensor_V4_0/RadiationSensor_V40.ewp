@@ -58,11 +58,11 @@
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>$TOOLKIT_DIR$\lib\dlib\dl430fn.h</state>
+          <state>$TOOLKIT_DIR$\lib\dlib\dl430xlsfn.h</state>
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\DLIB\dl430fn.r43</state>
+          <state>$TOOLKIT_DIR$\lib\dlib\dl430xlsfn.r43</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -97,7 +97,7 @@
         </option>
         <option>
           <name>OGChipSelectMenu</name>
-          <state>MSP430F149	MSP430F149</state>
+          <state>MSP430FR5949	MSP430FR5949</state>
         </option>
         <option>
           <name>GStackHeapOverride</name>
@@ -105,11 +105,11 @@
         </option>
         <option>
           <name>GStackSize2</name>
-          <state>80</state>
+          <state>160</state>
         </option>
         <option>
           <name>GHeapSize2</name>
-          <state>80</state>
+          <state>160</state>
         </option>
         <option>
           <name>RadioDataModelType</name>
@@ -117,7 +117,7 @@
         </option>
         <option>
           <name>GHeap20Size</name>
-          <state>###Uninitialized###</state>
+          <state>80</state>
         </option>
         <option>
           <name>GeneralMisraRules98</name>
@@ -224,7 +224,7 @@
         </option>
         <option>
           <name>Math description</name>
-          <state></state>
+          <state>Default variants of cos, sin, tan, log, log10, pow, and exp.</state>
         </option>
       </data>
     </settings>
@@ -237,7 +237,7 @@
         <debug>1</debug>
         <option>
           <name>CCDefines</name>
-          <state></state>
+          <state>PMEL</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1097,7 +1097,11 @@
         <debug>1</debug>
         <option>
           <name>CUTest</name>
-          <state>###Uninitialized###</state>
+          <state>-I$TOOLKIT_DIR$\inc</state>
+          <state>-@$TOOLKIT_DIR$\bin\iar.cmd</state>
+          <state>-@$PROJ_DIR$\source.txt</state>
+          <state>-@$PROJ_DIR$\include.txt</state>
+          <state>--preinclude=$PROJ_DIR$\IAR_ULPAdvisor_Defs.h</state>
         </option>
         <option>
           <name>ULPRules</name>
@@ -2247,107 +2251,116 @@
     </settings>
   </configuration>
   <group>
-    <name>buffers</name>
+    <name>inc</name>
     <file>
-      <name>$PROJ_DIR$\src\buffers\buffer16.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\buffers\buffer16.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\buffers\buffer8.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\buffers\buffer8.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\buffers\buffer_c.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\buffers\buffer_c.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\buffers\buffer_f.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\buffers\buffer_f.h</name>
+      <name>$PROJ_DIR$\inc\includes.h</name>
     </file>
   </group>
   <group>
-    <name>Console</name>
+    <name>src</name>
+    <group>
+      <name>buffers</name>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer16.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer16.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer8.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer8.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer_c.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer_c.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer_f.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\buffers\buffer_f.h</name>
+      </file>
+    </group>
+    <group>
+      <name>Console</name>
+      <file>
+        <name>$PROJ_DIR$\src\Console\console.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\Console\console.h</name>
+      </file>
+    </group>
+    <group>
+      <name>GPIO</name>
+      <file>
+        <name>$PROJ_DIR$\src\GPIO\gpio.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\GPIO\gpio.h</name>
+      </file>
+    </group>
+    <group>
+      <name>MAX1247</name>
+      <file>
+        <name>$PROJ_DIR$\src\MAX1247\MAX1247.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\MAX1247\MAX1247.h</name>
+      </file>
+    </group>
+    <group>
+      <name>rtc</name>
+      <file>
+        <name>$PROJ_DIR$\src\rtc\rtc.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\rtc\rtc.h</name>
+      </file>
+    </group>
+    <group>
+      <name>SPI</name>
+      <file>
+        <name>$PROJ_DIR$\src\SPI\spi.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\SPI\spi.h</name>
+      </file>
+    </group>
+    <group>
+      <name>Stats</name>
+      <file>
+        <name>$PROJ_DIR$\src\Stats\statistics.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\Stats\statistics.h</name>
+      </file>
+    </group>
+    <group>
+      <name>Timer</name>
+      <file>
+        <name>$PROJ_DIR$\src\Timer\timer.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\Timer\timer.h</name>
+      </file>
+    </group>
+    <group>
+      <name>UART</name>
+      <file>
+        <name>$PROJ_DIR$\src\UART\uart.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\UART\uart.h</name>
+      </file>
+    </group>
     <file>
-      <name>$PROJ_DIR$\src\Console\console.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\Console\console.h</name>
+      <name>$PROJ_DIR$\main.c</name>
     </file>
   </group>
-  <group>
-    <name>GPIO</name>
-    <file>
-      <name>$PROJ_DIR$\src\GPIO\gpio.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\GPIO\gpio.h</name>
-    </file>
-  </group>
-  <group>
-    <name>MAX1247</name>
-    <file>
-      <name>$PROJ_DIR$\src\MAX1247\MAX1247.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\MAX1247\MAX1247.h</name>
-    </file>
-  </group>
-  <group>
-    <name>rtc</name>
-    <file>
-      <name>$PROJ_DIR$\src\rtc\rtc.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\rtc\rtc.h</name>
-    </file>
-  </group>
-  <group>
-    <name>SPI</name>
-    <file>
-      <name>$PROJ_DIR$\src\SPI\spi.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\SPI\spi.h</name>
-    </file>
-  </group>
-  <group>
-    <name>Stats</name>
-    <file>
-      <name>$PROJ_DIR$\src\Stats\statistics.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\Stats\statistics.h</name>
-    </file>
-  </group>
-  <group>
-    <name>Timer</name>
-    <file>
-      <name>$PROJ_DIR$\src\Timer\timer.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\Timer\timer.h</name>
-    </file>
-  </group>
-  <group>
-    <name>UART</name>
-    <file>
-      <name>$PROJ_DIR$\src\UART\uart.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\UART\uart.h</name>
-    </file>
-  </group>
-  <file>
-    <name>$PROJ_DIR$\main.c</name>
-  </file>
 </project>
 
 

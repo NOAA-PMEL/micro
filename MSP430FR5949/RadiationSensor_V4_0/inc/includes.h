@@ -87,20 +87,20 @@
 
 /* ADC Strobe Pin/Port Assignment */
 #define ADC_STRB_PIN        (0)
-#define ADC_STRP_PORT       (3)
+#define ADC_STRB_PORT       (3)
 
 /* Pin control redefinitions */
-#define ADC_SHDN_INIT()         (GPIO_Init(ADC_SHDN_PORT, ADC_SHDN_PIN))
-#define ADC_SHDN_FLOAT()        (GPIO_Clear(ADC_SHDN_PORT,ADC_SHDN_PIN))
-#define ADC_SHDN_ON()           (GPIO_Set(ADC_SHDN_PORT,ADC_SHDN_PIN))
+#define ADC_SHDN_INIT()         (GPIO_SetPinAsOutput(ADC_SHDN_PORT, ADC_SHDN_PIN))
+#define ADC_SHDN_FLOAT()        (GPIO_ClearPin(ADC_SHDN_PORT,ADC_SHDN_PIN))
+#define ADC_SHDN_ON()           (GPIO_SetPin(ADC_SHDN_PORT,ADC_SHDN_PIN))
 
-#define ADC_CS_INIT()           (GPIO_Init(ADC_CS_PORT,ADC_CS_PIN))
-#define ADC_CS_SET()            (GPIO_Init(ADC_CS_PORT,ADC_CS_PIN))
-#define ADC_CS_CLEAR()          (GPIO_Init(ADC_CS_PORT,ADC_CS_PIN))
+#define ADC_CS_INIT()           (GPIO_SetPinAsOutput(ADC_CS_PORT,ADC_CS_PIN))
+#define ADC_CS_SET()            (GPIO_ClearPin(ADC_CS_PORT,ADC_CS_PIN))
+#define ADC_CS_CLEAR()          (GPIO_SetPin(ADC_CS_PORT,ADC_CS_PIN))
 
-#define ADC_STRB_INIT()         (GPIO_Init(ADC_STRB_PORT,ADC_STRB_PIN))
-#define ADC_STRB_CLEAR()        (GPIO_Init(ADC_STRB_PORT,ADC_STRB_PIN))
-
+#define ADC_STRB_INIT()         (GPIO_SetPinAsInput(ADC_STRB_PORT,ADC_STRB_PIN))
+#define ADC_STRB_CLEAR()        (GPIO_ClearPin(ADC_STRB_PORT,ADC_STRB_PIN))
+#define ADC_STRB_READ()         (GPIO_ReadInputPin(ADC_STRB_PORT,ADC_STRB_PIN))
 /************************************************************************
 *							STRUCTURES
 ************************************************************************/
@@ -190,6 +190,8 @@ extern float slope;
 extern float intercept;
 extern float dmMin;
 extern float dmMax;
+
+extern volatile uint16_t MAX1247_TimeoutTimer;
 
 /* Structures */
 extern SystemState_t SystemState;

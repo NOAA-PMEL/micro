@@ -13,14 +13,23 @@
  *
  *  @bug  No known bugs
  */
-#include "MAX1247.h";
+#include "MAX1247.h"
+
+
+const uint8_t MAX1247_CHAN0_START = 0x9E;
+const uint8_t MAX1247_CHAN1_START = 0xDE;
+const uint8_t MAX1247_CHAN2_START = 0xAE;
+const uint8_t MAX1247_CHAN3_START = 0xEE;
+const uint8_t MAX1247_FAST_SHUTDOWN = 0x81;
+const uint8_t MAX1247_FULL_SHUTDOWN = 0x80;
+const uint8_t MAX1247_DUMMY = 0x00;
 
 uint8_t MAX1247_Init(void) 
 {
   
   /*  Set \SHDN pin to ouput and set LOW */
-  MAX1247_SHDN_PIN_LOW();
-  MAX1247_SHDN_PIN_INIT();
+  MAX1247_SHDN_ON();
+  MAX1247_SHDN_INIT();
 
   /*  Set GPIO Pins to inputs fro \CS and STRB */
   MAX1247_CS_INIT();
@@ -48,7 +57,7 @@ uint8_t MAX1247_Read(uint16_t *value)
     SPI_Write(MAX1247_DUMMY);
     
     /* Wait for data */
-    while( MAX1247_DATARDY_PIN != 1)
+    while( MAX1247_STRB_READ() != 1)
     {
       /* If timeout reach, exit with fail status */
       if(MAX1247_TimeoutTimer >= MAX1247_TIMEOUT_VALUE )
@@ -58,7 +67,7 @@ uint8_t MAX1247_Read(uint16_t *value)
     }
     
     /* Retreive data from buffer */
-    if(i=0)
+    if(i==0)
     {
       byte_h = UCB0RXBUF;
     } else {
