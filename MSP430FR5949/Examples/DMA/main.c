@@ -97,8 +97,8 @@ SystemState_t SystemState;
 TransSubState_t TxSubState;
 
 /* Constants */
-char line0[256] = "This is the first\r\n";
-char line1[256] = "This is the second\r\n\n";
+__persistent char line0[256] = {0x21};//"This is the first\r\n";
+__persistent char line1[256] = {0x22};//"This is the second\r\n\n";
 unsigned short line0_addr = 0;
 unsigned short line1_addr = 0;
 unsigned short destination_addr = 0;
@@ -115,6 +115,8 @@ int main(void) {
   __low_level_init();				// Setup FRAM
   WDTCTL = WDTPW | WDTHOLD;	
 
+  
+  
   /* Debug Conditions */
 #ifdef DEBUG
   BufferTest();
