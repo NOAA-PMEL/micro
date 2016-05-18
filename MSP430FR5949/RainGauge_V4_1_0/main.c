@@ -68,6 +68,7 @@ void STATE_MinuteTimerRoutine(void);
 void STATE_Transmit(uint32_t count, uint32_t seconds);
 void STATE_TransmitVolume(float volume, uint32_t count, uint32_t seconds);
 void STATE_TransmitReport(SampleData_t *Data);
+void STATE_TransmitHourRate(SamplesData_t *Data);
 void STATE_TransmitCurrentTime(void);
 void SETUP_Clock(void);
 void SETUP_GPIO(void);
@@ -188,6 +189,7 @@ int main(void) {
         /* Set back to sampling state */
         SystemState = Sample;
         break;
+      case HourTimerRoutine:
       case Transmit:
         temp_SecondsCounter = SecondCounter + 1;
         while(SecondCounter < temp_SecondsCounter);
@@ -370,6 +372,21 @@ void STATE_TransmitVolume(float volume, uint32_t count, uint32_t seconds){
   sprintf(sendString,"%10lu\r\n",seconds);
   memcpy(sendString_u,sendString,64);
   UART_Write(&sendString_u[0],64,UART_A1);
+  
+}
+
+/** @brief Enters Transmit Hour Rate State
+ *
+ *  Preps the data 
+ *
+ *  @param volume Volume (in mL)
+ *  @param seconds Numer of seconds of integration
+ *
+ *  @return Void
+ */
+void STATE_TransmitHourRate(SamplesData_t *Data){
+  
+  
   
 }
 
