@@ -83,6 +83,7 @@ int8_t Buffer8_Clear(CircularBuffer8_s *buf)
 
 	buf->read = 0;
 	buf->write = 0;
+    buf->size = 0;
 
 	for(i=0;i<ACTUAL_BUFFER8_SIZE;i++)
 	{

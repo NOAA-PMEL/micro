@@ -216,6 +216,30 @@ uint8_t UART_WriteIncludeNull(uint8_t *value, uint8_t length, uint8_t Port)
 	return UART_OK;
   
 }
+
+uint8_t UART_WriteACK(uint8_t Port) {
+  /* Check for valid Port # */
+  if(Port != UART_A0 && Port != UART_A1)
+  {
+      return UART_FAIL;
+  }
+  
+  UART_WriteChar(0x06, Port);
+  
+  return UART_OK;
+}
+
+uint8_t UART_WriteNACK(uint8_t Port) {
+  /* Check for valid Port # */
+  if(Port != UART_A0 && Port != UART_A1)
+  {
+      return UART_FAIL;
+  }
+  
+  UART_WriteChar(0x15,Port);
+  
+  return UART_OK;
+}
 /************************************************************************
 *					STATIC FUNCTIONS
 ************************************************************************/
@@ -641,48 +665,30 @@ __interrupt void USCI_A1_ISR(void)
 		case USCI_NONE:
 			break;
 		case USCI_UART_UCRXIFG:     
+        
 			switch(SystemState)
 			{
               case Sample:
-                switch(UCA1RXBUF)
+              case Offset:
+                inputVal = UCA1RXBUF;
+                //UCA1TXBUF = inputVal;
+                if(inputVal == 0x08)
                 {
-                    case 'D':
-                      SystemState = Transmit;
-                      TxSubState = Volume;
-                      __low_power_mode_off_on_exit();
-                      break;
-                    case 'd':
-                      SystemState = Transmit;
-                      TxSubState = Counts;
-                      __low_power_mode_off_on_exit();
-                      break;
-                    case 'R':
-                    case 'r':
-                      SystemState = Transmit;
-                      TxSubState = Report;
-                      __low_power_mode_off_on_exit();
-                      break;
-                    case 'T':
-                    case 't':
-                      SystemState = Transmit; 
-                      TxSubState = CurrentTime;
-                      __low_power_mode_off_on_exit();
-                      break;
-                    case 0x03:
-                      if(++ConsoleCounter >= 3)
-                      {
-                        SystemState = Console;
-                      }
-                      __low_power_mode_off_on_exit();
-                      break;
-                    default:
-                        break;
+                  BufferC_Backspace(&UartData);
+                } else {
+                  BufferC_Put(&UartData,inputVal);
                 }
+                __low_power_mode_off_on_exit();
                 break;
               case Console:
                 inputVal = UCA1RXBUF;
                 UCA1TXBUF = inputVal;
-                BufferC_Put(&ConsoleData,inputVal);
+                if(inputVal == 0x08)
+                {
+                  BufferC_Backspace(&ConsoleData);
+                } else {
+                  BufferC_Put(&ConsoleData,inputVal);
+                }
                 break;
               default:
                 break;

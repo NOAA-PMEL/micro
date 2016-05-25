@@ -47,13 +47,53 @@ int8_t BufferC_Get(CircularBufferC_s *buf, char *value)
 	return 0;
 }
 
+int8_t BufferC_Backspace(CircularBufferC_s *buf)
+{
+  uint8_t PrevWrite = 0;
+
+  if(buf->read == buf->write)
+  {
+    return BUFFER_C_ERROR_EMPTY;
+  }
+  
+  if(buf->write == 0) {
+    PrevWrite = BUFFER_C_SIZE -1;
+  } else {
+    PrevWrite = buf->write - 1;
+  }
+  
+  buf->write=PrevWrite;
+  return 0;
+}
+
+int8_t BufferC_HasNewline(CircularBufferC_s *buf)
+{
+  uint8_t read = 0;
+  
+  if(buf->read == buf->write)
+  {
+      return BUFFER_C_ERROR_EMPTY;
+  }
+
+  read = buf->read;
+  while(read != buf->write){
+    if(buf->buffer[read] == '\n' || buf->buffer[read] == '\r' || buf->buffer[read] == 0x18) {
+      return BUFFER_C_HAS_NEWLINE;
+    }
+    read = (read + 1) % ACTUAL_BUFFER_C_SIZE;
+  }
+
+	return 0;
+}
+
 int8_t BufferC_Clear(CircularBufferC_s *buf)
 {
 	uint16_t i = 0;
 
 	buf->read = 0;
 	buf->write = 0;
-
+    buf->size = 0;
+    
 	for(i=0;i<ACTUAL_BUFFER_C_SIZE;i++)
 	{
 		buf->buffer[i] = 0;

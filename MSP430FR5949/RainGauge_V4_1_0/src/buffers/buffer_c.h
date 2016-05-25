@@ -30,7 +30,7 @@
 *						STANDARD LIBRARIES
 ************************************************************************/
 #include <stdint.h>
-
+#include <math.h>
 /************************************************************************
 *							MACROS
 ************************************************************************/
@@ -44,6 +44,8 @@
 #define BUFFER_C_NOT_EMPTY			(BUFFER_C_NOT_FULL)
 #define BUFFER_C_IS_EMPTY			(1)
 #define BUFFER_C_IS_FULL			(2)
+
+#define BUFFER_C_HAS_NEWLINE        (5)
 
 /** @brief Char circular buffer
  * 
@@ -116,5 +118,7 @@ int8_t BufferC_IsFull(CircularBufferC_s *buf);
 int8_t BufferC_IsEmpty(CircularBufferC_s *buf);
 
 
+int8_t BufferC_Backspace(CircularBufferC_s *buf);
+int8_t BufferC_HasNewline(CircularBufferC_s *buf);
 #endif
 

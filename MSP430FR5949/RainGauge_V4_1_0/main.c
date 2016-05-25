@@ -63,15 +63,17 @@
 #include "./inc/includes.h"
 
 /************************ Function Prototypes *****************************/
+void STATE_CheckRxBuffer(void);
 void STATE_Sample(void);
 void STATE_MinuteTimerRoutine(void);
 void STATE_Transmit(uint32_t count, uint32_t seconds);
 void STATE_TransmitVolume(float volume, uint32_t count, uint32_t seconds);
 void STATE_TransmitReport(SampleData_t *Data);
-void STATE_TransmitHourRate(SamplesData_t *Data);
+void STATE_TransmitIridium(SampleData_t *Data);
 void STATE_TransmitCurrentTime(void);
 void SETUP_Clock(void);
 void SETUP_GPIO(void);
+void ClearBuffers(void);
 float CalculateVolume(uint32_t count, uint32_t seconds);
 
 #ifdef DEBUG
@@ -99,6 +101,8 @@ __persistent SampleData_t HourData;
 __persistent RTCStruct_t RTC;
 __persistent uint8_t version[] = VERSION;
 __persistent uint8_t serialNumber[16] = "";
+__persistent uint8_t ClearBufferFlag = false;
+
 /*************************  Global variables  *****************************/
 /* Counters */
 volatile uint32_t SensorCounter;
@@ -107,6 +111,7 @@ volatile uint8_t ConsoleCounter;
 
 /* Structures */
 CircularBufferC_s ConsoleData;
+CircularBufferC_s UartData;
 CurrentData_t MinuteData;
 
 /* Enum types */
@@ -144,6 +149,8 @@ int main(void) {
   /* Setup the RTC */
   RTC_Init();
 
+  /* Clear the buffers */
+  ClearBuffers();
   
   /* Configure the UART */
   UART_Init(UART_A1,UART_BAUD_9600,CLK_32768,UART_CLK_SMCLK);
@@ -169,10 +176,20 @@ int main(void) {
     uint32_t temp_SecondsCounter = 0;
     float volume = 0.0;
     
+    if(ClearBufferFlag == true)
+    {
+      ClearBuffers();
+      ClearBufferFlag = false;
+    }
+    
     switch(SystemState)
     {
       case Sample:
         __bis_SR_register(LPM3_bits | GIE); /* Set LPM and wait for timer interrupt */
+        while(BufferC_IsEmpty(&UartData) == BUFFER_C_NOT_EMPTY)
+        {
+          STATE_CheckRxBuffer();
+        }
         break;
       case Console:
         CONSOLE_Main();
@@ -185,11 +202,10 @@ int main(void) {
         ConsoleCounter = 0;
         break;
       case MinuteTimerRoutine:
-         STATE_MinuteTimerRoutine();
+        STATE_MinuteTimerRoutine();
         /* Set back to sampling state */
         SystemState = Sample;
         break;
-      case HourTimerRoutine:
       case Transmit:
         temp_SecondsCounter = SecondCounter + 1;
         while(SecondCounter < temp_SecondsCounter);
@@ -211,6 +227,9 @@ int main(void) {
               SystemState = Sample;
             }
             break;
+          case Iridium:
+            STATE_TransmitIridium(&HourData);
+            break;
           case CurrentTime:
             STATE_TransmitCurrentTime();
             break;
@@ -220,6 +239,10 @@ int main(void) {
         }
         SecondCounter = 0;
         SumOfCount = 0;
+        SystemState = Sample;
+        break;
+      case Offset:
+        
         SystemState = Sample;
         break;
       default:
@@ -314,13 +337,18 @@ void STATE_MinuteTimerRoutine(void)
   }
  
   /* Send a . to indicate minute elapse, and then CR/NL */
+#ifdef DEBUG
   UART_WriteChar('.',UART_A1);
   __delay_cycles(5000);
   UART_WriteChar('\r',UART_A1);
   __delay_cycles(5000);
   UART_WriteChar('\n',UART_A1);
+#endif
 }
 
+
+                             
+                              
 /** @brief Enters Transmit State
  *
  *  Preps the data for transmission and sends over the UART
@@ -375,20 +403,113 @@ void STATE_TransmitVolume(float volume, uint32_t count, uint32_t seconds){
   
 }
 
-/** @brief Enters Transmit Hour Rate State
+
+/** @brief Enters Transmit Iridium Report State
  *
- *  Preps the data 
+ *  Preps last hour of data to transmit over Iridium
+ *  
  *
- *  @param volume Volume (in mL)
- *  @param seconds Numer of seconds of integration
+ *  Format is:
+ *      Header -
+ *              RAIN YYYY/MM/DD HH:00:00 INTERVAL\r\n
+ *      Data -
+ *              Mean0 Std0 Mean1 Std1 Mean2 Std2 Mean3 Std4\r\n
+ *              Mean5 Std   ...
+ *              ...
+ *              Mean55 Std55 Mean56 Std56 Mean57 Std57 Mean58 Std58 Mean59 Std59\r\n
+ *
+ *
+ *  @param *Data Hour Data Structure
  *
  *  @return Void
  */
-void STATE_TransmitHourRate(SamplesData_t *Data){
+void STATE_TransmitIridium(SampleData_t *Data)
+{
+  uint16_t year = 0;
+  uint8_t mon = 0;
+  uint8_t day = 0;
+  int8_t currentIdx = 0;
+  int8_t stopIdx = 0;
+  int8_t idx = 0;
+  float mean = 0.0;
+  float std = 0.0;
+  char line[128] = {0};  
+  uint8_t line_u[128] = {0};
+
+  /* Grab the First Time Recorded */
+  uint8_t now = 0;
+  uint8_t last = 100;
   
+  /* Set the index up*/
+  currentIdx = HourData.Hour.write;
+  stopIdx = currentIdx;
+  idx = currentIdx;
+  /* Retreive buffered data and transmit to UART A1 */
+  do
+  {
+    Buffer8_GetRequested(&HourData.Hour,idx,&now);
+    
+    if(now==0)
+    {
+      now = 100;
+    }
+    
+    if(now < last)
+    {
+      last = now;
+      Buffer16_GetRequested(&HourData.Year, idx, &year);
+      Buffer8_GetRequested(&HourData.Month,idx,&mon);
+      Buffer8_GetRequested(&HourData.Day,idx,&day);
+    }
+    ++idx;
+    idx = idx % 60;
+  } while(idx != stopIdx);
   
+  /* Prep & Send Header */
+  sprintf(line,"RAIN %04x%02x%02x,%02x:00:00\r\n",year,mon,day,last);
+  memcpy(line_u,line,128);
+  UART_Write(&line_u[0],LENGTH_OF(line_u),UART_A1);
   
+  /* Retreive buffered data and transmit to UART A1 */
+  uint8_t counter = 5;
+  uint8_t endline[] = "\r\n";
+//  for(uint8_t i=60;i>0;i--)
+//  {
+  
+  /* Set the index up*/
+  currentIdx = HourData.Hour.write;
+  stopIdx = currentIdx;
+  idx = currentIdx;
+  do
+  {
+    
+    if(counter == 0)
+    {
+      counter = 4;
+      UART_Write(&endline[0],LENGTH_OF(endline),UART_A1);
+    } else {
+      counter--;
+    }
+   
+    /* Retreive the last 60 minutes worth of data from buffers */
+    BufferF_GetRequested(&HourData.Mean,idx,&mean);
+    BufferF_GetRequested(&HourData.STD,idx,&std);
+
+    
+    /* RTC values are in hex, so print hex values to UART*/
+    sprintf(line,"%7.2f %7.2f",mean,std);
+    memcpy(line_u,line,128);
+    UART_Write(&line_u[0],LENGTH_OF(line_u),UART_A1);
+    
+    ++idx;
+    idx = idx % 60;
+  } while(idx != stopIdx);
+  
+  UART_Write(&endline[0],LENGTH_OF(endline),UART_A1);
+  UART_Write(&endline[0],LENGTH_OF(endline),UART_A1);
+  return;
 }
+
 
 /** @brief Enters Transmit Report State
  *
@@ -419,7 +540,8 @@ void STATE_TransmitReport(SampleData_t *Data)
   uint8_t day;
   uint8_t hr;
   uint8_t minute;
-  uint8_t currentIdx = 0;
+  int8_t currentIdx = 0;
+  int8_t stopIdx = 0;
   int8_t idx = 0;
   float mean;
   float std;
@@ -430,21 +552,14 @@ void STATE_TransmitReport(SampleData_t *Data)
 
   /* Set the index up*/
   currentIdx = HourData.Hour.write;
-  
+  stopIdx = currentIdx;
+  if(stopIdx < 0) {
+    stopIdx += 60;
+  }
+  idx = currentIdx;
   /* Retreive buffered data and transmit to UART A1 */
-  for(uint8_t i=60;i>0;i--)
+  do
   {
-    idx = currentIdx;
-    idx -= i;
-
-    if(idx < 0)
-    {
-      idx += 61;
-    }
-    
-    /* Modulo to keep on 60 second buffer */
-    idx = idx % 60;
-   
     /* Retreive the last 60 minutes worth of data from buffers */
     Buffer16_GetRequested(&HourData.Year, idx, &year);
     Buffer8_GetRequested(&HourData.Month, idx, &mon);
@@ -460,7 +575,11 @@ void STATE_TransmitReport(SampleData_t *Data)
     sprintf(line,"@@@%04x%02x%02x,%02x:%02x,%7.2f,%7.2f,%7.2f,%7.2f\r\n",year,mon,day,hr,minute,mean,std,min,max);
     memcpy(line_u,line,128);
     UART_Write(&line_u[0],LENGTH_OF(line_u),UART_A1);
-  } 
+    
+    /* Update report index */
+    ++idx;
+    idx = idx % 60;
+  } while(idx != stopIdx);
   
   return;
 }
@@ -481,6 +600,39 @@ void STATE_TransmitCurrentTime(void)
   UART_Write(&OutputStr_u[0],LENGTH_OF(OutputStr_u),UART_A1);
   
   return;
+}
+
+
+void ClearBuffers(void)
+{
+  /* Clear Minute Data Buffers */
+  for(uint8_t i=0;i<5;i++) {
+    MinuteData.Day[i] = 0;
+    MinuteData.Hour[i] = 0;
+    MinuteData.Min[i] = 0;
+    MinuteData.Mon[i] = 0;
+    MinuteData.Year[i] = 0;
+    
+    for(uint8_t j=0;j<60;j++) {
+      MinuteData.Counts[i][j] = 0;
+    }
+    
+  }
+  MinuteData.min = 0;
+  MinuteData.sec = 0;
+  MinuteData.numSamples = 0;
+  MinuteData.lastSampleRecorded = 0;
+  
+  /* Clear Hour Data Buffers */
+  Buffer16_Clear(&HourData.Year);
+  Buffer8_Clear(&HourData.Month);
+  Buffer8_Clear(&HourData.Day);
+  Buffer8_Clear(&HourData.Hour);
+  Buffer8_Clear(&HourData.Minute);
+  BufferF_Clear(&HourData.Mean);
+  BufferF_Clear(&HourData.STD);
+  BufferF_Clear(&HourData.Min);
+  BufferF_Clear(&HourData.Max);
 }
 
 /** @brief Calculates the Volume 
@@ -639,3 +791,98 @@ void BufferTest(void)
 }
 #endif
 
+
+
+void STATE_CheckRxBuffer(void)
+{
+  char value;
+  char string[32] = {0};
+  //uint8_t stringValid = false;
+  
+  SystemState = Sample;
+  
+  while(BufferC_IsEmpty(&UartData) == BUFFER_C_NOT_EMPTY)
+  {
+    BufferC_Get(&UartData,&value);
+    switch(value)
+    {
+        case 'D':
+          SystemState = Transmit;
+          TxSubState = Volume;
+          break;
+        case 'd':
+          SystemState = Transmit;
+          TxSubState = Counts;
+          break;
+        case 'I':
+        case 'i':
+          SystemState = Transmit;
+          TxSubState = Iridium;
+          break;
+        case 'R':
+        case 'r':
+          SystemState = Transmit;
+          TxSubState = Report;
+          break;
+        case 'O':
+        case 'o':
+          RTC.TimeAtCommand = SecondCounter;
+          SystemState = Offset;
+          break;
+        case 'T':
+        case 't':
+          SystemState = Transmit; 
+          TxSubState = CurrentTime;
+          break;
+        case 0x03:
+          if(++ConsoleCounter >= 3)
+          {
+            SystemState = Console;
+          }
+
+          break;
+        default:
+            break;
+    }          
+  }
+  
+  if(SystemState == Offset)
+  {
+    while(BufferC_HasNewline(&UartData) != BUFFER_C_HAS_NEWLINE) // || ADD TIMEOUT!
+    {
+    }
+    
+    uint8_t idx = 0;
+    uint8_t cnt = 0;
+    while(idx < 32 && BufferC_IsEmpty(&UartData) == BUFFER_C_NOT_EMPTY)
+    {
+      BufferC_Get(&UartData,&value);
+      if((value >= '0' && value <= '9') || (value == '-'))
+      {
+        string[cnt] = value;
+        cnt++;
+      } else if(value == '=' || value == 'o' || value == 'O' )  {
+
+      }else {
+        idx = 32;
+        
+      }
+      idx++;
+    }
+    
+    int32_t offsetVal = 0;
+    offsetVal = atol(string);
+
+    if(offsetVal != 0)
+    {
+      /* Offset the time */
+      RTC_Offset(offsetVal);
+      __delay_cycles(10);
+    }
+    
+    
+    SystemState = Sample;
+    __delay_cycles(10);
+  }
+}
+ 

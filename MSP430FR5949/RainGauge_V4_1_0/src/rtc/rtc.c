@@ -19,7 +19,12 @@
 *					STATIC FUNCTION PROTOTYPES
 ************************************************************************/
 static uint8_t RTC_ParseString(char *RTCString,uint16_t *Year,uint8_t *Mon,uint8_t *Day,uint8_t *Hour,uint8_t *Min,uint8_t *Sec);
-   
+static uint8_t RTC_ConvertTwoHexToDec(uint8_t val);
+static uint16_t RTC_ConvertFourHexToDec(uint16_t val);
+static uint8_t RTC_ConvertDecToTwoHex(uint8_t val);
+static uint16_t RTC_ConvertDecToFourHex(uint16_t val);
+static void RTC_UpdateCurrent(void);
+uint8_t GetDaysInMonth(uint8_t mon, uint8_t year);
 /************************************************************************
 *					GLOBAL FUNCTIONS
 ************************************************************************/
@@ -33,13 +38,13 @@ void RTC_Init(void)
   RTCCTL01 = RTCTEVIE | RTCRDYIE | RTCBCD | RTCHOLD;  
 
 
-  RTCYEAR = 0x2016;
-  RTCMON = 0x3;
-  RTCDAY = 0x21;
+  RTCYEAR = 0x1900;
+  RTCMON = 0x1;
+  RTCDAY = 0x1;
   RTCDOW = 0x01;
-  RTCHOUR = 0x16;
-  RTCMIN = 0x57;
-  RTCSEC = 0x58;
+  RTCHOUR = 0x0;
+  RTCMIN = 0x0;
+  RTCSEC = 0x0;
   
   RTCAMIN = 0x01;                         /* Set 1 Minute Alarm */
   RTCAMIN |= 0x80;                        /* Enable Alaarm      */
@@ -86,7 +91,7 @@ uint8_t RTC_Set(char *RTCString)
   
   
   /* Calculate Number of Seconds Difference between when message came in and present */
-  diffSec = SecondCounter - RTC.TimeAtCommand + 1; /* +1 for reset at next second */
+  diffSec = SecondCounter - RTC.TimeAtCommand; /* +1 for reset at next second */
   
   Sec += diffSec;
   if(Sec > 59)
@@ -168,6 +173,8 @@ uint8_t RTC_Set(char *RTCString)
     Mon = 1;
     Year++;
   }
+  
+  /* Convert to correct format */
   low = Sec %  10;
   high = Sec / 10;
   high = high << 4;
@@ -212,12 +219,182 @@ uint8_t RTC_Set(char *RTCString)
   /* Set the flag to update */
   RTC.UpdateFlag = true;
   
+  RTCSEC = RTC.Sec;
+  RTCYEAR = RTC.Year;
+  RTCMON = RTC.Mon;
+  RTCDAY = RTC.Day;
+  RTCHOUR = RTC.Hour;
+  RTCMIN = RTC.Min;
+  
+  RTC.UpdateFlag = false;
+  
   return true;
 }
 
 
+uint8_t RTC_Offset(int32_t offset) {
+  int32_t JulianSecond = 0;
+  int32_t JulianMinute = 0;
+  int32_t JulianHour = 0;
+  int32_t JulianDay = 0;
+  uint16_t Year = 0;
+  uint8_t Mon = 0;
+  uint8_t Day = 0;
+  uint8_t Hour = 0;
+  uint8_t Min = 0;
+  uint8_t Sec = 0;
+  
+  RTC_UpdateCurrent();
 
+  Year = RTC_ConvertFourHexToDec(RTC.Year);
+  Mon = RTC_ConvertTwoHexToDec(RTC.Mon);
+  Day = RTC_ConvertTwoHexToDec(RTC.Day);
+  Hour = RTC_ConvertTwoHexToDec(RTC.Hour);
+  Min = RTC_ConvertTwoHexToDec(RTC.Min);
+  Sec = RTC_ConvertTwoHexToDec(RTC.Sec);
+  
+  if((offset > 31536000) || (offset < (-31536000))) {
+      return RTC_BAD_OFFSET;
+  }
+  
+  /* Calculate the Juilan Day */
+  for(uint8_t i=0;i<Mon;i++)
+  {
+      JulianDay += GetDaysInMonth(i,Year); 
+  }
+  JulianDay += Day;
+  
+  JulianSecond = (int32_t) (SecondCounter - RTC.TimeAtCommand + 1); /* +1 for reset at next second */
+  /* Convert to get the Julian Second */
+  JulianSecond += JulianDay * 86400;		/* 86400 seconds in a day */
+  JulianSecond += (Hour * 3600); 			/* 3600 Seconds in an hour */
+  JulianSecond += (Min * 60);					/* 60 seoncs in a minute */
+  JulianSecond += Sec;
+  
+  /* Add in the offset */
+  JulianSecond += offset;
+  
+  /* Did we lose a year? Needs to be at least one day in year */
+  if(JulianSecond < 86400) {
+      Year -= 1;
+      
+      /* Look for leap year then adjust seconds */
+      if((Year % 4) == 0) {
+          JulianSecond = 31622400 + JulianSecond;
+      } else {
+          JulianSecond = 31536000 + JulianSecond;
+      }
+  }
+  
+  /* Calculate the Julian Minute, Hour & Day with offset */
+  JulianMinute = (JulianSecond / 60);
+  JulianHour = (JulianSecond / 3600);
+  JulianDay = (JulianSecond / 86400);
+  
+  
+  Sec = (uint8_t) (JulianSecond % 60);
+  Min = (uint8_t) (JulianMinute % 60);
+  Hour = (uint8_t) (JulianHour % 24);
+  
+  Mon = 1;
+  uint8_t idx = 0;
+  uint8_t NumDaysInMonth = 0;
+  
+  while(JulianDay > 0) {
+    idx++;
+    NumDaysInMonth = GetDaysInMonth(Mon,Year);
+  
+    if(JulianDay > NumDaysInMonth)
+    {
+        JulianDay -= NumDaysInMonth;
+        
+    } else {
+        Day = (uint8_t) JulianDay;
+        JulianDay = 0;
+    }
+  }
+  
+  Mon = idx;
+//  for(uint8_t i=1;i<13;i++) {
+//    
+//      NumDaysInMonth = GetDaysInMonth(Mon,Year);
+//      
+//      if(JulianDay > NumDaysInMonth)
+//      {
+//          JulianDay -= NumDaysInMonth;
+//          Mon++;
+//          
+//      } else {
+//          Day = (uint8_t) JulianDay;
+//          i=13;
+//      }
+//      
+//  }
+  
+  if(Mon > 12) {
+    Mon = Mon % 12;
+    Year += 1;
+  }
+  
+  if(Mon < 1) {
+    Mon = Mon % 12;
+    Year -= 1;
+  }
+  
+  
+  RTC.Year = RTC_ConvertDecToFourHex(Year);
+  RTC.Mon = RTC_ConvertDecToTwoHex(Mon);
+  RTC.Day = RTC_ConvertDecToTwoHex(Day);
+  RTC.Hour = RTC_ConvertDecToTwoHex(Hour);
+  RTC.Min = RTC_ConvertDecToTwoHex(Min);
+  RTC.Sec = RTC_ConvertDecToTwoHex(Sec);
+ 
+  /* Set the flag to update */
+  RTC.UpdateFlag = true;
 
+  RTCSEC = RTC.Sec;
+  RTCYEAR = RTC.Year;
+  RTCMON = RTC.Mon;
+  RTCDAY = RTC.Day;
+  RTCHOUR = RTC.Hour;
+  RTCMIN = RTC.Min;
+  
+  return 0;
+}
+
+uint8_t GetDaysInMonth(uint8_t mon, uint8_t year) {
+	
+	uint8_t days = 0;
+	switch(mon)
+	{
+		case 4:
+		case 6:
+		case 9:
+		case 11:
+			days = 30;
+			break;
+		case 2:
+			if((year % 4) == 0)
+			{
+				days = 29;
+			} else {
+				days = 28;
+			}
+			break;
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+		case 10:
+		case 12:
+			days = 31;
+			break;
+		default:
+			break;
+	}
+	
+	return days;
+}
 static uint8_t RTC_ParseString(char *RTCString,uint16_t *Year,uint8_t *Mon,uint8_t *Day,uint8_t *Hour,uint8_t *Min,uint8_t *Sec)
 {
   char temp[4];
@@ -338,6 +515,16 @@ static uint8_t RTC_ParseString(char *RTCString,uint16_t *Year,uint8_t *Mon,uint8
 }
 
 
+static void RTC_UpdateCurrent(void) {
+    RTC.Year = RTCYEAR;
+    RTC.Mon = RTCMON;
+    RTC.Day = RTCDAY;
+    RTC.Hour = RTCHOUR;
+    RTC.Min = RTCMIN;
+    RTC.Sec = RTCSEC;
+  
+    return;
+}
 
 #pragma vector=RTC_VECTOR
 __interrupt void RTC_ISR(void)
@@ -362,13 +549,13 @@ __interrupt void RTC_ISR(void)
       
       if(RTC.UpdateFlag == true)
       {
-        RTCYEAR = RTC.Year;
-        RTCMON = RTC.Mon;
-        RTCDAY = RTC.Day;
-        RTCHOUR = RTC.Hour;
-        RTCMIN = RTC.Min;
-        RTCSEC = RTC.Sec;
-        RTC.UpdateFlag = false;
+//        RTCYEAR = RTC.Year;
+//        RTCMON = RTC.Mon;
+//        RTCDAY = RTC.Day;
+//        RTCHOUR = RTC.Hour;
+//        RTCMIN = RTC.Min;
+//        RTCSEC = RTC.Sec;
+//        RTC.UpdateFlag = false;
       }
       /* Update Counters    */
       SensorCounter = 0;
@@ -399,6 +586,7 @@ __interrupt void RTC_ISR(void)
       MinuteData.Hour[MinuteData.min] = RTCHOUR;
       MinuteData.Min[MinuteData.min] = RTCMIN;
       
+      
       /* Clear the Seconds counter and increment the minute in the temp data buffer */
       MinuteData.sec = 0;
       MinuteData.min++;
@@ -423,4 +611,78 @@ __interrupt void RTC_ISR(void)
     default:
       break;   
   }
+}
+
+
+
+static uint8_t RTC_ConvertTwoHexToDec(uint8_t val){
+  uint8_t low = 0;
+  uint8_t high = 0;
+  
+  low = val & 0x0F;
+  high = val & 0xF0;
+  high = high >> 4;
+  high *= 10;
+  
+  return (high + low);
+}
+
+
+static uint16_t RTC_ConvertFourHexToDec(uint16_t val) {
+  uint16_t ones = 0;
+  uint16_t tens = 0;
+  uint16_t hundreds = 0;
+  uint16_t thousands = 0;
+  
+  ones = val & 0x000F;
+  
+  tens = val & 0x00F0;
+  tens = tens >> 4;
+  tens *= 10;
+  
+  hundreds = val & 0x0F00;
+  hundreds = hundreds >> 8;
+  hundreds *= 100;
+  
+  thousands = val & 0xF000;
+  thousands = thousands >> 12;
+  thousands *= 1000;
+  
+  return (thousands + hundreds + tens + ones);
+}
+
+
+static uint8_t RTC_ConvertDecToTwoHex(uint8_t val)
+{
+  uint8_t low = 0;
+  uint8_t high = 0;
+  
+  low = val %  10;
+  high = val / 10;
+  high = high << 4;
+  
+  return (high + low);
+}
+
+
+static uint16_t RTC_ConvertDecToFourHex(uint16_t val)
+{
+  uint16_t ones = 0;
+  uint16_t tens = 0;
+  uint16_t hundreds = 0;
+  uint16_t thousands = 0;
+  
+  ones = val % 10;
+  tens = (val - ones) / 10;
+  hundreds = tens / 10;
+  thousands = hundreds / 10;
+  tens = tens % 10;
+  hundreds = hundreds % 10;
+  thousands = thousands % 10;
+  
+  tens = tens << 4;
+  hundreds = hundreds << 8;
+  thousands = thousands << 12;  
+  
+  return thousands + hundreds + tens + ones;
 }

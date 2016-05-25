@@ -146,5 +146,8 @@ uint8_t UART_Write(uint8_t *value, uint8_t length, uint8_t Port);
  *  @return none
  */
 uint8_t UART_WriteIncludeNull(uint8_t *value, uint8_t length, uint8_t Port);
+
+uint8_t UART_WriteACK(uint8_t Port);
+uint8_t UART_WriteNACK(uint8_t Port);
 #endif
 

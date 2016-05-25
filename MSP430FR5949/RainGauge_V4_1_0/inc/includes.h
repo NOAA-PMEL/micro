@@ -28,6 +28,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <float.h>
+#include <math.h>
 
 #ifndef PMEL
 //#include "../test/msp430fr5969.h"
@@ -132,6 +133,7 @@ typedef enum SysState {
   Console,              /** Console State - Awaiting User Input */
   MinuteTimerRoutine,   /** Minute State - Converting data and storing in buffers */
   Transmit,             /** Transmit State - See Substates for choices */
+  Offset            /** TimeOffset State - Update the time by +/- offset seconds */
 } SystemState_t;
 
 /** @brief Transmit State Enumeration
@@ -143,6 +145,7 @@ typedef enum TransSubState{
   Counts,               /** Counts SubState - Transmit Counts & Seconds to user */
   Volume,               /** Volume SubState - Transmit Volume(mL) to user */
   Report,               /** Report SubState - Transmit 60 minute statistical data to user */
+  Iridium,              /** Iridium SubState - Transmit 60 min. data in Iridium format */
   CurrentTime           /** Current Time SubState - Transmit DateTime from RTC to user */    
 } TransSubState_t;
 /************************************************************************
@@ -165,11 +168,13 @@ extern float slope;
 extern float intercept;
 extern float dmMin;
 extern float dmMax;
+extern uint8_t ClearBufferFlag;
 
 /* Structures */
 extern SystemState_t SystemState;
 extern TransSubState_t TxSubState;
 extern CircularBuffer_t ConsoleData;
+extern CircularBuffer_t UartData;
 extern RTCStruct_t RTC; 
 extern CurrentData_t MinuteData;
 

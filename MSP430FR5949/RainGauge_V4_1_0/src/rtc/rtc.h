@@ -38,7 +38,7 @@
 ************************************************************************/
 #define RTC_OK      (0)
 #define RTC_FAIL    (1)
-
+#define RTC_BAD_OFFSET (2)
 
 /** @brief DateTime Structure
  *
@@ -78,5 +78,8 @@ void RTC_Init(void);
  * @return Status
  */
 uint8_t RTC_Set(char *RTCString);
+
+
+uint8_t RTC_Offset(int32_t offset);
 
 #endif // rtc_H

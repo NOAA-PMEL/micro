@@ -18,6 +18,7 @@
 /************************************************************************
 *					STATIC FUNCTION PROTOTYPES
 ************************************************************************/
+static void CONSOLE_DisplayMetadata(void);
 static uint8_t CONSOLE_ConstantInput(uint8_t *startChar,uint8_t *spaceChar, uint8_t *endChar, char *InputStr, uint8_t length);
 static uint8_t CONSOLE_TimeInput(uint8_t *startChar,uint8_t *spaceChar,uint8_t *endChar,char *InputStr,uint8_t length);
 static uint8_t CONSOLE_SerialInput(uint8_t *startChar,uint8_t *spaceChar,uint8_t *endChar,char *InputStr,uint8_t length);
@@ -36,9 +37,8 @@ void CONSOLE_Main(void)
   uint8_t StartOfStringCalled = false;
   uint8_t DisplayFlag = false;
   uint32_t NextSecondTimer = 0;
+  uint8_t IntroFlag = true;
 
-  char OutputStr[64] = {0};
-  uint8_t OutputStr_u[64] = {0};
   InputValue_t ConsoleState;
   
   /* Set the console state */
@@ -47,8 +47,7 @@ void CONSOLE_Main(void)
   /* Clear the buffer */
   BufferC_Clear(&ConsoleData);
   
-  /* Write the intro */
-  UART_Write(&Intro[0],LENGTH_OF(Intro),UART_A1);
+
   
   /* clear the counter */
   ConsoleTimeoutCounter = 0;
@@ -56,45 +55,78 @@ void CONSOLE_Main(void)
   /* Wait for timeout or data entered */
   while(ConsoleTimeoutCounter < CONSOLE_TIMEOUT)
   { 
+    
+    if(IntroFlag == true) {
+      /* Write the intro */
+      UART_Write(&Intro[0],LENGTH_OF(Intro),UART_A1);
+      IntroFlag = false;
+    }
+    
+    
     /* If ther is UART data, retreive it and parse it */
-    if(BufferC_IsEmpty(&ConsoleData) == BUFFER_C_NOT_EMPTY)
+    if(BufferC_HasNewline(&ConsoleData) == BUFFER_C_HAS_NEWLINE)
     {
       RTC.TimeAtCommand = SecondCounter;
       ConsoleTimeoutCounter = 0;
-      BufferC_Get(&ConsoleData,&InputStr[ctr]);
-      
-      if(StartOfStringCalled == false)
+      ctr = 0;
+      while(BufferC_IsEmpty(&ConsoleData) == BUFFER_C_NOT_EMPTY){
+        BufferC_Get(&ConsoleData,&InputStr[ctr]);
+        ctr++;
+      }
+      for(uint8_t i=0;i<ctr;i++)
       {
-        switch(InputStr[ctr])
+        if(StartOfStringCalled == false)
         {
-          case 'A':
-          case 'a':
-            if(ConsoleState == ConsoleWait)
-            {
-              startChar = ctr;
-              ConsoleState = ConstantsInput;
-            }
-            StartOfStringCalled = true;
-            break;
-          case 'T':
-          case 't':
-            startChar = ctr;
-            ConsoleState = DateTimeInput;
-            StartOfStringCalled = true;
-            break;
-            
-          case 'S':
-          case 's':
-            startChar = ctr;
-            ConsoleState = SerialInput;
-            StartOfStringCalled = true;
-            break;
-          case ' ':
-            spaceChar = ctr;
+          switch(InputStr[i])
+          {
+            case 'A':
+            case 'a':
+              if(ConsoleState == ConsoleWait)
+              {
+                startChar = i;
+                ConsoleState = ConstantsInput;
+              }
+              StartOfStringCalled = true;
+              break;
+            case 'T':
+            case 't':
+              startChar = i;
+              ConsoleState = DateTimeInput;
+              StartOfStringCalled = true;
+              break;
+              
+            case 'S':
+            case 's':
+              startChar = i;
+              ConsoleState = SerialInput;
+              StartOfStringCalled = true;
+              break;
+            case ' ':
+              spaceChar = i;
+              break;
+            case '\r':
+            case '\n':
+              endChar = i;
+              break;
+            case '?':         /* Look at current values */
+              DisplayFlag = true;
+              ConsoleState = ConsoleWait;
+              break;
+            case 0x18:        /* Ctrl-X to exit the console */
+              ConsoleTimeoutCounter = CONSOLE_TIMEOUT;
+              break;
+            default:
+              break;
+          }
+        } else {
+          switch (InputStr[i])
+          {
+            case ' ':
+            spaceChar = i;
             break;
           case '\r':
           case '\n':
-            endChar = ctr;
+            endChar = i;
             break;
           case '?':         /* Look at current values */
             DisplayFlag = true;
@@ -105,59 +137,91 @@ void CONSOLE_Main(void)
             break;
           default:
             break;
-        }
-        
-      } else {
-        switch (InputStr[ctr])
-        {
-          case ' ':
-          spaceChar = ctr;
-          break;
-        case '\r':
-        case '\n':
-          endChar = ctr;
-          break;
-        case '?':         /* Look at current values */
-          DisplayFlag = true;
-          ConsoleState = ConsoleWait;
-          break;
-        case 0x18:        /* Ctrl-X to exit the console */
-          ConsoleTimeoutCounter = CONSOLE_TIMEOUT;
-          break;
-        default:
-          break;
-          
+          }
         }
       }
-    
-      ctr++;
     }
     
     switch(ConsoleState)
     {
       case ConstantsInput:
-      DisplayFlag = CONSOLE_ConstantInput(&startChar,&spaceChar,&endChar,&InputStr[0],LENGTH_OF(InputStr));
+        DisplayFlag = CONSOLE_ConstantInput(&startChar,&spaceChar,&endChar,&InputStr[0],LENGTH_OF(InputStr));
+        ConsoleState = ConsoleWait;
+        IntroFlag = true;
         break;
       case DateTimeInput:
-      DisplayFlag = CONSOLE_TimeInput(&startChar,&spaceChar,&endChar,&InputStr[0],LENGTH_OF(InputStr));
+        DisplayFlag = CONSOLE_TimeInput(&startChar,&spaceChar,&endChar,&InputStr[0],LENGTH_OF(InputStr));
+        ConsoleState = ConsoleWait;
+        IntroFlag = true;
         break;
       case SerialInput:
-      DisplayFlag = CONSOLE_SerialInput(&startChar, &spaceChar,&endChar,&InputStr[0],LENGTH_OF(InputStr));
+        DisplayFlag = CONSOLE_SerialInput(&startChar, &spaceChar,&endChar,&InputStr[0],LENGTH_OF(InputStr));
+        ConsoleState = ConsoleWait;
+        IntroFlag = true;
         break;
       case ConsoleWait:
       default:
-      
+        IntroFlag = false;
         break;
       
     }
     
     /* If display is requested, show the coefficient values & current time */
     /* Then clear the buffers */
-    if(DisplayFlag == true)
-    {
+    
+    if(DisplayFlag == true) {
       /* Wait for two-ish seconds to let RTC adjust */
       NextSecondTimer = SecondCounter + 2;
       while(SecondCounter < NextSecondTimer);
+      CONSOLE_DisplayMetadata();
+      /* Write the > character to screen */
+      UART_Write(&Intro[0],LENGTH_OF(Intro),UART_A1);
+      
+      /* Clear all flags & buffers */
+      DisplayFlag = false;
+      StartOfStringCalled = false;
+      spaceChar = 0;
+      startChar = 0;
+      endChar = 0;
+      BufferC_Clear(&ConsoleData);
+      ConsoleState = ConsoleWait;
+      for(uint8_t i=0;i<64;i++)
+      {
+       InputStr[i] = 0;
+      }
+    }
+    
+  }
+
+  /* Calculate the dm min & max values */
+  if(intercept != 0)
+  {
+    dmMax = sqrt(-1*(slope/intercept));
+    dmMax += 1500;
+    dmMin = sqrt(slope/(550 - intercept ));
+    dmMin -= 1500;
+  }
+  else
+  {
+    dmMin = NAN;
+    dmMax = NAN;
+  }
+
+  /* Write the outro & exit the console */
+  UART_Write(&Outro[0],LENGTH_OF(Outro),UART_A1);
+  return;
+}
+
+
+
+
+/************************************************************************
+*					STATIC FUNCTIONS
+************************************************************************/
+
+static void CONSOLE_DisplayMetadata(void) {
+      char OutputStr[64] = {0};
+      uint8_t OutputStr_u[64] = {0};
       
       /* Write the Serial # */
       sprintf(OutputStr,"\r\n\r\nSerial Number: %s\r\n",serialNumber);
@@ -182,50 +246,9 @@ void CONSOLE_Main(void)
       memcpy(OutputStr_u,OutputStr,LENGTH_OF(OutputStr));
       UART_Write(&OutputStr_u[0],LENGTH_OF(OutputStr), UART_A1);
       
-      
-      
-     
-      
-      /* Write the > character to screen */
-      UART_Write(&Intro[0],LENGTH_OF(Intro),UART_A1);
-      
-      /* Clear all flags & buffers */
-      DisplayFlag = false;
-      StartOfStringCalled = false;
-      spaceChar = 0;
-      startChar = 0;
-      endChar = 0;
-      BufferC_Clear(&ConsoleData);
-      ConsoleState = ConsoleWait;
-      for(uint8_t i=0;i<64;i++)
-      {
-       InputStr[i] = 0;
-      }
-    }
-  }
-
-  /* Calculate the dm min & max values */
-  if(intercept != 0)
-  {
-    dmMax = sqrt(-1*(slope/intercept));
-    dmMax += 1500;
-    dmMin = sqrt(slope/(550 - intercept ));
-    dmMin -= 1500;
-  }
-  else
-  {
-    dmMin = NAN;
-    dmMax = NAN;
-  }
-
-  /* Write the outro & exit the console */
-  UART_Write(&Outro[0],LENGTH_OF(Outro),UART_A1);
-  return;
+    return;
 }
 
-/************************************************************************
-*					STATIC FUNCTIONS
-************************************************************************/
 /** @brief Console Coefficient Input State
  *
  *  Enter console read/parse routine
@@ -277,12 +300,13 @@ static uint8_t CONSOLE_ConstantInput(uint8_t *startChar,uint8_t *spaceChar, uint
           case 'E':
           case '-':
           case '+':
-            DispFlag = true;
+            DispFlag = false;
             break;
           default:
             /* If bad value, alert the user and return */
-            UART_Write(&InvalidMsg[0],LENGTH_OF(InvalidMsg),UART_A1);
-            DispFlag = true;
+            UART_WriteNACK(UART_A1);
+            //UART_Write(&InvalidMsg[0],LENGTH_OF(InvalidMsg),UART_A1);
+            DispFlag = false;
             return DispFlag;
             break;
         }
@@ -298,14 +322,15 @@ static uint8_t CONSOLE_ConstantInput(uint8_t *startChar,uint8_t *spaceChar, uint
     {
       case '0':
         slope = temp_f;
-        DispFlag = true;
+        DispFlag = false;
         break;
       case '1':
         intercept = temp_f;
-        DispFlag = true;
+        DispFlag = false;
         break;
       default:
-        UART_Write(&InvalidMsg[0],LENGTH_OF(InvalidMsg),UART_A1);
+        UART_WriteNACK(UART_A1);
+        //UART_Write(&InvalidMsg[0],LENGTH_OF(InvalidMsg),UART_A1);
         break;
     }
     
@@ -325,11 +350,13 @@ static uint8_t CONSOLE_ConstantInput(uint8_t *startChar,uint8_t *spaceChar, uint
   /* Look for bad strings */
   if(endChar == (spaceChar + 1))
   {
+    UART_WriteNACK(UART_A1);
     UART_Write(&InvalidMsg[0],LENGTH_OF(InvalidMsg),UART_A1);
   }
 
   if(spaceChar == (startChar +1))
   {
+    UART_WriteNACK(UART_A1);
     UART_Write(&InvalidMsg[0],LENGTH_OF(InvalidMsg),UART_A1);
       
   }
@@ -354,7 +381,7 @@ static uint8_t CONSOLE_ConstantInput(uint8_t *startChar,uint8_t *spaceChar, uint
 static uint8_t CONSOLE_TimeInput(uint8_t *startChar,uint8_t *spaceChar,uint8_t *endChar,char *InputStr,uint8_t length)
 {
   
-  uint8_t InvalidMsg[] = "\r\nInvalid Input\r\n";
+//  uint8_t InvalidMsg[] = "\r\nInvalid Input\r\n";
   uint8_t DispFlag = false;
   uint8_t startIdx = 0;
   uint8_t ValidMessageFlag = false;
@@ -374,12 +401,14 @@ static uint8_t CONSOLE_TimeInput(uint8_t *startChar,uint8_t *spaceChar,uint8_t *
   /* If there is an invalid message, report it */
   if(ValidMessageFlag == false)
   {
-    UART_Write(&InvalidMsg[0],LENGTH_OF(InvalidMsg),UART_A1);
+    UART_WriteNACK(UART_A1);
+    //UART_Write(&InvalidMsg[0],LENGTH_OF(InvalidMsg),UART_A1);
     DispFlag = false;
   }
   else
   {
-    DispFlag = true;
+    UART_WriteACK(UART_A1);
+    DispFlag = false;
   }
 
   /* Clear all input string variables */
@@ -391,6 +420,8 @@ static uint8_t CONSOLE_TimeInput(uint8_t *startChar,uint8_t *spaceChar,uint8_t *
   {
   InputStr[i] = 0;
   }
+  
+  ClearBufferFlag = true;
 
   return DispFlag;
 }
@@ -427,7 +458,7 @@ static uint8_t CONSOLE_SerialInput(uint8_t *startChar,uint8_t *spaceChar,uint8_t
       serialNumber[i] = InputStr[*spaceChar+1+i];
     }
 //    memcpy(&serialNumber,InputStr[*spaceChar+1],ValLength);
-    DispFlag = true;
+    DispFlag = false;
   }
   
   return DispFlag;
