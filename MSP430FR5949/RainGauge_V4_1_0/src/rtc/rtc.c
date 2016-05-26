@@ -237,6 +237,7 @@ uint8_t RTC_Offset(int32_t offset) {
   int32_t JulianMinute = 0;
   int32_t JulianHour = 0;
   int32_t JulianDay = 0;
+  int32_t temp = 0;
   uint16_t Year = 0;
   uint8_t Mon = 0;
   uint8_t Day = 0;
@@ -264,15 +265,18 @@ uint8_t RTC_Offset(int32_t offset) {
   }
   JulianDay += Day;
   
-  JulianSecond = (int32_t) (SecondCounter - RTC.TimeAtCommand + 1); /* +1 for reset at next second */
+  JulianSecond = (int32_t) (SecondCounter - RTC.TimeAtCommand); /* +1 for reset at next second */
   /* Convert to get the Julian Second */
-  JulianSecond += JulianDay * 86400;		/* 86400 seconds in a day */
-  JulianSecond += (Hour * 3600); 			/* 3600 Seconds in an hour */
-  JulianSecond += (Min * 60);					/* 60 seoncs in a minute */
-  JulianSecond += Sec;
+  temp = JulianDay * 86400;
+  JulianSecond += temp;		/* 86400 seconds in a day */
+  temp = ((int32_t)Hour * 3600);
+  JulianSecond += temp; 			/* 3600 Seconds in an hour */
+  temp = ((int32_t)Min * 60);
+  JulianSecond += temp;					/* 60 seoncs in a minute */
+  JulianSecond += (int32_t)Sec;
   
   /* Add in the offset */
-  JulianSecond += offset;
+  JulianSecond += (int32_t)offset;
   
   /* Did we lose a year? Needs to be at least one day in year */
   if(JulianSecond < 86400) {
@@ -302,7 +306,7 @@ uint8_t RTC_Offset(int32_t offset) {
   
   while(JulianDay > 0) {
     idx++;
-    NumDaysInMonth = GetDaysInMonth(Mon,Year);
+    NumDaysInMonth = GetDaysInMonth(idx,Year);
   
     if(JulianDay > NumDaysInMonth)
     {
@@ -385,6 +389,7 @@ uint8_t GetDaysInMonth(uint8_t mon, uint8_t year) {
 		case 3:
 		case 5:
 		case 7:
+        case 8:
 		case 10:
 		case 12:
 			days = 31;

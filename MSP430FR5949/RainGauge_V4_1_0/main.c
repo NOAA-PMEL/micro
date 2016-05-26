@@ -58,7 +58,7 @@
 */
 
 
-#define VERSION     ("4.1.2")
+#define VERSION     ("4.1.3")
 /*****************************  Includes  *********************************/
 #include "./inc/includes.h"
 
@@ -438,7 +438,7 @@ void STATE_TransmitIridium(SampleData_t *Data)
 
   /* Grab the First Time Recorded */
   uint8_t now = 0;
-  uint8_t last = 100;
+  uint8_t last = 0xFF;
   
   /* Set the index up*/
   currentIdx = HourData.Hour.write;
@@ -451,7 +451,7 @@ void STATE_TransmitIridium(SampleData_t *Data)
     
     if(now==0)
     {
-      now = 100;
+      now = 0xFF;
     }
     
     if(now < last)
@@ -465,7 +465,6 @@ void STATE_TransmitIridium(SampleData_t *Data)
     idx = idx % 60;
   } while(idx != stopIdx);
   
-  /* Prep & Send Header */
   sprintf(line,"RAIN %04x%02x%02x,%02x:00:00\r\n",year,mon,day,last);
   memcpy(line_u,line,128);
   UART_Write(&line_u[0],LENGTH_OF(line_u),UART_A1);
@@ -595,7 +594,8 @@ void STATE_TransmitCurrentTime(void)
   char OutputStr[64] = {0};
   uint8_t OutputStr_u[64] = {0};
   
-  sprintf(OutputStr, "%04x,%02x,%02x,%02x:%02x:%02x\r\n",RTCYEAR,RTCMON,RTCDAY,RTCHOUR,RTCMIN,RTCSEC);
+  //sprintf(OutputStr, "%04x,%02x,%02x,%02x:%02x:%02x\r\n",RTCYEAR,RTCMON,RTCDAY,RTCHOUR,RTCMIN,RTCSEC);
+  sprintf(OutputStr, "%04x,%02x,%02x,%02x:%02x:%02x\r\n",RTC.Year,RTC.Mon,RTC.Day,RTC.Hour,RTC.Min,RTC.Sec);
   memcpy(OutputStr_u,OutputStr,64);
   UART_Write(&OutputStr_u[0],LENGTH_OF(OutputStr_u),UART_A1);
   
@@ -831,6 +831,13 @@ void STATE_CheckRxBuffer(void)
           break;
         case 'T':
         case 't':
+          /* Added for testing*/
+          RTC.Sec = RTCSEC;
+          RTC.Min = RTCMIN;
+          RTC.Hour = RTCHOUR;
+          RTC.Day = RTCDAY;
+          RTC.Mon = RTCMON;
+          RTC.Year = RTCYEAR;
           SystemState = Transmit; 
           TxSubState = CurrentTime;
           break;
@@ -865,6 +872,7 @@ void STATE_CheckRxBuffer(void)
 
       }else {
         idx = 32;
+        UART_WriteNACK(UART_A1);
         
       }
       idx++;
@@ -875,6 +883,7 @@ void STATE_CheckRxBuffer(void)
 
     if(offsetVal != 0)
     {
+      UART_WriteACK(UART_A1);
       /* Offset the time */
       RTC_Offset(offsetVal);
       __delay_cycles(10);
