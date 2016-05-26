@@ -552,20 +552,10 @@ __interrupt void RTC_ISR(void)
         SumOfCount = 0xFFFFFFFF;
       }
       
-      if(RTC.UpdateFlag == true)
-      {
-//        RTCYEAR = RTC.Year;
-//        RTCMON = RTC.Mon;
-//        RTCDAY = RTC.Day;
-//        RTCHOUR = RTC.Hour;
-//        RTCMIN = RTC.Min;
-//        RTCSEC = RTC.Sec;
-//        RTC.UpdateFlag = false;
-      }
       /* Update Counters    */
       SensorCounter = 0;
       
-      SecondCounter ++;
+      SecondCounter++;
       ConsoleTimeoutCounter++;
 #ifdef DEBUG
       GPIO_TogglePin(DEBUG_PORT,DEBUG_PIN);

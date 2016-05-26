@@ -472,8 +472,6 @@ void STATE_TransmitIridium(SampleData_t *Data)
   /* Retreive buffered data and transmit to UART A1 */
   uint8_t counter = 5;
   uint8_t endline[] = "\r\n";
-//  for(uint8_t i=60;i>0;i--)
-//  {
   
   /* Set the index up*/
   currentIdx = HourData.Hour.write;

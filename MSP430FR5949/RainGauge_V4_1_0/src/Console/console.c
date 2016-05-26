@@ -68,6 +68,7 @@ void CONSOLE_Main(void)
     {
       RTC.TimeAtCommand = SecondCounter;
       ConsoleTimeoutCounter = 0;
+      StartOfStringCalled = false;
       ctr = 0;
       while(BufferC_IsEmpty(&ConsoleData) == BUFFER_C_NOT_EMPTY){
         BufferC_Get(&ConsoleData,&InputStr[ctr]);
