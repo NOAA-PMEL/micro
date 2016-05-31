@@ -257,7 +257,7 @@
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 56 18 67 46 47 1 49 30 26 33 32 36 20 12 40 37 34 41 66 58 52 65 22 28 16 14 24 64 9 10 8</file>
+          <file> 14 67 46 41 1 56 52 28 32 49 58 65 22 16 24 64 9 10 66 36 30 20 18 12 26 40 37 33 34 47 8</file>
         </tool>
         <tool>
           <name>ICC430</name>
@@ -341,11 +341,15 @@
           <name>BICOMP</name>
           <file> 6</file>
         </tool>
+        <tool>
+          <name>ICC430</name>
+          <file> 59</file>
+        </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 20 32 41 33 67 1 36 46 56 12 47 49 30 18 26 37 34 66 8 58 52 65 22 28 16 14 24 40 64 9 10</file>
+          <file> 18 9 32 46 41 1 49 67 56 30 26 64 36 20 12 10 66 8 58 52 65 22 28 16 14 24 40 37 33 34 47</file>
         </tool>
         <tool>
           <name>ICC430</name>

@@ -540,8 +540,47 @@ __interrupt void RTC_ISR(void)
       break;
     case RTCIV_RTCOFIFG:    /* Oscillator Failure   */
       break;
-    case RTCIV_RTCRDYIFG:   /* Second Timer         */       
-      MinuteData.sec++;
+    case RTCIV_RTCRDYIFG:   /* Second Timer         */
+      if(SystemState != MinuteTimerRoutine) {
+        MinuteData.sec++;
+        if( (0xFFFFFFFF - SumOfCount) > SensorCounter)
+        {
+          SumOfCount += SensorCounter;
+         
+        }
+        else
+        {
+          SumOfCount = 0xFFFFFFFF;
+        }
+        
+        /* Update Counters    */
+        SensorCounter = 0;
+        
+        SecondCounter++;
+        ConsoleTimeoutCounter++;
+      }
+#ifdef DEBUG
+      GPIO_TogglePin(DEBUG_PORT,DEBUG_PIN);
+      
+#endif
+      break;
+      
+    /*  Minute Timer */
+    case RTCIV_RTCTEVIFG:   /* RTC Interval Timer Flag  */
+      /* Minute timer  */
+      uint8_t min_temp;
+      min_temp = MinuteData.min;
+      __no_operation();
+      MinuteData.min++;
+      if(MinuteData.min > 4)
+      {
+        MinuteData.min = 0;
+      }
+      MinuteData.sec = 0;
+      
+//      MinuteData.sec++;
+      /* Compute Second Information */
+      /* Minute Interrupt precedes Second Interrupt */
       if( (0xFFFFFFFF - SumOfCount) > SensorCounter)
       {
         SumOfCount += SensorCounter;
@@ -557,38 +596,26 @@ __interrupt void RTC_ISR(void)
       
       SecondCounter++;
       ConsoleTimeoutCounter++;
-#ifdef DEBUG
-      GPIO_TogglePin(DEBUG_PORT,DEBUG_PIN);
       
-#endif
-      break;
       
-    /*  Minute Timer */
-    case RTCIV_RTCTEVIFG:   /* RTC Interval Timer Flag  */
-      /* Minute timer  */
-      __no_operation();
       
+
       /* Change RTC values if flagged */
-      if(SystemState == Sample)
-      {
-        /* Set to Run Minute Routine */
+//      if(SystemState == Sample)
+//      {
+//        /* Set to Run Minute Routine */
         SystemState = MinuteTimerRoutine;
-      }
-      /* Grab the date/time */
-      MinuteData.Year[MinuteData.min] = RTCYEAR;
-      MinuteData.Mon[MinuteData.min] = RTCMON;
-      MinuteData.Day[MinuteData.min] = RTCDAY;
-      MinuteData.Hour[MinuteData.min] = RTCHOUR;
-      MinuteData.Min[MinuteData.min] = RTCMIN;
+//      }
+//      /* Grab the date/time */
+      MinuteData.Year[min_temp] = RTCYEAR;
+      MinuteData.Mon[min_temp] = RTCMON;
+      MinuteData.Day[min_temp] = RTCDAY;
+      MinuteData.Hour[min_temp] = RTCHOUR;
+      MinuteData.Min[min_temp] = RTCMIN;
       
       
       /* Clear the Seconds counter and increment the minute in the temp data buffer */
-      MinuteData.sec = 0;
-      MinuteData.min++;
-      if(MinuteData.min > 4)
-      {
-        MinuteData.min = 0;
-      }
+
 
       /* Increment the number of temp samples collected counter */
       MinuteData.numSamples++;

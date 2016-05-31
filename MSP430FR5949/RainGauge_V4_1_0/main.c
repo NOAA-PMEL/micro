@@ -8,7 +8,7 @@
  *
  *  @copyright National Oceanic and Atmospheric Administration
  *  @copyright Pacific Marine Environmental Lab
- *  @copyright Environmental Development Division
+ *  @copyright Engineering Development Division
  *
  *	@mainpage
  *
@@ -76,6 +76,8 @@ void SETUP_GPIO(void);
 void ClearBuffers(void);
 float CalculateVolume(uint32_t count, uint32_t seconds);
 
+void populatehour(void);
+
 #ifdef DEBUG
 void BufferTest(void);
 #endif
@@ -140,6 +142,8 @@ int main(void) {
   dmMin = 3.704e4;
 #endif 
   
+ 
+  
   /* Configure GPIO */
   SETUP_GPIO();
 
@@ -151,6 +155,9 @@ int main(void) {
 
   /* Clear the buffers */
   ClearBuffers();
+  
+   /* TESTING ONLY!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+  populatehour();
   
   /* Configure the UART */
   UART_Init(UART_A1,UART_BAUD_9600,CLK_32768,UART_CLK_SMCLK);
@@ -202,6 +209,7 @@ int main(void) {
         ConsoleCounter = 0;
         break;
       case MinuteTimerRoutine:
+        /* Grab the date/time */
         STATE_MinuteTimerRoutine();
         /* Set back to sampling state */
         SystemState = Sample;
@@ -278,7 +286,7 @@ void STATE_MinuteTimerRoutine(void)
     
   /* Calculate the Statistical Data */
   /* Find the start index of the temp data */
-  if(MinuteData.numSamples > (5-1))
+  if(MinuteData.numSamples > (4))
   {
     numSamples = 5;
   } else {
@@ -442,7 +450,12 @@ void STATE_TransmitIridium(SampleData_t *Data)
   
   /* Set the index up*/
   currentIdx = HourData.Hour.write;
+  currentIdx = currentIdx % 60;
   stopIdx = currentIdx;
+  if(stopIdx < 0) {
+    stopIdx += 60;
+  }
+  
   idx = currentIdx;
   /* Retreive buffered data and transmit to UART A1 */
   do
@@ -466,7 +479,7 @@ void STATE_TransmitIridium(SampleData_t *Data)
   } while(idx != stopIdx);
   
 //  sprintf(line,"RAIN %04x%02x%02x,%02x:00:00\r\n",year,mon,day,last);
-  sprintf(line,"RAIN %02x/%02x/%04x,%02x:00:00,00:01:00",mon,day,year,last);
+  sprintf(line,"RAIN %02x/%02x/%04x,%02x:00:00,00:01:00\r\n",mon,day,year,last);
   memcpy(line_u,line,128);
   UART_Write(&line_u[0],LENGTH_OF(line_u),UART_A1);
   
@@ -475,8 +488,9 @@ void STATE_TransmitIridium(SampleData_t *Data)
   uint8_t endline[] = "\r\n";
   
   /* Set the index up*/
-  currentIdx = HourData.Hour.write;
-  stopIdx = currentIdx;
+//  currentIdx = HourData.Hour.write + 1;
+//  currentIdx = current
+//  stopIdx = currentIdx;
   idx = currentIdx;
   do
   {
@@ -550,6 +564,7 @@ void STATE_TransmitReport(SampleData_t *Data)
 
   /* Set the index up*/
   currentIdx = HourData.Hour.write;
+  currentIdx = currentIdx % 60;
   stopIdx = currentIdx;
   if(stopIdx < 0) {
     stopIdx += 60;
@@ -663,17 +678,7 @@ float CalculateVolume(uint32_t count, uint32_t seconds){
   {
     return NAN;
   }
-  
-//  if(dm > (dmMax + 600))
-//  {
-//    dm = dmMax;
-//  }
-//  
-//  if(dm < (dmMin - 600))
-//  {
-//    dm = dmMin;
-//  }
-  
+    
   dm *= dm;
   
   vol = (float) (slope / dm);
@@ -894,3 +899,144 @@ void STATE_CheckRxBuffer(void)
   }
 }
  
+
+void populatehour(void) {
+  
+  HourData.Minute.buffer[0] = 0x00;
+  HourData.Minute.buffer[1] = 0x01;
+  HourData.Minute.buffer[2] = 0x02;
+  HourData.Minute.buffer[3] = 0x03;
+  HourData.Minute.buffer[4] = 0x04;
+  HourData.Minute.buffer[5] = 0x05;
+  HourData.Minute.buffer[6] = 0x06;
+  HourData.Minute.buffer[7] = 0x07;
+  HourData.Minute.buffer[8] = 0x08;
+  HourData.Minute.buffer[9] = 0x09;
+  HourData.Minute.buffer[10] = 0x10;
+  HourData.Minute.buffer[11] = 0x11;
+  HourData.Minute.buffer[12] = 0x12;
+  HourData.Minute.buffer[13] = 0x13;
+  HourData.Minute.buffer[14] = 0x14;
+  HourData.Minute.buffer[15] = 0x15;
+  HourData.Minute.buffer[16] = 0x16;
+  HourData.Minute.buffer[17] = 0x17;
+  HourData.Minute.buffer[18] = 0x18;
+  HourData.Minute.buffer[19] = 0x19;
+  HourData.Minute.buffer[20] = 0x20;
+  HourData.Minute.buffer[21] = 0x21;
+  HourData.Minute.buffer[22] = 0x22;
+  HourData.Minute.buffer[23] = 0x23;
+  HourData.Minute.buffer[24] = 0x24;
+  HourData.Minute.buffer[25] = 0x25;
+  HourData.Minute.buffer[26] = 0x26;
+  HourData.Minute.buffer[27] = 0x27;
+  HourData.Minute.buffer[28] = 0x28;
+  HourData.Minute.buffer[29] = 0x29;
+  HourData.Minute.buffer[30] = 0x30;
+  HourData.Minute.buffer[31] = 0x31;
+  HourData.Minute.buffer[32] = 0x32;
+  HourData.Minute.buffer[33] = 0x33;
+  HourData.Minute.buffer[34] = 0x34;
+  HourData.Minute.buffer[35] = 0x35;
+  HourData.Minute.buffer[36] = 0x36;
+  HourData.Minute.buffer[37] = 0x37;
+  HourData.Minute.buffer[38] = 0x38;
+  HourData.Minute.buffer[39] = 0x39;
+  HourData.Minute.buffer[40] = 0x40;
+  HourData.Minute.buffer[41] = 0x41;
+  HourData.Minute.buffer[42] = 0x42;
+  HourData.Minute.buffer[43] = 0x43;
+  HourData.Minute.buffer[44] = 0x44;
+  HourData.Minute.buffer[45] = 0x45;
+  HourData.Minute.buffer[46] = 0x46;
+  HourData.Minute.buffer[47] = 0x47;
+  HourData.Minute.buffer[48] = 0x48;
+  HourData.Minute.buffer[49] = 0x49;
+  HourData.Minute.buffer[50] = 0x50;
+  HourData.Minute.buffer[51] = 0x51;
+  HourData.Minute.buffer[52] = 0x52;
+  HourData.Minute.buffer[53] = 0x53;
+  HourData.Minute.buffer[54] = 0x54;
+  HourData.Minute.buffer[55] = 0x55;
+  HourData.Minute.buffer[56] = 0x56;
+  HourData.Minute.buffer[57] = 0x57;
+  HourData.Minute.buffer[58] = 0x58;
+  HourData.Minute.buffer[59] = 0x59;
+  
+  
+  HourData.Mean.buffer[0] = 0;
+  HourData.Mean.buffer[1] = 1;
+  HourData.Mean.buffer[2] = 2;
+  HourData.Mean.buffer[3] = 3;
+  HourData.Mean.buffer[4] = 4;
+  HourData.Mean.buffer[5] = 5;
+  HourData.Mean.buffer[6] = 6;
+  HourData.Mean.buffer[7] = 7;
+  HourData.Mean.buffer[8] = 8;
+  HourData.Mean.buffer[9] = 9;
+  HourData.Mean.buffer[10] = 10;
+  HourData.Mean.buffer[11] = 11;
+  HourData.Mean.buffer[12] = 12;
+  HourData.Mean.buffer[13] = 13;
+  HourData.Mean.buffer[14] = 14;
+  HourData.Mean.buffer[15] = 15;
+  HourData.Mean.buffer[16] = 16;
+  HourData.Mean.buffer[17] = 17;
+  HourData.Mean.buffer[18] = 18;
+  HourData.Mean.buffer[19] = 19;
+  HourData.Mean.buffer[20] = 20;
+  HourData.Mean.buffer[21] = 21;
+  HourData.Mean.buffer[22] = 22;
+  HourData.Mean.buffer[23] = 23;
+  HourData.Mean.buffer[24] = 24;
+  HourData.Mean.buffer[25] = 25;
+  HourData.Mean.buffer[26] = 26;
+  HourData.Mean.buffer[27] = 27;
+  HourData.Mean.buffer[28] = 28;
+  HourData.Mean.buffer[29] = 29;
+  HourData.Mean.buffer[30] = 30;
+  HourData.Mean.buffer[31] = 31;
+  HourData.Mean.buffer[32] = 32;
+  HourData.Mean.buffer[33] = 33;
+  HourData.Mean.buffer[34] = 34;
+  HourData.Mean.buffer[35] = 35;
+  HourData.Mean.buffer[36] = 36;
+  HourData.Mean.buffer[37] = 37;
+  HourData.Mean.buffer[38] = 38;
+  HourData.Mean.buffer[39] = 39;
+  HourData.Mean.buffer[40] = 40;
+  HourData.Mean.buffer[41] = 41;
+  HourData.Mean.buffer[42] = 42;
+  HourData.Mean.buffer[43] = 43;
+  HourData.Mean.buffer[44] = 44;
+  HourData.Mean.buffer[45] = 45;
+  HourData.Mean.buffer[46] = 46;
+  HourData.Mean.buffer[47] = 47;
+  HourData.Mean.buffer[48] = 48;
+  HourData.Mean.buffer[49] = 49;
+  HourData.Mean.buffer[50] = 50;
+  HourData.Mean.buffer[51] = 51;
+  HourData.Mean.buffer[52] = 52;
+  HourData.Mean.buffer[53] = 53;
+  HourData.Mean.buffer[54] = 54;
+  HourData.Mean.buffer[55] = 55;
+  HourData.Mean.buffer[56] = 56;
+  HourData.Mean.buffer[57] = 57;
+  HourData.Mean.buffer[58] = 58;
+  HourData.Mean.buffer[59] = 59;
+  
+  HourData.Day.write = 0;
+  HourData.Hour.write = 0;
+  HourData.Max.write = 0;
+  HourData.Mean.write = 0;
+  HourData.Min.write = 0;
+  HourData.Minute.write = 0;
+  HourData.Month.write = 0;
+  HourData.STD.write = 0;
+  HourData.Year.write = 0;
+  
+  RTCHOUR=0;
+  RTCMIN=0x59;
+  RTCSEC=0x55;
+  
+}
