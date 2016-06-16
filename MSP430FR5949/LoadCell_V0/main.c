@@ -76,7 +76,7 @@ void SETUP_Clock(void);
 void SETUP_GPIO(void);
 
 /***********************  Constants (In FRAM)  *****************************/
-const uint8_t sensorAddress = 0x46;
+const uint8_t sensorAddress = 0x40;
 const uint8_t sensorEOCPort = 3;
 const uint8_t sensorEOCPin = 7;
 
@@ -126,7 +126,7 @@ int main(void) {
   FRAM_RetreiveData();
 
   /* Set the sensor I2C address -> Change for production */
-  pxSensor.address = 0x46;
+  pxSensor.address = 0x40;
 
   /* Configure GPIO */
   SETUP_GPIO();
