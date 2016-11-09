@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <fileChecksum>2707352589</fileChecksum>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\inc\low_level_init.c</file>
+      <file>$PROJ_DIR$\inc\main.h</file>
+      <file>$PROJ_DIR$\inc\includes.h</file>
+      <file>$PROJ_DIR$\src\Buffers\buffer_c.c</file>
+      <file>$PROJ_DIR$\src\Buffers\buffer_c.h</file>
+      <file>$PROJ_DIR$\src\DMA\DMA.c</file>
+      <file>$PROJ_DIR$\src\DMA\DMA.h</file>
+      <file>$PROJ_DIR$\src\GPIO\GPIO.c</file>
+      <file>$PROJ_DIR$\src\GPIO\GPIO.h</file>
+      <file>$PROJ_DIR$\src\Timer\timer.c</file>
+      <file>$PROJ_DIR$\src\Timer\timer.h</file>
+      <file>$PROJ_DIR$\src\UART\UART.c</file>
+      <file>$PROJ_DIR$\src\UART\UART.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\main.c</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\ymath.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\xtgmath.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\low_level_init.r43</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.r43</file>
+      <file>$PROJ_DIR$\Debug\Obj\low_level_init.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\math.h</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$TOOLKIT_DIR$\inc\msp430fr5969.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\TAO_CompassReplacement.pbd</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stdbool.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\float.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stdlib.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\time.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\GPIO.r43</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Threads.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stdint.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\xencoding_limits.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stdio.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Defaults.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\ysizet.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\string.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Product.h</file>
+      <file>$TOOLKIT_DIR$\lib\dlib\dl430xlsfn.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\yvals.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\UART.r43</file>
+      <file>$PROJ_DIR$\Debug\Obj\UART.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\timer.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\ycheck.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\timer.r43</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\ystdio.h</file>
+      <file>$TOOLKIT_DIR$\config\linker\lnk430fr5949.xcl</file>
+      <file>$TOOLKIT_DIR$\config\linker\multiplier32.xcl</file>
+      <file>$PROJ_DIR$\Debug\List\TAO_CompassReplacement.map</file>
+      <file>$TOOLKIT_DIR$\lib\dlib\dl430xlsfn.r43</file>
+      <file>$TOOLKIT_DIR$\inc\msp430fr5949.h</file>
+      <file>$TOOLKIT_DIR$\inc\in430.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\GPIO.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\DMA.r43</file>
+      <file>$PROJ_DIR$\Debug\Obj\DMA.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\buffer_c.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\buffer_c.r43</file>
+      <file>$PROJ_DIR$\Debug\Exe\TAO_CompassReplacement.d43</file>
+      <file>$PROJ_DIR$\Debug\Exe\TAO_CompassReplacement.ulp</file>
+    </outputs>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 56 47</file>
+        </tool>
+        <tool>
+          <name>ULP430</name>
+          <file> 57</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\inc\low_level_init.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 17</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 19</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 2 32 42 38 33 37 36 31 29 34 44 30 24 20 15 16 35 26 25 27 22 50 21 1 8 49 10 12 4 6</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 42 38 34 31 25 36 24 8 15 50 32 35 22 37 21 30 20 26 27 1 44 33 29 16 2 49</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\src\Buffers\buffer_c.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 55</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 54</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 4 30 42 38 33 37 36 31 29 20 15 16</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 31 42 36 30 38 37 16 20 33 29 15 4</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\src\DMA\DMA.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 52</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 53</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 49 50 21 6 32 42 38 33 37 36 31 29 34 44 30 35 1</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 42 50 32 35 34 31 38 6 21 30 44 33 29 49 1 37 36</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\src\GPIO\GPIO.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 28</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 51</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 8 49 50 21 30 42 38 33 37 36 31 29 1</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 38 49 1 50 42 33 30 21 29 8 31 37 36</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\src\Timer\timer.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 43</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 41</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 10 30 42 38 33 37 36 31 29 49 50 21 1</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 37 21 30 38 49 42 31 36 50 10 1 33 29</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\src\UART\UART.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 39</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 40</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 12 49 50 21 32 42 38 33 37 36 31 29 34 44 30 35 1 4 20 15 16 10</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 4 38 37 32 42 15 35 50 30 49 1 10 34 31 36 12 21 44 33 29 20 16</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 18</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 13</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 2 32 42 38 33 37 36 31 29 34 44 30 24 20 15 16 35 26 25 27 22 50 21 1 8 49 10 12 4 6</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 42 38 34 31 25 36 24 8 15 50 32 35 22 37 21 30 20 26 27 1 44 33 29 16 2 49</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\TAO_CompassReplacement.d43</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 47</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 45 46 55 52 28 17 18 43 39 48</file>
+        </tool>
+      </inputs>
+    </file>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs/>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+
