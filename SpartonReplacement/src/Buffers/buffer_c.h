@@ -56,6 +56,7 @@ typedef struct {
   uint16_t write;               /** Buffer WRITE index */
 }CircularBufferC_s;
 
+
 /************************************************************************
 *					GLOBAL FUNCTION PROTOTYPES
 ************************************************************************/

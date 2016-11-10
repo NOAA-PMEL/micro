@@ -2140,6 +2140,15 @@
       </file>
     </group>
     <group>
+      <name>OceanServer</name>
+      <file>
+        <name>$PROJ_DIR$\src\OceanServer\OS5000S.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\OceanServer\OS5000S.h</name>
+      </file>
+    </group>
+    <group>
       <name>Timers</name>
       <file>
         <name>$PROJ_DIR$\src\Timer\timer.c</name>

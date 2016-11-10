@@ -143,11 +143,7 @@ void SETUP_MicroPeripherals(void) {
 
 #ifdef DEBUG
   /* Clear the terminal */
-//  UART_puts("\033[2J");
-//  /* Write the Splash Screen */
-//  UART_puts(Splash);
-//  UART_puts(version);
-//  UART_puts(Debug);
+
 #endif
   
   return;
