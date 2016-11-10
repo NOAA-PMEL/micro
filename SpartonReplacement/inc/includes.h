@@ -41,8 +41,8 @@
 #include "UART.h"
 #include "buffer_c.h"
 #include "DMA.h"
-
-
+#include "OS5000S.h"
+#include "FLEX.h"
 
 
 #endif

@@ -89,12 +89,12 @@
 //#define UART_NACK           (0x15)
 
 /* */
-#define UART_puts(x)        (UART_Write((uint8_t*)&x,LENGTH_OF(x),UART_A1))
-#define UART_putc(x)        (UART_WriteChar((uint8_t*)&x,UART_A1))
-#define UART_getc(x)        (UART_Read((uint8_t*)&x,UART_A1))
-#define UART_ACK()          (UART_WriteACK(UART_A1))
-#define UART_NACK()         (UART_WriteNACK(UART_A1))
-#define UART_Newline()      (UART_WriteNewline(UART_A1))
+//#define UART_puts(x)        (UART_Write((uint8_t*)&x,LENGTH_OF(x),UART_A1))
+//#define UART_putc(x)        (UART_WriteChar((uint8_t*)&x,UART_A1))
+//#define UART_getc(x)        (UART_Read((uint8_t*)&x,UART_A1))
+//#define UART_ACK()          (UART_WriteACK(UART_A1))
+//#define UART_NACK()         (UART_WriteNACK(UART_A1))
+//#define UART_Newline()      (UART_WriteNewline(UART_A1))
 
 /* Ocean Server Macros */
 #define OS_puts(x)          (UART_Write((uint8_t*)&x,LENGTH_OF(x),UART_A0))
@@ -108,16 +108,18 @@
 
 /* */
 typedef struct {
-  uint8_t Echo;
-  uint8_t CancelCnt;
-  uint8_t CancelFlag;
-  uint8_t SystemBusy;
+//  uint8_t Echo;
+//  uint8_t CancelCnt;
+//  uint8_t CancelFlag;
+//  uint8_t SystemBusy;
   CircularBufferC_s Buffer;
-  TimerMS_t *Timer;
+  volatile TimerMS_t *Timer;
 }UART_t;
 
 
-extern UART_t UART;
+//extern UART_t UART;
+extern UART_t *pOS_UART;
+extern UART_t *pFL_UART;
 /************************************************************************
 *					GLOBAL FUNCTION PROTOTYPES
 ************************************************************************/
@@ -143,6 +145,8 @@ void TFLEX_UART_Init(void);
 void OS5000S_UART_Init(void);
 
 void OS5000S_UART_Halt(void);
+
+void OS5000S_Attach_Rx_Interrupt(void);
 
 /** @brief Reads from UART
  *

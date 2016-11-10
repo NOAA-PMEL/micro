@@ -57,17 +57,20 @@
  *
  */
 typedef struct _TimerMS_s {
-  uint32_t volatile Elapsed;
-  uint32_t volatile Total;
+//  uint32_t volatile Elapsed;
+//  uint32_t volatile Total;
   uint32_t volatile Timeout;
-  uint8_t volatile TimeoutFlag:1;
+  uint8_t volatile TimeoutFlag;
 }TimerMS_t;
 
 
-extern TimerMS_t UARTTimer;
-extern TimerMS_t *pUARTTimer;
+//extern TimerMS_t UARTTimer;
+//extern TimerMS_t *pUARTTimer;
 
-extern TimerMS_t SystemTimer;
+extern volatile TimerMS_t *pOSTimer;
+extern volatile TimerMS_t *pFLTimer;
+
+//extern TimerMS_t SystemTimer;
 /************************************************************************
 *						GLOBAL FUNCTION PROTOTYPES
 ************************************************************************/

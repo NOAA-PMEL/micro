@@ -14,9 +14,14 @@
  */
 
 #include "timer.h"
-TimerMS_t UARTTimer;
-TimerMS_t SystemTimer;
-TimerMS_t *pUARTTimer = &UARTTimer;
+//TimerMS_t UARTTimer;
+//TimerMS_t SystemTimer;
+//TimerMS_t *pUARTTimer = &UARTTimer;
+
+__persistent volatile TimerMS_t OSTimer;
+__persistent volatile TimerMS_t *pOSTimer = &OSTimer;
+__persistent volatile TimerMS_t FLTimer;
+__persistent volatile TimerMS_t *pFLTimer = &FLTimer;
 /************************************************************************
 *				GLOBAL FUNCTIONS
 ************************************************************************/
@@ -35,14 +40,14 @@ void TIMER_A1_Init ( void )
 {
 
   /* Set up for 1mS using 32768Hz Crystal */
-//  TA1CCR0 =32;
-//  TA1CTL = TASSEL__ACLK | MC__UP;
-//  TA1CCTL0 = CCIE;
+  TA1CCR0 =32;
+  TA1CTL = TASSEL__ACLK | MC__UP;
+  TA1CCTL0 = CCIE;
   
   /* Set up for 1mS using 8MHz Clock Signal */
-  TA1CCR0 = 8000;
-  TA1CTL = TASSEL__SMCLK | MC__UP;
-  TA1CCTL0 = CCIE;
+//  TA1CCR0 = 8000;
+//  TA1CTL = TASSEL__SMCLK | MC__UP;
+//  TA1CCTL0 = CCIE;
 
   return;
 }
@@ -87,27 +92,21 @@ __interrupt void TIMER0_A0_ISR(void)
 #pragma vector=TIMER1_A0_VECTOR
 __interrupt void TIMER1_A0_ISR(void)
 {
+  if(FLTimer.Timeout > 0){
+    FLTimer.Timeout--;
+    if(FLTimer.Timeout == 0){
+      FLTimer.TimeoutFlag = true;
+    }
+  }
+  
+  if(OSTimer.Timeout > 0){
+    OSTimer.Timeout--;
+    if(OSTimer.Timeout == 0){
+      OSTimer.TimeoutFlag = true;
+    }
+  }
   
   
-//  disk_timerproc();
-//  
-//  if(UARTTimer.Timeout != 0){
-//    UARTTimer.Timeout--;
-//  }
-//  if(UARTTimer.Timeout == 0){
-//    UARTTimer.TimeoutFlag = true;
-//  }
-//  
-//  if(SystemTimer.Timeout != 0){
-//    SystemTimer.Timeout--;
-//  }
-//  if(SystemTimer.Timeout == 0){
-//    SystemTimer.TimeoutFlag = true;
-//  }
-//  
-//  SpiA0Timer.Elapsed += 1;
-//  MainTimer.Elapsed += 1;
-//  MainTimer.Total += 1;
   return;
 }
 

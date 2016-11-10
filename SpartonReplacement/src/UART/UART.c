@@ -15,19 +15,24 @@
  */
 #include "uart.h"
 
-__persistent UART_t UART;
-
+__persistent UART_t OS_UART;                /** OS5000S UART Struct */
+__persistent UART_t *pOS_UART = &OS_UART;   /** OS5000S UART Struct Pointer */
+__persistent UART_t FL_UART;                /** FLEX UART Struct */
+__persistent UART_t *pFL_UART = &FL_UART;              /** FLEX UART Struct Pointer */
 
 /************************************************************************
 *					STATIC FUNCTION PROTOTYPES
 ************************************************************************/
-
+static void UART_ClearStruct_FLEX(void);
+static void UART_ClearStruct_OS(void);
 
 /************************************************************************
 *					GLOBAL FUNCTIONS
 ************************************************************************/
 void TFLEX_UART_Init(void) {
   
+  /* Clear the struct */
+  UART_ClearStruct_FLEX();
   
   /* Put USCI_A1 in Reset */
   UCA1CTLW0 = UCSWRST;
@@ -52,7 +57,8 @@ void TFLEX_UART_Init(void) {
 
 void OS5000S_UART_Init(void) {
   
-  
+  /* Clear the Struct */
+  UART_ClearStruct_OS();
   /* Put USCI_A1 in Reset */
   UCA0CTLW0 = UCSWRST;
 
@@ -69,7 +75,7 @@ void OS5000S_UART_Init(void) {
   
   /* Set up interrupts */
   UCA0CTLW0 &= ~UCSWRST;            /* Take UART out of reset */
-//  UCA0IE |=  UCRXIE |UCTXIE;                /* Enable USCI_A1 RX interrupt */
+  UCA0IE |=  UCRXIE |UCTXIE;                /* Enable USCI_A1 RX interrupt */
 //  UCA0IE |= UCTXIE;
   return;
 }
@@ -77,6 +83,11 @@ void OS5000S_UART_Init(void) {
 void OS5000S_UART_Halt(void) {
   UCA0IE &= ~(UCRXIE);
   
+}
+
+void OS5000S_Attach_Rx_Interrupt(void) {
+  
+  UCA0IE |= UCRXIE;
 }
 
 uint8_t UART_Read(uint8_t *value, uint8_t Port)
@@ -213,8 +224,21 @@ uint8_t UART_WriteNewline(uint8_t Port) {
 /************************************************************************
 *					STATIC FUNCTIONS
 ************************************************************************/
+static void UART_ClearStruct_FLEX(void) {
+//  FL_UART.CancelCnt = 0;
+//  FL_UART.Cancel
+  FL_UART.Timer = pFLTimer;
+  BufferC_Clear(&FL_UART.Buffer);
+  
+  return;
+}
 
-
+static void UART_ClearStruct_OS(void) {
+  OS_UART.Timer = pOSTimer;
+  BufferC_Clear(&OS_UART.Buffer);
+  
+  return;
+}
 
 /************************************************************************
 *					INTERRUPT VECTOR
@@ -232,10 +256,11 @@ __interrupt void USCI_A0_ISR(void)
 			break;
 		case USCI_UART_UCRXIFG:  
           /* Retreive buffer */
-          UCA1TXBUF = UCA0RXBUF;
-            break;
+          val = UCA0RXBUF;
+          BufferC_Put(&OS_UART.Buffer,val);
+          break;
 		case USCI_UART_UCTXIFG:
-            //UCA1IFG &= ~(UCTXIFG);
+            
 			break;
 		case USCI_UART_UCSTTIFG:
 			break;
@@ -258,7 +283,7 @@ __interrupt void USCI_A1_ISR(void)
 		case USCI_UART_UCRXIFG:  
           /* Retreive buffer */
           //val = UCA1RXBUF;
-          UCA0TXBUF = UCA1RXBUF;
+//          UCA0TXBUF = UCA1RXBUF;
             break;
 		case USCI_UART_UCTXIFG:
             UCA1IFG &= ~(UCTXIFG);

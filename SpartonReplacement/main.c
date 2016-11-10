@@ -80,32 +80,36 @@ int main( void )
 //  TIMER_A0_Init();
   TIMER_A1_Init();  
   
+  /* Initialize the OS5000S Structure */
+  OS5000S_Init();
+  
+  /* Initialize the FLEX Structure */
+  FLEX_Init();
+  
   /* Setup the Peripherals */
   SETUP_MicroPeripherals();
+  OS5000S_Attach_Rx_Interrupt();
   
-  DMA_Init();
+//  DMA_Init();
   
   /* Enable the interrupts */
   __bis_SR_register(GIE);
-//  char send[4];
-//  send[0] = 0x1B;
-//  send[1] = 0x26;
-//  send[2] = 0x20;
-//  send[3] = 0x00;
-  //OS_puts(send);
+
+  char sendstr[256];
+  FLEX.UART->Timer->TimeoutFlag = true;
   for(;;) {
 
-//    TFLEX_puts("ABC");
-//    OS_putc(0x1B);
-//    OS_putc(0x26);
-//    OS_putc(0x20);
     
-//    OS_putc('a');
-//    TFLEX_putc('a');
-    //TFLEX_puts(send);
-    __delay_cycles(10000000);
+//    __delay_cycles(1000000);
+    OS5000S_ParseBuffer();
     
     
+    if(FLEX.UART->Timer->TimeoutFlag == true) {
+      sprintf(sendstr,"H%07.3f,%07.3f,R%07.3f\r\n",OS5000S.heading,OS5000S.pitch,OS5000S.roll);
+      TFLEX_puts(sendstr);
+      FLEX.UART->Timer->TimeoutFlag = false;
+      FLEX.UART->Timer->Timeout = 250;
+    }
   }
 
   return 0;

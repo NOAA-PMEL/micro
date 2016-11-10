@@ -31,7 +31,7 @@
 *							MACROS
 ************************************************************************/
 
-#define BUFFER_C_SIZE				(2048)
+#define BUFFER_C_SIZE				(256)
 #define ACTUAL_BUFFER_C_SIZE		(BUFFER_C_SIZE + 1)
 
 #define BUFFER_C_ERROR_EMPTY		(1)

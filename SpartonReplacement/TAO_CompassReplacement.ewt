@@ -2131,6 +2131,15 @@
       </file>
     </group>
     <group>
+      <name>FLEX</name>
+      <file>
+        <name>$PROJ_DIR$\src\FLEX\FLEX.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\FLEX\FLEX.h</name>
+      </file>
+    </group>
+    <group>
       <name>GPIO</name>
       <file>
         <name>$PROJ_DIR$\src\GPIO\GPIO.c</name>

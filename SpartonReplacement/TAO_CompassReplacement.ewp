@@ -101,15 +101,15 @@
         </option>
         <option>
           <name>GStackHeapOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GStackSize2</name>
-          <state>160</state>
+          <state>500</state>
         </option>
         <option>
           <name>GHeapSize2</name>
-          <state>160</state>
+          <state>500</state>
         </option>
         <option>
           <name>RadioDataModelType</name>
@@ -396,6 +396,8 @@
           <state>C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\src\Timer</state>
           <state>C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\src\UART</state>
           <state>C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\inc</state>
+          <state>C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\src\OceanServer</state>
+          <state>C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\src\FLEX</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -2293,6 +2295,15 @@
       </file>
       <file>
         <name>$PROJ_DIR$\src\DMA\DMA.h</name>
+      </file>
+    </group>
+    <group>
+      <name>FLEX</name>
+      <file>
+        <name>$PROJ_DIR$\src\FLEX\FLEX.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\src\FLEX\FLEX.h</name>
       </file>
     </group>
     <group>
