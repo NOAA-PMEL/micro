@@ -282,8 +282,7 @@ __interrupt void USCI_A1_ISR(void)
 			break;
 		case USCI_UART_UCRXIFG:  
           /* Retreive buffer */
-          //val = UCA1RXBUF;
-//          UCA0TXBUF = UCA1RXBUF;
+          BufferC_Put(&FL_UART.Buffer,UCA1RXBUF);
             break;
 		case USCI_UART_UCTXIFG:
             UCA1IFG &= ~(UCTXIFG);
