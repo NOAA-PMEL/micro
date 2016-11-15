@@ -100,12 +100,13 @@
 #define OS_puts(x)          (UART_Write((uint8_t*)&x,LENGTH_OF(x),UART_A0))
 #define OS_putc(x)          (UART_WriteChar((uint8_t)x,UART_A0))
 #define OS_getc(x)          (UART_Read(uint8_t*)&x,UART_A1)
+#define OS_busy()           (UCA0STATW & UCBUSY)
 
 /* T-FLEX Macro */
 #define TFLEX_puts(x)       (UART_Write((uint8_t*)&x,LENGTH_OF(x),UART_A1))
 #define TFLEX_putc(x)       (UART_WriteChar((uint8_t)x,UART_A1))
 #define TFLEX_getc(x)       (UART_Read((uint8_t*)&x,UART_A1))
-
+#define TFLEX_busy()        (UCA1STATW & UCBUSY)
 /* */
 typedef struct {
 //  uint8_t Echo;

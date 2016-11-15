@@ -32,8 +32,10 @@
 /************************************************************************
 *						MACROS
 ************************************************************************/
-
-
+#define SPARTON_FILTER_MSG      ("\xA4\x90\x00\x20\xA0")
+#define SPARTON_MOUNTING_MSG    (0xA44A00A0)
+#define SPARTON_DIRECTION_MSG   ("\xA4\x09\x00\x00\xA0")
+#define SPARTON_TILT_MSG        ("\xA4\x06\x00\x00\x00\x00\xA0");
 /************************************************************************
 *						ENUMS
 ************************************************************************/
@@ -60,13 +62,28 @@ typedef enum {
 }FLMODE_t;  
 
 
+/** @brief Flex Commands
+ *
+ * FLEX to Sparton Commands
+ *
+ */
+typedef enum {
+  
+  FLEX_FILTER_SETUP,
+  FLEX_MOUNT_SETUP,
+  FLEX_TILT_CMD,
+  FLEX_DIRECTION_CMD
+}FLCMD_t;
+
+
 /************************************************************************
 *						STRUCTS
 ************************************************************************/
 typedef struct {
 //  CircularBufferC_s buf;    /** Receive Buffer */
   UART_t *UART;             /** Received UART Data */
-  FLMODE_t Mode;            /** COMMANDED Mode */
+  FLMODE_t SysMode;            /** COMMANDED Mode */
+  FLCMD_t Mode;
 }FLEX_t;
 
 

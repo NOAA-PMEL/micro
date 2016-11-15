@@ -69,7 +69,33 @@ void OS5000S_ParseBuffer(void) {
 }
 
 
+void OS5000S_CurrentHeading(float *heading) {
+  *heading = OS5000S.heading;
+  return;
+}
 
+void OS5000S_CurrentPandR(float *pitch,float *roll){
+  *pitch = OS5000S.pitch;
+  *roll = OS5000S.roll;
+  return;
+}
+
+void OS5000S_CurrentHeading_Int(uint16_t *heading){
+  *heading = (uint16_t) ((OS5000S.heading *4096)/ 360.0);
+//  fHeading *= 4096;
+  
+ 
+  
+  return;
+}
+
+void OS5000S_CurrentPandR_Int(uint16_t *pitch, uint16_t *roll) {
+  *pitch = (uint16_t) ((OS5000S.pitch * 4096) / 360.0) ;
+  *roll = (uint16_t) ((OS5000S.roll * 4096) / 360.0);
+  
+  
+  return;
+}
 
 static OSSTAT_t OS5000S_SplitSubString(char *str, char *substr) {
   

@@ -70,3 +70,45 @@ typedef enum {
  *  @return None
  */
 void OS5000S_ParseBuffer(void);
+
+/** @brief Return Current Heading value
+ *
+ *	Returns the current heading value
+ *
+ *  @param *heading Pointer to current heading
+ *
+ *  @return None
+ */
+void OS5000S_CurrentHeading(float *val);
+
+/** @brief Return the current pitch & roll value
+ *
+ *	Return the current pitch & roll values
+ *
+ *  @param *pitch Pointer to Pitch value
+ *  @param *roll Pointer to Roll value
+ *
+ *  @return None
+ */
+void OS5000S_CurrentPandR(float *pitch,float *roll);
+
+/** @brief Return Current Heading value
+ *
+ *	Returns the current heading value
+ *
+ *  @param *heading Pointer to current heading
+ *
+ *  @return None
+ */
+void OS5000S_CurrentHeading_Int(uint16_t *heading);
+
+/** @brief Return the current pitch & roll value
+ *
+ *	Return the current pitch & roll values
+ *
+ *  @param *pitch Pointer to Pitch value
+ *  @param *roll Pointer to Roll value
+ *
+ *  @return None
+ */
+void OS5000S_CurrentPandR_Int(uint16_t *pitch,uint16_t *roll);
