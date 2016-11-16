@@ -108,7 +108,7 @@ int main( void )
 //      sprintf(sendstr,"H%07.3f,%07.3f,R%07.3f\r\n",OS5000S.heading,OS5000S.pitch,OS5000S.roll);
 //      TFLEX_puts(sendstr);
       FLEX.UART->Timer->TimeoutFlag = false;
-      FLEX.UART->Timer->Timeout = 250;
+      FLEX.UART->Timer->Timeout = 1000;
       FLEX_ParseBuffer();
       
     }

@@ -22,10 +22,11 @@ static void FLEX_FilterSet(void);
 static void FLEX_MountingSet(void);
 static void FLEX_TiltCmd(void);
 static void FLEX_HeadingCmd(void);
+static void FLEX_SplitSubstring(char *str, FLEX_t *f);
 /************************************************************************
 *					VARIABLES
 ************************************************************************/
- __persistent volatile FLEX_t FLEX;
+ __persistent FLEX_t FLEX;
  /************************************************************************
 *					GLOBAL FUNCTIONS
 ************************************************************************/
@@ -42,8 +43,24 @@ void FLEX_Init(void) {
 
 void FLEX_ParseBuffer(void) {
   
-FLEX.Mode = FLEX_TILT_CMD;
+  uint8_t stopFlag = false;
+  uint16_t idx = 0;
+  char str[BUFFER_C_SIZE];
+  memset(&str[0],0,BUFFER_C_SIZE);
+  do{
+    if(BufferC_HasChar(&FLEX.UART->Buffer,0xA0) == BUFFER_C_HAS_CHAR ){
+      TFLEX_UART_Halt();
+      BufferC_Get(&FLEX.UART->Buffer,&str[idx++]);
+    } else {
+      stopFlag = true;
+      TFLEX_UART_Start();
+    }
+  }while(stopFlag == false);
   
+  if(str[idx-1] == 0xA0) {
+    FLEX_SplitSubstring(&str[0], &FLEX);
+  }
+ 
   switch(FLEX.Mode) {
     case FLEX_FILTER_SETUP:
       FLEX_FilterSet();
@@ -57,10 +74,16 @@ FLEX.Mode = FLEX_TILT_CMD;
     case FLEX_DIRECTION_CMD:
       FLEX_HeadingCmd();
       break;
+    case FLEX_IDLE:
     default:
-    
+      __low_power_mode_3();
       break;
   }
+  
+  /* Return to Idle Mode */
+  FLEX.Mode = FLEX_IDLE;
+  
+  return;
 }
 
 
@@ -70,6 +93,7 @@ static void FLEX_FilterSet(void) {
 
   for(uint8_t i=0;i<5;i++) {
     TFLEX_putc(filt[i]);
+    while(TFLEX_busy());
   }
   return;
 }
@@ -78,17 +102,18 @@ static void FLEX_FilterSet(void) {
 static void FLEX_MountingSet(void) {
   
   const char mtg[] = {SPARTON_MOUNTING_MSG};
-  
-  for(uint8_t i=0;i<5;i++) {
+//  uint8_t len = LENGTH_OF(mtg);
+  for(uint8_t i=0;i<4;i++) {
     TFLEX_putc(mtg[i]);
+    while(TFLEX_busy());
   }
   return;
 }
  
 
 static void FLEX_TiltCmd(void) {
-  uint16_t pitch = 0.0;
-  uint16_t roll = 0.0;
+  int16_t pitch = 0.0;
+  int16_t roll = 0.0;
   char sendstr[7] = SPARTON_TILT_MSG;
   /* Retreive Current Pitch & Roll */
 //  OS5000S_CurrentPandR(&pitch,&roll);
@@ -122,6 +147,62 @@ static void FLEX_HeadingCmd(void){
   for(uint8_t i=0;i<5;i++) {
     TFLEX_putc(sendstr[i]);
     while(TFLEX_busy());
+  }
+  
+  return;
+}
+
+
+
+static void FLEX_SplitSubstring(char *str, FLEX_t *f) {
+
+  /* Find the last start/end flex command issued */
+  uint8_t endIdx = 0;
+  uint8_t startIdx = 0;
+  for(uint16_t i=0;i<BUFFER_C_SIZE;i++){
+    if(str[i] == FLEX_START_CHAR){
+      startIdx = i;
+    }
+    
+    if(str[i] == FLEX_END_CHAR) {
+      endIdx = i;
+    }
+  }
+  
+  /* Verify substring */
+  if( (endIdx < startIdx)) {
+    f->Mode = FLEX_IDLE;
+    return;
+  }
+  
+  /* Verify valid length */
+  uint8_t length = (endIdx - startIdx) ;
+  if(length < 2 || length > 8) {
+   f->Mode = FLEX_IDLE;
+   return;
+  }
+  
+  /* Find mode */
+  char temp[7];
+//  memset(&temp[0],0,BUFFER_C_SIZE);
+  memcpy(&temp[0],&str[startIdx],length);
+  
+  switch(str[1]) {
+    case FLEX_FILTER_CMD:
+      f->Mode = FLEX_FILTER_SETUP;
+      break;
+    case FLEX_HEADING_CMD:
+      f->Mode = FLEX_DIRECTION_CMD;
+      break;
+    case FLEX_PANDR_CMD:
+      f->Mode = FLEX_TILT_CMD;
+      break;
+    case FLEX_MOUNTING_CMD:
+      f->Mode = FLEX_MOUNT_SETUP;
+      break;
+    default:
+      f->Mode = FLEX_IDLE;
+      break;
   }
   
   return;

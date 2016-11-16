@@ -90,8 +90,8 @@ void OS5000S_CurrentHeading_Int(uint16_t *heading){
 }
 
 void OS5000S_CurrentPandR_Int(uint16_t *pitch, uint16_t *roll) {
-  *pitch = (uint16_t) ((OS5000S.pitch * 4096) / 360.0) ;
-  *roll = (uint16_t) ((OS5000S.roll * 4096) / 360.0);
+  *pitch = (int16_t) ((OS5000S.pitch * 4096) / 90.0) ;
+  *roll = (int16_t) ((OS5000S.roll * 4096) / 180.0);
   
   
   return;

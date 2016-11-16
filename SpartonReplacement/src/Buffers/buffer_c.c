@@ -94,6 +94,26 @@ int8_t BufferC_HasNewline(CircularBufferC_s *buf)
 
 	return 0;
 }
+    
+int8_t  BufferC_HasChar(CircularBufferC_s *buf, char val) {
+
+  uint8_t read = 0;
+  
+  if(buf->read == buf->write)
+  {
+      return BUFFER_C_ERROR_EMPTY;
+  }
+
+  read = buf->read;
+  while(read != buf->write){
+    if(buf->buffer[read] == val) {
+      return BUFFER_C_HAS_CHAR;
+    }
+    read = (read + 1) % ACTUAL_BUFFER_C_SIZE;
+  }
+
+	return 0;
+}
 
 int8_t BufferC_Clear(CircularBufferC_s *buf)
 {

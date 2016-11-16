@@ -135,6 +135,10 @@ extern UART_t *pFL_UART;
  */
 void TFLEX_UART_Init(void);
 
+void TFLEX_UART_Halt(void);
+
+void TFLEX_UART_Start(void);
+
 /** @brief Initialize the T-FLEX UART
  *
 *	Sets the T-FLEX UART connection at 9600 Baud on UART A1
@@ -146,6 +150,8 @@ void TFLEX_UART_Init(void);
 void OS5000S_UART_Init(void);
 
 void OS5000S_UART_Halt(void);
+
+void OS5000S_UART_Start(void);
 
 void OS5000S_Attach_Rx_Interrupt(void);
 

@@ -55,6 +55,16 @@ void TFLEX_UART_Init(void) {
   return;
 }
 
+void TFLEX_UART_Halt(void) {
+  UCA1IE &= ~(UCRXIE);
+  return;
+}
+
+void TFLEX_UART_Start(void) {
+  UCA1IE |= UCRXIE;
+}
+
+
 void OS5000S_UART_Init(void) {
   
   /* Clear the Struct */
@@ -82,7 +92,12 @@ void OS5000S_UART_Init(void) {
 
 void OS5000S_UART_Halt(void) {
   UCA0IE &= ~(UCRXIE);
-  
+  return;
+}
+
+void OS5000S_UART_Start(void) {
+  UCA0IE |= UCRXIE;
+  return;
 }
 
 void OS5000S_Attach_Rx_Interrupt(void) {
@@ -283,6 +298,7 @@ __interrupt void USCI_A1_ISR(void)
 		case USCI_UART_UCRXIFG:  
           /* Retreive buffer */
           BufferC_Put(&FL_UART.Buffer,UCA1RXBUF);
+          __low_power_mode_off_on_exit();
             break;
 		case USCI_UART_UCTXIFG:
             UCA1IFG &= ~(UCTXIFG);

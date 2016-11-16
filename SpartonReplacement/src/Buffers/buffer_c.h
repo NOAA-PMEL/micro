@@ -42,7 +42,7 @@
 #define BUFFER_C_IS_FULL			(2)
 
 #define BUFFER_C_HAS_NEWLINE        (5)
-
+#define BUFFER_C_HAS_CHAR           (6)
 
 /** @brief Char circular buffer
  * 
@@ -115,6 +115,8 @@ int8_t BufferC_IsEmpty(CircularBufferC_s *buf);
 
 int8_t BufferC_Backspace(CircularBufferC_s *buf);
 int8_t BufferC_HasNewline(CircularBufferC_s *buf);
+
+int8_t  BufferC_HasChar(CircularBufferC_s *buf, char val) ;
 
 //void BufferC_Size(CircularBufferC_s *buf);
 #endif
