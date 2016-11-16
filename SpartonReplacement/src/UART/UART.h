@@ -85,16 +85,10 @@
 #define CLOCK_OK			(0)
 #define CLOCK_FAIL			(1)
 
-//#define UART_ACK            (0x06)
-//#define UART_NACK           (0x15)
 
-/* */
-//#define UART_puts(x)        (UART_Write((uint8_t*)&x,LENGTH_OF(x),UART_A1))
-//#define UART_putc(x)        (UART_WriteChar((uint8_t*)&x,UART_A1))
-//#define UART_getc(x)        (UART_Read((uint8_t*)&x,UART_A1))
-//#define UART_ACK()          (UART_WriteACK(UART_A1))
-//#define UART_NACK()         (UART_WriteNACK(UART_A1))
-//#define UART_Newline()      (UART_WriteNewline(UART_A1))
+
+
+
 
 /* Ocean Server Macros */
 #define OS_puts(x)          (UART_Write((uint8_t*)&x,LENGTH_OF(x),UART_A0))
@@ -107,12 +101,19 @@
 #define TFLEX_putc(x)       (UART_WriteChar((uint8_t)x,UART_A1))
 #define TFLEX_getc(x)       (UART_Read((uint8_t*)&x,UART_A1))
 #define TFLEX_busy()        (UCA1STATW & UCBUSY)
-/* */
+/************************************************************************
+*					ENUMS
+************************************************************************/
+typedef enum{
+  UART_MODE_0,
+  UART_MODE_1,
+  UART_MODE_2
+}UARTMODE_t;
+/************************************************************************
+*					STRUCTS
+************************************************************************/
 typedef struct {
-//  uint8_t Echo;
-//  uint8_t CancelCnt;
-//  uint8_t CancelFlag;
-//  uint8_t SystemBusy;
+  UARTMODE_t Mode;
   CircularBufferC_s Buffer;
   volatile TimerMS_t *Timer;
 }UART_t;

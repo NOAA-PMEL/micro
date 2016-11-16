@@ -18,6 +18,7 @@
 
    
 static void BufferC_Size(CircularBufferC_s *buf);
+static uint8_t BufferC_Size_Calc(uint8_t read, uint8_t write);
 /************************************************************************
 *					GLOBAL FUNCTIONS
 ************************************************************************/
@@ -115,6 +116,51 @@ int8_t  BufferC_HasChar(CircularBufferC_s *buf, char val) {
 	return 0;
 }
 
+int8_t BufferC_HasSequence(CircularBufferC_s *buf, const char *seq,uint8_t len) {
+  uint8_t read = 0;     /* Read index */
+  uint8_t subIdx = 0;   /* Read substring index */
+  uint8_t sIdx = 0;     /* sequence index */
+  uint8_t validFlag = false; /* Valid sequence flag */
+  uint8_t length = len;
+  if(buf->read == buf->write) {
+    return BUFFER_C_ERROR_EMPTY;
+  }
+  
+  /* Populate the tempoary read index */
+  read = buf->read;
+ 
+  while(read != buf->write) {
+    /* If we see the first sequence value, check for the rest */
+    if(buf->buffer[read] == seq[sIdx]) {
+      /* Copy buffer string to temp */
+      char temp[8];
+      memset(&temp[0],0,8);
+      for(uint8_t i=0;i<len;i++) {
+        temp[i] = buf->buffer[read];
+        read = (read + 1) % ACTUAL_BUFFER_C_SIZE;
+        if(read == buf->write){
+          break;
+        }
+        
+      }
+      
+      if(memcmp(temp,seq,len)==0) {
+        validFlag = true;
+      }
+      
+    } else {
+      /* Increment the temporary read index and rollover if necessary */
+      read = (read + 1) % ACTUAL_BUFFER_C_SIZE;
+    }
+  }
+  
+  if(validFlag == true) {
+    return BUFFER_C_HAS_SEQ;
+  } else {
+    return BUFFER_C_NO_SEQ;
+  }
+}
+
 int8_t BufferC_Clear(CircularBufferC_s *buf)
 {
 	uint16_t i = 0;
@@ -159,4 +205,17 @@ static void BufferC_Size(CircularBufferC_s *buf){
   } else {
     buf->size = BUFFER_C_SIZE - buf->read + buf->write + 1;
   }
+}
+
+static uint8_t BufferC_Size_Calc(uint8_t read, uint8_t write) {
+  uint8_t size;
+  if(write == read) {
+    size = 0;
+  } else if (write > read) {
+    size = write - read;
+  } else {
+    size = BUFFER_C_SIZE - read + write + 1;
+  }
+  
+  return size;
 }

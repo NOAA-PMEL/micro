@@ -30,6 +30,13 @@
 /************************************************************************
 *							MACROS
 ************************************************************************/
+#ifndef true
+#define true				(1)
+#endif
+
+#ifndef false
+#define	false				(0)
+#endif
 
 #define BUFFER_C_SIZE				(256)
 #define ACTUAL_BUFFER_C_SIZE		(BUFFER_C_SIZE + 1)
@@ -43,6 +50,8 @@
 
 #define BUFFER_C_HAS_NEWLINE        (5)
 #define BUFFER_C_HAS_CHAR           (6)
+#define BUFFER_C_HAS_SEQ            (7)
+#define BUFFER_C_NO_SEQ             (8)
 
 /** @brief Char circular buffer
  * 
@@ -117,7 +126,7 @@ int8_t BufferC_Backspace(CircularBufferC_s *buf);
 int8_t BufferC_HasNewline(CircularBufferC_s *buf);
 
 int8_t  BufferC_HasChar(CircularBufferC_s *buf, char val) ;
-
+int8_t BufferC_HasSequence(CircularBufferC_s *buf, const char *seq,uint8_t len);
 //void BufferC_Size(CircularBufferC_s *buf);
 #endif
 

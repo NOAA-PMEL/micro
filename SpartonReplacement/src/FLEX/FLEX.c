@@ -27,6 +27,8 @@ static void FLEX_SplitSubstring(char *str, FLEX_t *f);
 *					VARIABLES
 ************************************************************************/
  __persistent FLEX_t FLEX;
+const char OSSeq[] = OS5000S_ESCAPE_SEQUENCE;
+uint8_t OSSeq_len = 3;
  /************************************************************************
 *					GLOBAL FUNCTIONS
 ************************************************************************/
@@ -47,39 +49,62 @@ void FLEX_ParseBuffer(void) {
   uint16_t idx = 0;
   char str[BUFFER_C_SIZE];
   memset(&str[0],0,BUFFER_C_SIZE);
-  do{
-    if(BufferC_HasChar(&FLEX.UART->Buffer,0xA0) == BUFFER_C_HAS_CHAR ){
-      TFLEX_UART_Halt();
-      BufferC_Get(&FLEX.UART->Buffer,&str[idx++]);
-    } else {
-      stopFlag = true;
-      TFLEX_UART_Start();
+  
+  /* Look for Ocean-Server Software Escape Sequence */
+  if(BufferC_HasSequence(&FLEX.UART->Buffer, &OSSeq[0],OSSeq_len) == BUFFER_C_HAS_SEQ) {
+    /* Halt UART Interrupt */
+    OS5000S_UART_Halt();
+    TFLEX_UART_Halt();
+    
+    /* Change mode to DMA */
+    DMA0_Init();
+    DMA1_Init();
+    
+    /* Go into low powere mode */
+    __low_power_mode_3();
+    
+//    /* Start the Config Timeout Timer */
+//    FLEX.UART->Timer->ConfigTimeoutFlag = false;
+//    FLEX.UART->Timer->ConfigTimeout = FLEX_CONFIG_TIMEOUT;
+    
+    /* Set the Mode */
+//    FLEX.SysMode = FL_CONFIGURE;
+    
+  } else {
+    /* Otherwise look for FLEX commands */
+    do{
+      if(BufferC_HasChar(&FLEX.UART->Buffer,0xA0) == BUFFER_C_HAS_CHAR ){
+        TFLEX_UART_Halt();
+        BufferC_Get(&FLEX.UART->Buffer,&str[idx++]);
+      } else {
+        stopFlag = true;
+        TFLEX_UART_Start();
+      }
+    }while(stopFlag == false);
+    
+    if(str[idx-1] == 0xA0) {
+      FLEX_SplitSubstring(&str[0], &FLEX);
     }
-  }while(stopFlag == false);
   
-  if(str[idx-1] == 0xA0) {
-    FLEX_SplitSubstring(&str[0], &FLEX);
+    switch(FLEX.Mode) {
+      case FLEX_FILTER_SETUP:
+        FLEX_FilterSet();
+        break;
+      case FLEX_MOUNT_SETUP:
+        FLEX_MountingSet();
+        break;
+      case FLEX_TILT_CMD:
+        FLEX_TiltCmd();
+        break;
+      case FLEX_DIRECTION_CMD:
+        FLEX_HeadingCmd();
+        break;
+      case FLEX_IDLE:
+      default:
+        __low_power_mode_3();
+        break;
+    }
   }
- 
-  switch(FLEX.Mode) {
-    case FLEX_FILTER_SETUP:
-      FLEX_FilterSet();
-      break;
-    case FLEX_MOUNT_SETUP:
-      FLEX_MountingSet();
-      break;
-    case FLEX_TILT_CMD:
-      FLEX_TiltCmd();
-      break;
-    case FLEX_DIRECTION_CMD:
-      FLEX_HeadingCmd();
-      break;
-    case FLEX_IDLE:
-    default:
-      __low_power_mode_3();
-      break;
-  }
-  
   /* Return to Idle Mode */
   FLEX.Mode = FLEX_IDLE;
   

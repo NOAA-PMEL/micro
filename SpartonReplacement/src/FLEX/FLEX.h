@@ -32,6 +32,8 @@
 /************************************************************************
 *						MACROS
 ************************************************************************/
+#define OS5000S_ESCAPE_SEQUENCE     ("\x1B\x26\x20")
+
 #define SPARTON_FILTER_MSG      ("\xA4\x90\x00\x20\xA0")
 #define SPARTON_MOUNTING_MSG    ("\xA4\x4A\x00\xA0")
 #define SPARTON_DIRECTION_MSG   ("\xA4\x09\x00\x00\xA0")
@@ -43,6 +45,8 @@
 #define FLEX_HEADING_CMD        (0x09)
 #define FLEX_PANDR_CMD          (0x06)
 #define FLEX_MOUNTING_CMD       (0x4A)
+
+#define FLEX_CONFIG_TIMEOUT      (10000)
 /************************************************************************
 *						ENUMS
 ************************************************************************/

@@ -57,8 +57,8 @@
  *
  */
 typedef struct _TimerMS_s {
-//  uint32_t volatile Elapsed;
-//  uint32_t volatile Total;
+//  uint32_t volatile ConfigTimeout;
+//  uint8_t volatile ConfigTimeoutFlag;
   uint32_t volatile Timeout;
   uint8_t volatile TimeoutFlag;
 }TimerMS_t;

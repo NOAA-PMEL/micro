@@ -44,7 +44,8 @@
 
 
 
-void DMA_Init(void);
+void DMA0_Init(void);
+void DMA1_Init(void);
 void DMA_Start(void);
 void DMA_Stop(void);
 uint16_t DMA_WriteLength(void);

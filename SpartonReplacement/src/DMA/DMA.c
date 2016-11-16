@@ -24,15 +24,10 @@
 
 
 
-void DMA_Init(void){
-  
+void DMA0_Init(void){
 
-
-  
-
-  
   /* DMA-0 is set on UART A1 Receive */
-  DMACTL0 = DMA0TSEL__UCA0RXIFG ;
+  DMACTL0 |= DMA0TSEL__UCA0RXIFG ;
   
   /* Configure the Source & Destination Addresses */
   __data16_write_addr((unsigned short) &DMA0SA,(unsigned long) &UCA0RXBUF);
@@ -60,6 +55,36 @@ void DMA_Init(void){
 }
 
 
+void DMA1_Init(void){
+
+  /* DMA-0 is set on UART A1 Receive */
+  DMACTL0 |= DMA1TSEL__UCA1RXIFG ;
+  
+  /* Configure the Source & Destination Addresses */
+  __data16_write_addr((unsigned short) &DMA1SA,(unsigned long) &UCA1RXBUF);
+  __data16_write_addr((unsigned short) &DMA1DA,(unsigned long) &UCA0TXBUF);
+  
+  /* DMA 1 Control Register */
+  /* DMA Settings: */
+  /* - Single Transfer Mode Repeat(DMADT=4) */
+  /* - Destination Address is incremented (DMADSTINCR=3) */
+  /* - Source Address is unchanged (DMASRCINC = 0) */
+  /* - Destination is Byte sized (DMADSTBYTE=1) */
+  /* - Source is Word Sized (DMASRCBYTE=0) */
+  /* - DMA Level is edge (DMALEVEL=0) */
+  /* - Clear DMA Interrupt Flag (DMAIFG = 0) */
+  /* - Enable the DMA Interrupt (DMAIE=1) */
+  DMA1CTL |=  (DMADT_4 | DMADSTINCR_3 | DMADSTBYTE | DMASRCINCR_0 | DMAIE);
+    
+  /* Set the Size of the transfer */
+  DMA1SZ = 0x01;
+  
+  /* - Enable the DMA (DMAEN = 1) */
+  DMA1CTL |=   DMAEN;
+   
+  return;
+}
+
 void DMA_Start(void) {
   DMA0CTL |= DMAEN;
   return;
@@ -79,15 +104,15 @@ __interrupt void DMA0_ISR(void)
   
   switch(__even_in_range(DMAIV,16)) {
     case 0: break;
-    case 2: 
-    /* Disable the DMA */
-//      DMA0CTL &= ~DMAEN;
-      
-      
+    case 2:     
       /* Enable the DMA */
       DMA0CTL |= DMAEN;
       break;
     case 0x04:
+    __delay_cycles(10);
+     DMA1CTL |=   DMAEN;
+     
+     
       break;
     default:
       break;

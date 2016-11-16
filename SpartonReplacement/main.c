@@ -25,6 +25,11 @@
  *  Stop Bits - 1
  *  Parity - None
  *
+ *
+ *  @note The OceanServer 5000-S Compass can be calibrated without removing
+ *        from the PCB.  Use the Ocean Server Digital Compass Demo Utility to
+          calibrate the compass.  Note: When complete, you must cycle power 
+          before the FLEX commands will work again.
  *  @note To add FRAM capability, you must enable MPU in IAR 
  *        (Project->Options->General Options->MPU/IPU->Support MPU)
  * 
@@ -95,27 +100,68 @@ int main( void )
   /* Enable the interrupts */
   __bis_SR_register(GIE);
 
-  char sendstr[256];
+  //char sendstr[256];
+  FLEX.SysMode = FL_NORMAL;
   FLEX.UART->Timer->TimeoutFlag = true;
   for(;;) {
 
     
-//    __delay_cycles(1000000);
-    OS5000S_ParseBuffer();
-    
-    
-    if(FLEX.UART->Timer->TimeoutFlag == true) {
-//      sprintf(sendstr,"H%07.3f,%07.3f,R%07.3f\r\n",OS5000S.heading,OS5000S.pitch,OS5000S.roll);
-//      TFLEX_puts(sendstr);
-      FLEX.UART->Timer->TimeoutFlag = false;
-      FLEX.UART->Timer->Timeout = 1000;
-      FLEX_ParseBuffer();
+    if(FLEX.SysMode == FL_CONFIGURE) {
+       SYS_ConfigurationRoutine();
       
+    } else {
+      /* Parse the Ocean Server Buffer */
+      OS5000S_ParseBuffer();
+      /* Parse the FLEX commands on timeout */
+      if(FLEX.UART->Timer->TimeoutFlag == true) {
+        FLEX.UART->Timer->TimeoutFlag = false;
+        FLEX.UART->Timer->Timeout = 1000;
+        FLEX_ParseBuffer();
+      }
     }
   }
 
   return 0;
 }
+
+
+/** @brief OS Configuration Routine 
+ *
+ *
+ *
+ * @param
+ *
+ * @ret None 
+ */
+void SYS_ConfigurationRoutine(void) {
+  char val = 0;
+  while(BufferC_Get(&FLEX.UART->Buffer,&val)!= BUFFER_C_IS_EMPTY){
+      OS_putc(val);
+    }
+  
+//  /* Check buffer for Escape and reset timer if yes*/
+//  if(BufferC_HasChar(&FLEX.UART->Buffer,0x1B) == BUFFER_C_HAS_CHAR) {
+//    FLEX.UART->Timer->ConfigTimeout = FLEX_CONFIG_TIMEOUT;
+//    FLEX.UART->Timer->ConfigTimeoutFlag = false;
+//  }
+  
+  
+  
+//  /* If the timer has expired, turn DMA off */
+//  if(FLEX.UART->Timer->ConfigTimeoutFlag == true) {
+//    DMA_Stop();
+//    OS5000S_UART_Start();
+//    FLEX.SysMode = FL_NORMAL;
+//  }  else {
+//    /* Write FLEX buffer to OS5000S Port */
+//    char val = 0;
+//    while(BufferC_Get(&FLEX.UART->Buffer,&val)!= BUFFER_C_IS_EMPTY){
+//      OS_putc(val);
+//    }
+//  }
+  
+}
+ 
 
 
 

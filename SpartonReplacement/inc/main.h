@@ -37,7 +37,7 @@ void SETUP_OceanServer(void);
 void MAIN_SD_Unavailable(void);
 void SYSTEM_RESET(void);
 void SD_InitPins(void);
-
+void SYS_ConfigurationRoutine(void);
 /************************************************************************
 *							CONSTANTS
 ************************************************************************/

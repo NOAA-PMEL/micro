@@ -99,6 +99,13 @@ __interrupt void TIMER1_A0_ISR(void)
     }
   }
   
+//  if(FLTimer.ConfigTimeout > 0){
+//    FLTimer.ConfigTimeout--;
+//    if(FLTimer.ConfigTimeout == 0){
+//      FLTimer.ConfigTimeoutFlag = true;
+//    }
+//  }
+  
   if(OSTimer.Timeout > 0){
     OSTimer.Timeout--;
     if(OSTimer.Timeout == 0){
