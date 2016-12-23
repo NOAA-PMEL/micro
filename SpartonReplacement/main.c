@@ -115,13 +115,13 @@ int main( void )
       /* Parse the FLEX commands on timeout */
       if(FLEX.UART->Timer->TimeoutFlag == true) {
         FLEX.UART->Timer->TimeoutFlag = false;
-        FLEX.UART->Timer->Timeout = 1000;
+        FLEX.UART->Timer->Timeout = 10;
         FLEX_ParseBuffer();
       }
     }
   }
 
-  return 0;
+//  return 0;
 }
 
 
@@ -180,10 +180,10 @@ void SYS_ConfigurationRoutine(void) {
  */
 void SETUP_MicroPeripherals(void) {
   
-#ifdef DEBUG
-  const uint8_t Splash[] = "\r\TAO  - ";
-  const uint8_t Debug[] = "\r\n*** DEBUG MODE ***\r\n";
-#endif
+//#ifdef DEBUG
+//  const uint8_t Splash[] = "TAO  - ";
+//  const uint8_t Debug[] = "\r\n*** DEBUG MODE ***\r\n";
+//#endif
   
   /* Configure the T-FLEX UART */
   TFLEX_UART_Init();

@@ -46,7 +46,7 @@ void OS5000S_ParseBuffer(void) {
     
   
     /* retreive the string from the circular buffer */
-    uint8_t idx = 0;
+    uint16_t idx = 0;
     uint8_t status = BUFFER_C_NOT_FULL;
     char str[BUFFER_C_SIZE];
     memset(&str[0],0,BUFFER_C_SIZE);
@@ -138,7 +138,7 @@ static OSSTAT_t OS5000S_ParseSubString(char *str, OS5000S_t *s){
   /* Validate Checksum */
   uint8_t len = strlen(str);
   uint8_t idx = 0;
-  uint8_t starIdx = 0;
+//  uint8_t starIdx = 0;
   unsigned char chksum = 0;
   do{
       if(str[idx] == '$') {
@@ -156,8 +156,8 @@ static OSSTAT_t OS5000S_ParseSubString(char *str, OS5000S_t *s){
   char chkVal[8];
   sprintf(chkVal,"%x",chksum);
 
-  char *tempIdx = 0;
-  uint8_t tempLen = 0;
+//  char *tempIdx = 0;
+//  uint8_t tempLen = 0;
   
   char *token;
   char tmp_chksum[8];

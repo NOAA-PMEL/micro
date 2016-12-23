@@ -28,7 +28,7 @@
 #include "DMA.h"
 #include "timer.h"
 #include "buffer_c.h"
-
+//#include "OS5000S.h"
 /************************************************************************
 *						MACROS
 ************************************************************************/
@@ -37,7 +37,7 @@
 #define SPARTON_FILTER_MSG      ("\xA4\x90\x00\x20\xA0")
 #define SPARTON_MOUNTING_MSG    ("\xA4\x4A\x00\xA0")
 #define SPARTON_DIRECTION_MSG   ("\xA4\x09\x00\x00\xA0")
-#define SPARTON_TILT_MSG        ("\xA4\x06\x00\x00\x00\x00\xA0");
+#define SPARTON_TILT_MSG        ("\xA4\x06\x00\x00\x00\x00\xA0")
 
 #define FLEX_START_CHAR         (0xA4)
 #define FLEX_END_CHAR           (0xA0)
@@ -79,11 +79,11 @@ typedef enum {
  *
  */
 typedef enum {
-  
   FLEX_FILTER_SETUP,
   FLEX_MOUNT_SETUP,
   FLEX_TILT_CMD,
   FLEX_DIRECTION_CMD,
+  FLEX_DIRECTION_AND_TILT_CMD,
   FLEX_IDLE
 }FLCMD_t;
 
@@ -112,4 +112,5 @@ extern FLEX_t FLEX;
  *
  *  @return None
  */
+void FLEX_ParseBuffer(void);
 void FLEX_Init(void);

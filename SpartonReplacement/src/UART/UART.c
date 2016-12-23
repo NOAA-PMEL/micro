@@ -291,7 +291,7 @@ __interrupt void USCI_A0_ISR(void)
 #pragma vector=USCI_A1_VECTOR
 __interrupt void USCI_A1_ISR(void)
 {
-    uint8_t val;
+//    uint8_t val;
 	switch(__even_in_range(UCA1IV, USCI_UART_UCTXCPTIFG))
 	{
 		case USCI_NONE:

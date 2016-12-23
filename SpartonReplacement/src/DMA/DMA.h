@@ -34,7 +34,7 @@
 #ifndef false
 #define false   (0)
 #endif
-#define DMA_BUF_LENGTH      (128)//(2048)
+#define DMA_BUF_LENGTH      (128)
 #define DMA_ESC_COUNT       (2)
 #define DMA_TIMEOUT         (10)
 

@@ -21,6 +21,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 /************************************************************************
 *						STANDARD LIBRARIES
 ************************************************************************/
@@ -63,6 +64,16 @@ typedef enum {
 /************************************************************************
 *					GLOBAL FUNCTION PROTOTYPES
 ************************************************************************/
+/** @brief Init the OS5000-S buffer
+ *
+ *	Initialize the OS5000-S buffer for heading, pitch and roll, calibrate
+ *  and UART stuct pointer
+ *
+ *  @param None
+ *
+ *  @return None
+ */
+void OS5000S_Init(void) ;
 /** @brief Parse the OS5000-S buffer
  *
  *	Parse the buffer for heading, pitch and roll info
