@@ -100,6 +100,7 @@ int main( void )
   /* Enable the interrupts */
   __bis_SR_register(GIE);
 
+  
   //char sendstr[256];
   FLEX.SysMode = FL_NORMAL;
   FLEX.UART->Timer->TimeoutFlag = true;
@@ -225,14 +226,26 @@ void SETUP_GPIO(void)
   PJSEL1 &= ~BIT4;
   PJSEL0 |= BIT4;
   
-  /* Unlock GPIO */
-  PM5CTL0 &= ~LOCKLPM5;		/* Needs to be done after config GPIO & Pins! */
-  
-  /* Setup RTC Output Pin */
+    /* Setup RTC Output Pin */
   GPIO_ClearPin(1,0);
   GPIO_SetPinAsOutput(1,0);
   P1SEL1 |= BIT0;
   P1SEL0 &= ~BIT0;
+  
+  /* Set Switched Power Pin */
+  P3DIR |= 0x01;
+  
+//  GPIO_ClearPin(3,0);
+//  GPIO_SetPinAsOutput(3,0);
+//  GPIO_SetPin(3,0);
+  //GPIO_ClearPin(3,0);
+  /* Unlock GPIO */
+  PM5CTL0 &= ~LOCKLPM5;		/* Needs to be done after config GPIO & Pins! */
+  
+  __delay_cycles(100);
+  P3OUT |= 0x01;
+  
+
   
 #ifdef DEBUG
   GPIO_SetPinAsOutput(1,0);
