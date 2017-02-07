@@ -103,7 +103,14 @@ int main( void )
   
   //char sendstr[256];
   FLEX.SysMode = FL_NORMAL;
-  FLEX.UART->Timer->TimeoutFlag = true;
+  FLEX.UART->Timer->TimeoutFlag = false;
+  FLEX.UART->Timer->Timeout = 50;
+  
+//  OS5000S_Delay(2);
+//  OS5000S_ParseBuffer();
+//  OS5000S_Delay(1);
+//  OS5000S_ParseBuffer();
+  //__delay_cycles(50000);
   for(;;) {
 
     
@@ -114,7 +121,7 @@ int main( void )
       /* Parse the Ocean Server Buffer */
       OS5000S_ParseBuffer();
       /* Parse the FLEX commands on timeout */
-      if(FLEX.UART->Timer->TimeoutFlag == true) {
+      if( (FLEX.UART->Timer->TimeoutFlag == true) && OS5000S.MSGValid == true) {
         FLEX.UART->Timer->TimeoutFlag = false;
         FLEX.UART->Timer->Timeout = 10;
         FLEX_ParseBuffer();

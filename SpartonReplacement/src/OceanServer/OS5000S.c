@@ -34,9 +34,18 @@ void OS5000S_Init(void) {
   OS5000S.pitch = 0.0;
   OS5000S.roll = 0.0;
   OS5000S.UART = pOS_UART;
-  
+  OS5000S.MSGValid = false;
   
   return;
+}
+
+void OS5000S_Delay(uint8_t counts) {
+  
+  for(uint8_t i=0;i<counts;i++){
+    while(BufferC_HasNewline(&OS5000S.UART->Buffer) != BUFFER_C_HAS_NEWLINE);
+    BufferC_Clear(&OS5000S.UART->Buffer);
+  }
+  
 }
 
 void OS5000S_ParseBuffer(void) {
@@ -61,8 +70,10 @@ void OS5000S_ParseBuffer(void) {
     /* Split the string and parse the substring */
     if(OS5000S_SplitSubString(&str[0],&substr[0]) == OS_VALID) {
       OS5000S_ParseSubString(&substr[0],&OS5000S);
-      
-    } 
+      OS5000S.MSGValid = true;
+    } else {
+      OS5000S.MSGValid = false;
+    }
   }
   
   return;

@@ -273,6 +273,7 @@ __interrupt void USCI_A0_ISR(void)
           /* Retreive buffer */
           val = UCA0RXBUF;
           BufferC_Put(&OS_UART.Buffer,val);
+
 //          UCA0TXBUF = 0x0A;
            __low_power_mode_off_on_exit();
           break;

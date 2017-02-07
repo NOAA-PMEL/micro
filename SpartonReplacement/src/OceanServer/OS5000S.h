@@ -42,6 +42,7 @@
 
 typedef struct {
 //  CircularBufferC_s buf;    /** Receive Buffer */
+  uint8_t MSGValid; 
   UART_t *UART;             /** Received UART Data */
   float heading;            /** Current Heading */
   float pitch;              /** Current Pitch */
@@ -125,3 +126,6 @@ void OS5000S_CurrentHeading_Int(uint16_t *heading);
  *  @return None
  */
 void OS5000S_CurrentPandR_Int(uint16_t *pitch,uint16_t *roll);
+
+
+void OS5000S_Delay(uint8_t counts);
