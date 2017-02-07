@@ -14,6 +14,8 @@
  *  @bug  No known bugs
  */
 
+#ifndef __FLEX_H__
+#define __FLEX_H__
 
 /************************************************************************
 *						HEADER FILES
@@ -115,3 +117,5 @@ extern FLEX_t FLEX;
  */
 void FLEX_ParseBuffer(void);
 void FLEX_Init(void);
+
+#endif

@@ -18,7 +18,7 @@
 
    
 static void BufferC_Size(CircularBufferC_s *buf);
-static uint8_t BufferC_Size_Calc(uint8_t read, uint8_t write);
+//static uint8_t BufferC_Size_Calc(uint8_t read, uint8_t write);
 /************************************************************************
 *					GLOBAL FUNCTIONS
 ************************************************************************/
@@ -118,10 +118,10 @@ int8_t  BufferC_HasChar(CircularBufferC_s *buf, char val) {
 
 int8_t BufferC_HasSequence(CircularBufferC_s *buf, const char *seq,uint8_t len) {
   uint8_t read = 0;     /* Read index */
-  uint8_t subIdx = 0;   /* Read substring index */
+//  uint8_t subIdx = 0;   /* Read substring index */
   uint8_t sIdx = 0;     /* sequence index */
   uint8_t validFlag = false; /* Valid sequence flag */
-  uint8_t length = len;
+//  uint8_t length = len;
   if(buf->read == buf->write) {
     return BUFFER_C_ERROR_EMPTY;
   }
@@ -207,15 +207,15 @@ static void BufferC_Size(CircularBufferC_s *buf){
   }
 }
 
-static uint8_t BufferC_Size_Calc(uint8_t read, uint8_t write) {
-  uint8_t size;
-  if(write == read) {
-    size = 0;
-  } else if (write > read) {
-    size = write - read;
-  } else {
-    size = BUFFER_C_SIZE - read + write + 1;
-  }
-  
-  return size;
-}
+//static uint8_t BufferC_Size_Calc(uint8_t read, uint8_t write) {
+//  uint8_t size;
+//  if(write == read) {
+//    size = 0;
+//  } else if (write > read) {
+//    size = write - read;
+//  } else {
+//    size = BUFFER_C_SIZE - read + write + 1;
+//  }
+//  
+//  return size;
+//}
