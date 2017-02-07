@@ -67,11 +67,11 @@ void FLEX_ParseBuffer(void) {
     /* Otherwise look for FLEX commands */
     do{
       if(BufferC_HasChar(&FLEX.UART->Buffer,0xA0) == BUFFER_C_HAS_CHAR ){
-        //TFLEX_UART_Halt();
+
         BufferC_Get(&FLEX.UART->Buffer,&str[idx++]);
       } else {
         stopFlag = true;
-        //TFLEX_UART_Start();
+
       }
     }while(stopFlag == false);
     
@@ -124,7 +124,7 @@ static void FLEX_FilterSet(void) {
 static void FLEX_MountingSet(void) {
   
   const char mtg[] = {SPARTON_MOUNTING_MSG};
-//  uint8_t len = LENGTH_OF(mtg);
+
   for(uint8_t i=0;i<4;i++) {
     TFLEX_putc(mtg[i]);
     while(TFLEX_busy());
@@ -134,11 +134,10 @@ static void FLEX_MountingSet(void) {
  
 
 static void FLEX_TiltCmd(void) {
-  int16_t pitch = 0.0;
-  int16_t roll = 0.0;
+  uint16_t pitch = 0.0;
+  uint16_t roll = 0.0;
   char sendstr[7] = SPARTON_TILT_MSG;
   /* Retreive Current Pitch & Roll */
-//  OS5000S_CurrentPandR(&pitch,&roll);
   OS5000S_CurrentPandR_Int(&pitch,&roll);
   sendstr[5] = (char) (roll & 0x00FF);
   sendstr[4] = (char) ((roll >> 8) & 0x00FF);
@@ -157,8 +156,6 @@ static void FLEX_HeadingCmd(void){
   uint16_t heading = 0.0;
   char sendstr[5] = SPARTON_DIRECTION_MSG;
   
-//  memset(&sendstr,0,5);
-  //strcpy(sendstr,SPARTON_DIRECTION_MSG,5);
   
   /* Retreive Current Heading */
   OS5000S_CurrentHeading_Int(&heading);
@@ -173,74 +170,6 @@ static void FLEX_HeadingCmd(void){
   
   return;
 }
-
-//static void FLEX_HeadingTiltCmd(void) {
-//  uint16_t heading = 0.0;
-//  uint16_t pitch = 0.0;
-//  uint16
-//  
-//}
-
-//static void FLEX_SplitSubstring(char *str, FLEX_t *f) {
-//  const char DirAndPitch[] = "\xA4\x09\xA0\xA4\x06\xA0";
-//  /* Check for dual command Direction & Tilt */
-//  if(strcmp(str,DirAndPitch)==0){
-//    f->Mode = FLEX_DIRECTION_AND_TILT_CMD;
-//    return;
-//  }
-//  /* Find the last start/end flex command issued */
-//  uint8_t endIdx = 0;
-//  uint8_t startIdx = 0;
-//  for(uint16_t i=0;i<BUFFER_C_SIZE;i++){
-//    if(str[i] == FLEX_START_CHAR){
-//      startIdx = i;
-//    }
-//    
-//    if(str[i] == FLEX_END_CHAR) {
-//      endIdx = i;
-//    }
-//  }
-//  
-//  /* Verify substring */
-//  if( (endIdx < startIdx)) {
-//    f->Mode = FLEX_IDLE;
-//    return;
-//  }
-//  
-// 
-//  
-//  
-//  /* Verify valid length */
-//  uint8_t length = (endIdx - startIdx) ;
-//  if(length < 2 || length > 8) {
-//   f->Mode = FLEX_IDLE;
-//   return;
-//  }
-//  
-//  /* Find mode */
-//  char temp[7];
-//  memcpy(&temp[0],&str[startIdx],length);
-//  
-//  switch(str[1]) {
-//    case FLEX_FILTER_CMD:
-//      f->Mode = FLEX_FILTER_SETUP;
-//      break;
-//    case FLEX_HEADING_CMD:
-//      f->Mode = FLEX_DIRECTION_CMD;
-//      break;
-//    case FLEX_PANDR_CMD:
-//      f->Mode = FLEX_TILT_CMD;
-//      break;
-//    case FLEX_MOUNTING_CMD:
-//      f->Mode = FLEX_MOUNT_SETUP;
-//      break;
-//    default:
-//      f->Mode = FLEX_IDLE;
-//      break;
-//  }
-//  
-//  return;
-//}
 
 
 static void FLEX_SplitSubstring(char *str, FLEX_t *f) {

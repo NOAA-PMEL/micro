@@ -28,6 +28,7 @@
 #include "DMA.h"
 #include "timer.h"
 #include "buffer_c.h"
+#include "os5000s.h"
 //#include "OS5000S.h"
 /************************************************************************
 *						MACROS

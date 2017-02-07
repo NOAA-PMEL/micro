@@ -93,7 +93,7 @@ void OS5000S_CurrentPandR(float *pitch,float *roll){
 
 void OS5000S_CurrentHeading_Int(uint16_t *heading){
   *heading = (uint16_t) ((OS5000S.heading *4096)/ 360.0);
-//  fHeading *= 4096;
+
   
  
   
@@ -149,14 +149,14 @@ static OSSTAT_t OS5000S_ParseSubString(char *str, OS5000S_t *s){
   /* Validate Checksum */
   uint8_t len = strlen(str);
   uint8_t idx = 0;
-//  uint8_t starIdx = 0;
+
   unsigned char chksum = 0;
   do{
       if(str[idx] == '$') {
           chksum = 0;
       }
       else if(str[idx] == '*'){
-//          starIdx = idx;
+
           break;
       } else {
           chksum ^= str[idx];
@@ -167,8 +167,6 @@ static OSSTAT_t OS5000S_ParseSubString(char *str, OS5000S_t *s){
   char chkVal[8];
   sprintf(chkVal,"%x",chksum);
 
-//  char *tempIdx = 0;
-//  uint8_t tempLen = 0;
   
   char *token;
   char tmp_chksum[8];
@@ -178,14 +176,6 @@ static OSSTAT_t OS5000S_ParseSubString(char *str, OS5000S_t *s){
 
   
   strcpy(tmp_chksum,token);
-//  tempIdx = strchr(&str[0],'\r');   /* Find the CR that terminatest the line */
-//  tempLen = tempIdx - &str[starIdx+1];
-  
-  
-//  memcpy(tmp_chksum,&str[starIdx],tempLen-1);
-//  
-//  printf("tmp_chksum = %s\n",tmp_chksum);
-//  printf("chkVal = %s\n",chkVal);
 
   for(uint8_t i=0;i<8;i++) {
     tmp_chksum[i] = toupper(tmp_chksum[i]);

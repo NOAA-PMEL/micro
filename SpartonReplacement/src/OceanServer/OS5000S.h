@@ -14,6 +14,8 @@
  *  @bug  No known bugs
  */
 
+#ifndef __OS5000S_H__
+#define __OS5000S_H__
 
 /************************************************************************
 *						HEADER FILES
@@ -129,3 +131,8 @@ void OS5000S_CurrentPandR_Int(uint16_t *pitch,uint16_t *roll);
 
 
 void OS5000S_Delay(uint8_t counts);
+
+void OS5000S_CurrentPandR_Int(uint16_t *pitch, uint16_t *roll);
+
+
+#endif

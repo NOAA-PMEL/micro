@@ -82,7 +82,6 @@ int main( void )
   SETUP_Clock();
   
   /* Setup Timer */
-//  TIMER_A0_Init();
   TIMER_A1_Init();  
   
   /* Initialize the OS5000S Structure */
@@ -95,22 +94,14 @@ int main( void )
   SETUP_MicroPeripherals();
   OS5000S_Attach_Rx_Interrupt();
   
-//  DMA_Init();
-  
   /* Enable the interrupts */
   __bis_SR_register(GIE);
 
-  
-  //char sendstr[256];
   FLEX.SysMode = FL_NORMAL;
   FLEX.UART->Timer->TimeoutFlag = false;
   FLEX.UART->Timer->Timeout = 50;
   
-//  OS5000S_Delay(2);
-//  OS5000S_ParseBuffer();
-//  OS5000S_Delay(1);
-//  OS5000S_ParseBuffer();
-  //__delay_cycles(50000);
+
   for(;;) {
 
     
@@ -129,7 +120,6 @@ int main( void )
     }
   }
 
-//  return 0;
 }
 
 
@@ -145,29 +135,7 @@ void SYS_ConfigurationRoutine(void) {
   char val = 0;
   while(BufferC_Get(&FLEX.UART->Buffer,&val)!= BUFFER_C_IS_EMPTY){
       OS_putc(val);
-    }
-  
-//  /* Check buffer for Escape and reset timer if yes*/
-//  if(BufferC_HasChar(&FLEX.UART->Buffer,0x1B) == BUFFER_C_HAS_CHAR) {
-//    FLEX.UART->Timer->ConfigTimeout = FLEX_CONFIG_TIMEOUT;
-//    FLEX.UART->Timer->ConfigTimeoutFlag = false;
-//  }
-  
-  
-  
-//  /* If the timer has expired, turn DMA off */
-//  if(FLEX.UART->Timer->ConfigTimeoutFlag == true) {
-//    DMA_Stop();
-//    OS5000S_UART_Start();
-//    FLEX.SysMode = FL_NORMAL;
-//  }  else {
-//    /* Write FLEX buffer to OS5000S Port */
-//    char val = 0;
-//    while(BufferC_Get(&FLEX.UART->Buffer,&val)!= BUFFER_C_IS_EMPTY){
-//      OS_putc(val);
-//    }
-//  }
-  
+    }  
 }
  
 
@@ -187,12 +155,7 @@ void SYS_ConfigurationRoutine(void) {
  * @return None
  */
 void SETUP_MicroPeripherals(void) {
-  
-//#ifdef DEBUG
-//  const uint8_t Splash[] = "TAO  - ";
-//  const uint8_t Debug[] = "\r\n*** DEBUG MODE ***\r\n";
-//#endif
-  
+    
   /* Configure the T-FLEX UART */
   TFLEX_UART_Init();
 
@@ -242,10 +205,6 @@ void SETUP_GPIO(void)
   /* Set Switched Power Pin */
   P3DIR |= 0x01;
   
-//  GPIO_ClearPin(3,0);
-//  GPIO_SetPinAsOutput(3,0);
-//  GPIO_SetPin(3,0);
-  //GPIO_ClearPin(3,0);
   /* Unlock GPIO */
   PM5CTL0 &= ~LOCKLPM5;		/* Needs to be done after config GPIO & Pins! */
   
