@@ -38,7 +38,7 @@ compass installed in a PMEL modified Gill Wind sensor housing.
 &nbsp;
 - [ ] Select "Scan for Compass" from the top menu
 
-![Step_2](https://github.com/NOAA-PMEL/micro/blob/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small/Figures_Small\Cal_Step_2alt.png)
+![Step_2](https://github.com/NOAA-PMEL/micro/blob/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small/Cal_Step_2alt.png)
 
 
 

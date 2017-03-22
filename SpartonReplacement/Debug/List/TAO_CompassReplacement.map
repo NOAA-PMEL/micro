@@ -1,0 +1,2632 @@
+################################################################################
+#                                                                              #
+#      IAR Universal Linker V6.4.6.89                                          #
+#                                                                              #
+#           Link time     =  14/Feb/2017  12:37:02                             #
+#           Target CPU    =  MSP430                                            #
+#           List file     =  C:\Users\Casari\version-control\PMEL\micro\Sparto #
+#                            nReplacement\Debug\List\TAO_CompassReplacement.ma #
+#                            p                                                 #
+#           Output file 1 =  C:\Users\Casari\version-control\PMEL\micro\Sparto #
+#                            nReplacement\Debug\Exe\TAO_CompassReplacement.txt #
+#                            Format: msp430_txt                                #
+#           Output file 2 =  C:\Users\Casari\version-control\PMEL\micro\Sparto #
+#                            nReplacement\Debug\Exe\TAO_CompassReplacement.d43 #
+#                            Format: ubrof10                                   #
+#                            UBROF version 10.0.6                              #
+#                            Using library modules for C-SPY (-rt)             #
+#           Command line  =  C:\Users\Casari\version-control\PMEL\micro\Sparto #
+#                            nReplacement\Debug\Obj\buffer_c.r43               #
+#                            C:\Users\Casari\version-control\PMEL\micro\Sparto #
+#                            nReplacement\Debug\Obj\DMA.r43                    #
+#                            C:\Users\Casari\version-control\PMEL\micro\Sparto #
+#                            nReplacement\Debug\Obj\FLEX.r43                   #
+#                            C:\Users\Casari\version-control\PMEL\micro\Sparto #
+#                            nReplacement\Debug\Obj\GPIO.r43                   #
+#                            C:\Users\Casari\version-control\PMEL\micro\Sparto #
+#                            nReplacement\Debug\Obj\low_level_init.r43         #
+#                            C:\Users\Casari\version-control\PMEL\micro\Sparto #
+#                            nReplacement\Debug\Obj\main.r43                   #
+#                            C:\Users\Casari\version-control\PMEL\micro\Sparto #
+#                            nReplacement\Debug\Obj\OS5000S.r43                #
+#                            C:\Users\Casari\version-control\PMEL\micro\Sparto #
+#                            nReplacement\Debug\Obj\timer.r43                  #
+#                            C:\Users\Casari\version-control\PMEL\micro\Sparto #
+#                            nReplacement\Debug\Obj\UART.r43                   #
+#                            -o                                                #
+#                            C:\Users\Casari\version-control\PMEL\micro\Sparto #
+#                            nReplacement\Debug\Exe\TAO_CompassReplacement.d43 #
+#                            -l                                                #
+#                            C:\Users\Casari\version-control\PMEL\micro\Sparto #
+#                            nReplacement\Debug\List\TAO_CompassReplacement.ma #
+#                            p                                                 #
+#                            -xms                                              #
+#                            "-IC:\Program Files (x86)\IAR Systems\Embedded Wo #
+#                            rkbench 7.4\430\LIB\"                             #
+#                            -f                                                #
+#                            "C:\Program Files (x86)\IAR Systems\Embedded Work #
+#                            bench 7.4\430\config\linker\lnk430fr5949.xcl"     #
+#                            (-cmsp430 -QCODE_I=CODE_ID -QTLS16_I=TLS16_ID     #
+#                            -D__iar_HWMUL=4C0 -Z(CONST)INFO=1800-19FF         #
+#                            -Z(CONST)INFOA=1980-19FF                          #
+#                            -Z(CONST)INFOB=1900-197F                          #
+#                            -Z(CONST)INFOC=1880-18FF                          #
+#                            -Z(CONST)INFOD=1800-187F                          #
+#                            -Z(DATA)DATA16_I,DATA16_Z,DATA16_N,TLS16_I=1C00-2 #
+#                            3FF                                               #
+#                            -Z(DATA)CODE_I                                    #
+#                            -Z(DATA)DATA20_I,DATA20_Z,DATA20_N                #
+#                            -Z(DATA)CSTACK+_STACK_SIZE#                       #
+#                            -Z(CONST)DATA16_P,DATA20_P=4400-FF7F              #
+#                            -Z(DATA)DATA16_HEAP+_DATA16_HEAP_SIZE             #
+#                            -Z(DATA)DATA20_HEAP+_DATA20_HEAP_SIZE             #
+#                            -Z(CONST)MPU_B1 -Z(CONST)IPE_B1=4400-FF7F         #
+#                            -Z(DATA)IPEDATA16_N -Z(CODE)IPECODE16             #
+#                            -Z(CONST)IPEDATA16_C,IPE_B2 -Z(CONST)MPU_B2       #
+#                            -Z(CONST)DATA16_C,DATA16_ID,TLS16_ID,DIFUNCT,CHEC #
+#                            KSUM=4400-FF7F                                    #
+#                            -Z(CODE)CSTART,ISR_CODE,CODE16=4400-FF7F          #
+#                            -P(CODE)CODE=4400-FF7F,10000-13FFF                #
+#                            -Z(CODE)CODE_PAD                                  #
+#                            -Z(CONST)DATA20_C,DATA20_ID,CODE_ID=4400-FF7F,100 #
+#                            40-13FFF                                          #
+#                            -Z(CONST)SIGNATURE=FF80-FF8F                      #
+#                            -Z(CONST)JTAGSIGNATURE=FF80-FF83                  #
+#                            -Z(CONST)BSLSIGNATURE=FF84-FF87                   #
+#                            -Z(CONST)IPESIGNATURE=FF88-FF8F                   #
+#                            -Z(CODE)INTVEC=FF90-FFFF                          #
+#                            -Z(CODE)RESET=FFFE-FFFF) -f                       #
+#                            "C:\Program Files (x86)\IAR Systems\Embedded Work #
+#                            bench 7.4\430\config\linker\multiplier32.xcl"     #
+#                            (-e?Mul8Hw=?Mul8 -e?Mul16Hw=?Mul16                #
+#                            -e?Mul16to32uHw=?Mul16to32u                       #
+#                            -e?Mul16to32sHw=?Mul16to32s -e?Mul32Hw32=?Mul32   #
+#                            -e?Mul64Hw32=_Mul64i                              #
+#                            -e?Mul32u32uto64iHw32=_Mul32u32uto64i             #
+#                            -e?Mul32fHw32=_Mul32f                             #
+#                            -e_Mul64fHw32Ptr=_Mul64fPtr) -D_STACK_SIZE=4E2    #
+#                            -rt                                               #
+#                            "C:\Program Files (x86)\IAR Systems\Embedded Work #
+#                            bench 7.4\430\lib\dlib\dl430xlsfn.r43"            #
+#                            -e_PrintfLarge=_Printf -e_ScanfLarge=_Scanf       #
+#                            -D_DATA16_HEAP_SIZE=0                             #
+#                            -Omsp430_txt=C:\Users\Casari\version-control\PMEL #
+#                            \micro\SpartonReplacement\Debug\Exe\TAO_CompassRe #
+#                            placement.txt                                     #
+#                            -s __program_start -D_DATA20_HEAP_SIZE=50         #
+#                            -D__iar_430_MPU_base=0x5A0 -g?mpu2_init           #
+#                            -D__iar_430_MPUCTL0_value=0x0001                  #
+#                            -D__iar_430_MPUSAM_value=0x3573                   #
+#                                                                              #
+#                           Copyright (C) 1987-2016 IAR Systems AB.            #
+################################################################################
+
+
+
+
+
+                ****************************************
+                *                                      *
+                *           CROSS REFERENCE            *
+                *                                      *
+                ****************************************
+
+       Program entry at :           487C  Relocatable, from module : ?cstart
+
+
+
+
+                ****************************************
+                *                                      *
+                *            RUNTIME MODEL             *
+                *                                      *
+                ****************************************
+
+  __Heap_Handler             = Basic
+  __SystemLibrary            = DLib
+  __code_model               = large
+  __core                     = 430X
+  __data_model               = small
+  __dlib_file_descriptor     = 0
+  __dlib_full_locale_support = 0
+  __double_size              = 32
+  __pic                      = no
+  __reg_r4                   = free
+  __reg_r5                   = free
+  __rt_version               = 3
+
+                ****************************************
+                *                                      *
+                *    AUTOMATIC SYMBOL REDIRECTIONS     *
+                *                                      *
+                ****************************************
+
+                  There are no automatic symbol redirections.
+
+
+
+                ****************************************
+                *                                      *
+                *              MODULE MAP              *
+                *                                      *
+                ****************************************
+
+
+  DEFINED ABSOLUTE ENTRIES
+    *************************************************************************
+
+  DEFINED ABSOLUTE ENTRIES
+  PROGRAM MODULE, NAME : ?ABS_ENTRY_MOD
+
+Absolute parts
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __iar_430_MPUSAM_value
+                                   3573            ?mpu2_init (?MpuInit)
+           __iar_430_MPUCTL0_value
+                                   0001            ?mpu2_init (?MpuInit)
+           __iar_430_MPU_base      05A0            ?mpu2_init (?MpuInit)
+           _DATA20_HEAP_SIZE       0050 
+           _DATA16_HEAP_SIZE       0000 
+           _STACK_SIZE             04E2 
+           __iar_HWMUL             04C0            ?Mul16to32sHw (?Mul16to32sHw)
+                                                   ?Mul32Hw32 (?Mul32Hw32)
+                                                   ?Mul32fHw32 (?Mul32fHw32)
+                                                   Segment part 1 (?Mul8Hw)
+    *************************************************************************
+
+  FILE NAME : C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Debug\Obj\buffer_c.r43
+  PROGRAM MODULE, NAME : buffer_c
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 6ADE - 6B19 (0x3c bytes), align: 1
+  Segment part 3.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           BufferC_Put             6ADE            USCI_A0_ISR (UART)
+                                                   USCI_A1_ISR (UART)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6AA2 - 6ADD (0x3c bytes), align: 1
+  Segment part 4.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           BufferC_Get             6AA2            FLEX_ParseBuffer (FLEX)
+                                                   OS5000S_ParseBuffer (OS5000S)
+                                                   SYS_ConfigurationRoutine (main)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 661C - 667D (0x62 bytes), align: 1
+  Segment part 6.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           BufferC_HasNewline      661C            OS5000S_ParseBuffer (OS5000S)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6914 - 6959 (0x46 bytes), align: 1
+  Segment part 7.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           BufferC_HasChar         6914            FLEX_ParseBuffer (FLEX)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 612C - 61D7 (0xac bytes), align: 1
+  Segment part 8.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           BufferC_HasSequence     612C            FLEX_ParseBuffer (FLEX)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6EF4 - 6F19 (0x26 bytes), align: 1
+  Segment part 9.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           BufferC_Clear           6EF4            FLEX_Init (FLEX)
+                                                   UART_ClearStruct_FLEX (UART)
+                                                   UART_ClearStruct_OS (UART)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6B54 - 6B8D (0x3a bytes), align: 1
+  Segment part 2.             Intra module refs:   BufferC_Get
+                                                   BufferC_Put
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           BufferC_Size            6B54 
+
+    *************************************************************************
+
+  FILE NAME : C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Debug\Obj\DMA.r43
+  PROGRAM MODULE, NAME : DMA
+
+  SEGMENTS IN THE MODULE
+  ======================
+DATA16_AN
+  Relative segment, address: 0500 - 0501 (0x2 bytes), align: 0
+  Segment part 1. ROOT        Intra module refs:   DMA0_Init
+                                                   DMA1_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DMACTL0_L            0500 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DMACTL0                 0500 
+           DMACTL0_H               0501 
+           DMACTL0_L               0500 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 050E - 050F (0x2 bytes), align: 0
+  Segment part 2. ROOT        Intra module refs:   DMA0_ISR
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DMAIV_L              050E 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DMAIV                   050E 
+           DMAIV_H                 050F 
+           DMAIV_L                 050E 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0510 - 0511 (0x2 bytes), align: 0
+  Segment part 3. ROOT        Intra module refs:   DMA0_ISR
+                                                   DMA0_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DMA0CTL_L            0510 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DMA0CTL                 0510 
+           DMA0CTL_H               0511 
+           DMA0CTL_L               0510 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0512 - 0515 (0x4 bytes), align: 0
+  Segment part 4. ROOT        Intra module refs:   DMA0_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DMA0SA_L             0512 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DMA0SA                  0512 
+           DMA0SAH                 0514 
+           DMA0SAL                 0512 
+           DMA0SA_H                0513 
+           DMA0SA_L                0512 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0516 - 0519 (0x4 bytes), align: 0
+  Segment part 5. ROOT        Intra module refs:   DMA0_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DMA0DA_L             0516 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DMA0DA                  0516 
+           DMA0DAH                 0518 
+           DMA0DAL                 0516 
+           DMA0DA_H                0517 
+           DMA0DA_L                0516 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 051A - 051B (0x2 bytes), align: 0
+  Segment part 6. ROOT        Intra module refs:   DMA0_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           DMA0SZ                  051A 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0520 - 0521 (0x2 bytes), align: 0
+  Segment part 7. ROOT        Intra module refs:   DMA0_ISR
+                                                   DMA1_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DMA1CTL_L            0520 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DMA1CTL                 0520 
+           DMA1CTL_H               0521 
+           DMA1CTL_L               0520 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0522 - 0525 (0x4 bytes), align: 0
+  Segment part 8. ROOT        Intra module refs:   DMA1_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DMA1SA_L             0522 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DMA1SA                  0522 
+           DMA1SAH                 0524 
+           DMA1SAL                 0522 
+           DMA1SA_H                0523 
+           DMA1SA_L                0522 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0526 - 0529 (0x4 bytes), align: 0
+  Segment part 9. ROOT        Intra module refs:   DMA1_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DMA1DA_L             0526 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DMA1DA                  0526 
+           DMA1DAH                 0528 
+           DMA1DAL                 0526 
+           DMA1DA_H                0527 
+           DMA1DA_L                0526 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 052A - 052B (0x2 bytes), align: 0
+  Segment part 10. ROOT       Intra module refs:   DMA1_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           DMA1SZ                  052A 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05CC - 05CD (0x2 bytes), align: 0
+  Segment part 11. ROOT       Intra module refs:   DMA0_Init
+                                                   USCI_A0_ISR (UART)
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_UCA0RXBUF_L          05CC 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UCA0RXBUF               05CC 
+           UCA0RXBUF_H             05CD 
+           UCA0RXBUF_L             05CC 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05CE - 05CF (0x2 bytes), align: 0
+  Segment part 12. ROOT       Intra module refs:   DMA1_Init
+                                                   UART_WriteChar (UART)
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_UCA0TXBUF_L          05CE 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UCA0TXBUF               05CE 
+           UCA0TXBUF_H             05CF 
+           UCA0TXBUF_L             05CE 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05EC - 05ED (0x2 bytes), align: 0
+  Segment part 13. ROOT       Intra module refs:   DMA1_Init
+                                                   USCI_A1_ISR (UART)
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_UCA1RXBUF_L          05EC 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UCA1RXBUF               05EC 
+           UCA1RXBUF_H             05ED 
+           UCA1RXBUF_L             05EC 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05EE - 05EF (0x2 bytes), align: 0
+  Segment part 14. ROOT       Intra module refs:   DMA0_Init
+                                                   UART_WriteChar (UART)
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_UCA1TXBUF_L          05EE 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UCA1TXBUF               05EE 
+           UCA1TXBUF_H             05EF 
+           UCA1TXBUF_L             05EE 
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6C98 - 6CCB (0x34 bytes), align: 1
+  Segment part 17.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           DMA0_Init               6C98            FLEX_ParseBuffer (FLEX)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6CCC - 6CFF (0x34 bytes), align: 1
+  Segment part 18.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           DMA1_Init               6CCC            FLEX_ParseBuffer (FLEX)
+    -------------------------------------------------------------------------
+ISR_CODE
+  Relative segment, address: 48B0 - 48DF (0x30 bytes), align: 1
+  Segment part 22.            Intra module refs:   DMA0_ISR::??INTVEC 84
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           DMA0_ISR                48B0 
+               interrupt function
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: FF90 - FFE5 (0x56 bytes), align: 1
+  Segment part 15. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           DMA0_ISR::??INTVEC 84   FFE4 
+
+    *************************************************************************
+
+  FILE NAME : C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Debug\Obj\FLEX.r43
+  PROGRAM MODULE, NAME : FLEX
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 7286 - 7289 (0x4 bytes), align: 1
+  Segment part 16.            Intra module refs:   FLEX_SplitSubstring
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           strstr                  7286 
+               calls direct
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05EA - 05EA (0x1 bytes), align: 0
+  Segment part 1. ROOT        Intra module refs:   FLEX_FilterSet
+                                                   FLEX_HeadingCmd
+                                                   FLEX_MountingSet
+                                                   FLEX_TiltCmd
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           UCA1STATW               05EA 
+    -------------------------------------------------------------------------
+DATA16_P
+  Relative segment, address: 4400 - 4403 (0x4 bytes), align: 1
+  Segment part 12.            Intra module refs:   FLEX_Init
+                                                   FLEX_ParseBuffer
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           FLEX                    4400            SYS_ConfigurationRoutine (main)
+                                                   main (main)
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 4818 - 481D (0x6 bytes), align: 0
+  Segment part 3.             Intra module refs:   FLEX_FilterSet
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 481E - 4822 (0x5 bytes), align: 0
+  Segment part 4.             Intra module refs:   FLEX_MountingSet
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 4823 - 4829 (0x7 bytes), align: 0
+  Segment part 5.             Intra module refs:   FLEX_TiltCmd
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 482A - 482E (0x5 bytes), align: 0
+  Segment part 6.             Intra module refs:   FLEX_HeadingCmd
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 482F - 4835 (0x7 bytes), align: 0
+  Segment part 7.             Intra module refs:   FLEX_SplitSubstring
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 4836 - 483B (0x6 bytes), align: 0
+  Segment part 8.             Intra module refs:   FLEX_SplitSubstring
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 483C - 4840 (0x5 bytes), align: 0
+  Segment part 9.             Intra module refs:   FLEX_SplitSubstring
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 4841 - 4846 (0x6 bytes), align: 0
+  Segment part 10.            Intra module refs:   FLEX_SplitSubstring
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 4847 - 484E (0x8 bytes), align: 0
+  Segment part 11.            Intra module refs:   FLEX_SplitSubstring
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 484F - 4852 (0x4 bytes), align: 0
+  Segment part 13.            Intra module refs:   FLEX_ParseBuffer
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           OSSeq                   484F 
+    -------------------------------------------------------------------------
+DATA16_I
+  Relative segment, address: 1C00 - 1C00 (0x1 bytes), align: 0
+  Segment part 14.            Intra module refs:   FLEX_ParseBuffer
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           OSSeq_len               1C00 
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6C64 - 6C97 (0x34 bytes), align: 1
+  Segment part 17.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           FLEX_Init               6C64            main (main)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 5ECE - 5FA5 (0xd8 bytes), align: 1
+  Segment part 23.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           FLEX_ParseBuffer        5ECE            main (main)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6B1A - 6B53 (0x3a bytes), align: 1
+  Segment part 21.            Intra module refs:   FLEX_ParseBuffer
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           FLEX_FilterSet          6B1A 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6B8E - 6BC5 (0x38 bytes), align: 1
+  Segment part 20.            Intra module refs:   FLEX_ParseBuffer
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           FLEX_MountingSet        6B8E 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 65B6 - 661B (0x66 bytes), align: 1
+  Segment part 19.            Intra module refs:   FLEX_ParseBuffer
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           FLEX_TiltCmd            65B6 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 682A - 687B (0x52 bytes), align: 1
+  Segment part 18.            Intra module refs:   FLEX_ParseBuffer
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           FLEX_HeadingCmd         682A 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6434 - 64BD (0x8a bytes), align: 1
+  Segment part 22.            Intra module refs:   FLEX_ParseBuffer
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           FLEX_SplitSubstring     6434 
+               calls direct
+    -------------------------------------------------------------------------
+DATA16_ID
+  Relative segment, address: 487A - 487A (0x1 bytes), align: 0
+  Segment part 15.            Intra module refs:   OSSeq_len
+
+    *************************************************************************
+
+  FILE NAME : C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Debug\Obj\GPIO.r43
+  PROGRAM MODULE, NAME : GPIO
+
+  SEGMENTS IN THE MODULE
+  ======================
+DATA16_AN
+  Relative segment, address: 0200 - 0201 (0x2 bytes), align: 0
+  Segment part 1. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PAIN_L               0200 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PAIN                    0200 
+           PAIN_H                  0201 
+           PAIN_L                  0200 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0202 - 0203 (0x2 bytes), align: 0
+  Segment part 2. ROOT        Intra module refs:   GPIO_ClearPin
+                                                   GPIO_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PAOUT_L              0202 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PAOUT                   0202 
+           PAOUT_H                 0203 
+           PAOUT_L                 0202 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0204 - 0205 (0x2 bytes), align: 0
+  Segment part 3. ROOT        Intra module refs:   GPIO_ClearPin
+                                                   GPIO_Init
+                                                   GPIO_SetPinAsOutput
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PADIR_L              0204 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PADIR                   0204 
+           PADIR_H                 0205 
+           PADIR_L                 0204 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0206 - 0207 (0x2 bytes), align: 0
+  Segment part 4. ROOT        Intra module refs:   GPIO_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PAREN_L              0206 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PAREN                   0206 
+           PAREN_H                 0207 
+           PAREN_L                 0206 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 020A - 020B (0x2 bytes), align: 0
+  Segment part 5. ROOT        Intra module refs:   GPIO_Init
+                                                   OS5000S_UART_Init (UART)
+                                                   SETUP_GPIO (main)
+                                                   TFLEX_UART_Init (UART)
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PASEL0_L             020A 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PASEL0                  020A 
+           PASEL0_H                020B 
+           PASEL0_L                020A 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 020C - 020D (0x2 bytes), align: 0
+  Segment part 6. ROOT        Intra module refs:   GPIO_Init
+                                                   OS5000S_UART_Init (UART)
+                                                   SETUP_GPIO (main)
+                                                   TFLEX_UART_Init (UART)
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PASEL1_L             020C 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PASEL1                  020C 
+           PASEL1_H                020D 
+           PASEL1_L                020C 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0218 - 0219 (0x2 bytes), align: 0
+  Segment part 7. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PAIES_L              0218 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PAIES                   0218 
+           PAIES_H                 0219 
+           PAIES_L                 0218 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 021A - 021B (0x2 bytes), align: 0
+  Segment part 8. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PAIE_L               021A 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PAIE                    021A 
+           PAIE_H                  021B 
+           PAIE_L                  021A 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 021C - 021D (0x2 bytes), align: 0
+  Segment part 9. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PAIFG_L              021C 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PAIFG                   021C 
+           PAIFG_H                 021D 
+           PAIFG_L                 021C 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0220 - 0221 (0x2 bytes), align: 0
+  Segment part 10. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PBIN_L               0220 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PBIN                    0220 
+           PBIN_H                  0221 
+           PBIN_L                  0220 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0222 - 0223 (0x2 bytes), align: 0
+  Segment part 11. ROOT       Intra module refs:   GPIO_ClearPin
+                                                   GPIO_Init
+                                                   SETUP_GPIO (main)
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PBOUT_L              0222 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PBOUT                   0222 
+           PBOUT_H                 0223 
+           PBOUT_L                 0222 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0224 - 0225 (0x2 bytes), align: 0
+  Segment part 12. ROOT       Intra module refs:   GPIO_ClearPin
+                                                   GPIO_Init
+                                                   GPIO_SetPinAsOutput
+                                                   SETUP_GPIO (main)
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PBDIR_L              0224 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PBDIR                   0224 
+           PBDIR_H                 0225 
+           PBDIR_L                 0224 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0226 - 0227 (0x2 bytes), align: 0
+  Segment part 13. ROOT       Intra module refs:   GPIO_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PBREN_L              0226 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PBREN                   0226 
+           PBREN_H                 0227 
+           PBREN_L                 0226 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 022A - 022B (0x2 bytes), align: 0
+  Segment part 14. ROOT       Intra module refs:   GPIO_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PBSEL0_L             022A 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PBSEL0                  022A 
+           PBSEL0_H                022B 
+           PBSEL0_L                022A 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 022C - 022D (0x2 bytes), align: 0
+  Segment part 15. ROOT       Intra module refs:   GPIO_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PBSEL1_L             022C 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PBSEL1                  022C 
+           PBSEL1_H                022D 
+           PBSEL1_L                022C 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0238 - 0239 (0x2 bytes), align: 0
+  Segment part 16. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PBIES_L              0238 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PBIES                   0238 
+           PBIES_H                 0239 
+           PBIES_L                 0238 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 023A - 023B (0x2 bytes), align: 0
+  Segment part 17. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PBIE_L               023A 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PBIE                    023A 
+           PBIE_H                  023B 
+           PBIE_L                  023A 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 023C - 023D (0x2 bytes), align: 0
+  Segment part 18. ROOT       Intra module refs:   SETUP_GPIO (main)
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PBIFG_L              023C 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PBIFG                   023C 
+           PBIFG_H                 023D 
+           PBIFG_L                 023C 
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6732 - 6785 (0x54 bytes), align: 1
+  Segment part 20.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           GPIO_Init               6732            SETUP_GPIO (main)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6542 - 65B5 (0x74 bytes), align: 1
+  Segment part 21.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           GPIO_SetPinAsOutput     6542            SETUP_GPIO (main)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6070 - 612B (0xbc bytes), align: 1
+  Segment part 24.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           GPIO_ClearPin           6070            SETUP_GPIO (main)
+
+    *************************************************************************
+
+  FILE NAME : C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Debug\Obj\low_level_init.r43
+  PROGRAM MODULE, NAME : low_level_init
+
+  SEGMENTS IN THE MODULE
+  ======================
+DATA16_AN
+  Relative segment, address: 015C - 015D (0x2 bytes), align: 0
+  Segment part 1. ROOT        Intra module refs:   __low_level_init
+                                                   main (main)
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_WDTCTL_L             015C 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           WDTCTL                  015C 
+           WDTCTL_H                015D 
+           WDTCTL_L                015C 
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 722C - 7235 (0xa bytes), align: 1
+  Segment part 3. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __low_level_init        722C            ?cstart_call_low_level_init (?cstart)
+                                                   main (main)
+
+    *************************************************************************
+
+  FILE NAME : C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Debug\Obj\main.r43
+  PROGRAM MODULE, NAME : main
+
+  SEGMENTS IN THE MODULE
+  ======================
+DATA16_AN
+  Relative segment, address: 0160 - 0161 (0x2 bytes), align: 0
+  Segment part 1. ROOT        Intra module refs:   SETUP_Clock
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_CSCTL0_L             0160 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           CSCTL0                  0160 
+           CSCTL0_H                0161 
+           CSCTL0_L                0160 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0162 - 0163 (0x2 bytes), align: 0
+  Segment part 2. ROOT        Intra module refs:   SETUP_Clock
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_CSCTL1_L             0162 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           CSCTL1                  0162 
+           CSCTL1_H                0163 
+           CSCTL1_L                0162 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0164 - 0165 (0x2 bytes), align: 0
+  Segment part 3. ROOT        Intra module refs:   SETUP_Clock
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_CSCTL2_L             0164 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           CSCTL2                  0164 
+           CSCTL2_H                0165 
+           CSCTL2_L                0164 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0166 - 0167 (0x2 bytes), align: 0
+  Segment part 4. ROOT        Intra module refs:   SETUP_Clock
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_CSCTL3_L             0166 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           CSCTL3                  0166 
+           CSCTL3_H                0167 
+           CSCTL3_L                0166 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0168 - 0169 (0x2 bytes), align: 0
+  Segment part 5. ROOT        Intra module refs:   SETUP_Clock
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_CSCTL4_L             0168 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           CSCTL4                  0168 
+           CSCTL4_H                0169 
+           CSCTL4_L                0168 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 016A - 016B (0x2 bytes), align: 0
+  Segment part 6. ROOT        Intra module refs:   SETUP_Clock
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_CSCTL5_L             016A 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           CSCTL5                  016A 
+           CSCTL5_H                016B 
+           CSCTL5_L                016A 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0130 - 0131 (0x2 bytes), align: 0
+  Segment part 7. ROOT        Intra module refs:   SETUP_GPIO
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PM5CTL0_L            0130 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PM5CTL0                 0130 
+           PM5CTL0_H               0131 
+           PM5CTL0_L               0130 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 032A - 032B (0x2 bytes), align: 0
+  Segment part 13. ROOT       Intra module refs:   SETUP_GPIO
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PJSEL0_L             032A 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PJSEL0                  032A 
+           PJSEL0_H                032B 
+           PJSEL0_L                032A 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 032C - 032D (0x2 bytes), align: 0
+  Segment part 14. ROOT       Intra module refs:   SETUP_GPIO
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PJSEL1_L             032C 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PJSEL1                  032C 
+           PJSEL1_H                032D 
+           PJSEL1_L                032C 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0102 - 0103 (0x2 bytes), align: 0
+  Segment part 15. ROOT       Intra module refs:   SETUP_Clock
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_SFRIFG1_L            0102 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           SFRIFG1                 0102 
+           SFRIFG1_H               0103 
+           SFRIFG1_L               0102 
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 627E - 6313 (0x96 bytes), align: 1
+  Segment part 24.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           main                    627E            Segment part 26 (?cstart)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6F3E - 6F61 (0x24 bytes), align: 1
+  Segment part 20.            Intra module refs:   main
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           SYS_ConfigurationRoutine
+                                   6F3E 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 725C - 7263 (0x8 bytes), align: 1
+  Segment part 21.            Intra module refs:   main
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           SETUP_MicroPeripherals
+                                   725C 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 66DA - 6731 (0x58 bytes), align: 1
+  Segment part 23.            Intra module refs:   main
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           SETUP_GPIO              66DA 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6C30 - 6C63 (0x34 bytes), align: 1
+  Segment part 22.            Intra module refs:   main
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           SETUP_Clock             6C30 
+
+    *************************************************************************
+
+  FILE NAME : C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Debug\Obj\OS5000S.r43
+  PROGRAM MODULE, NAME : OS5000S
+
+  SEGMENTS IN THE MODULE
+  ======================
+DATA16_P
+  Relative segment, address: 4404 - 4415 (0x12 bytes), align: 1
+  Segment part 8.             Intra module refs:   OS5000S_CurrentHeading_Int
+                                                   OS5000S_CurrentPandR_Int
+                                                   OS5000S_Init
+                                                   OS5000S_ParseBuffer
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           OS5000S                 4404            main (main)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6EA4 - 6ECB (0x28 bytes), align: 1
+  Segment part 9.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           OS5000S_Init            6EA4            main (main)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 64BE - 6541 (0x84 bytes), align: 1
+  Segment part 12.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           OS5000S_ParseBuffer     64BE            main (main)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6E50 - 6E7B (0x2c bytes), align: 1
+  Segment part 15.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           OS5000S_CurrentHeading_Int
+                                   6E50            FLEX_HeadingCmd (FLEX)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6786 - 67D7 (0x52 bytes), align: 1
+  Segment part 16.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           OS5000S_CurrentPandR_Int
+                                   6786            FLEX_TiltCmd (FLEX)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 667E - 66D9 (0x5c bytes), align: 1
+  Segment part 17.            Intra module refs:   OS5000S_ParseBuffer
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           OS5000S_SplitSubString
+                                   667E 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 5914 - 5A65 (0x152 bytes), align: 1
+  Segment part 11.            Intra module refs:   OS5000S_ParseBuffer
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           OS5000S_ParseSubString
+                                   5914 
+               calls direct
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 4853 - 4855 (0x3 bytes), align: 0
+  Segment part 2.             Intra module refs:   OS5000S_ParseSubString
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 4856 - 4857 (0x2 bytes), align: 0
+  Segment part 3.             Intra module refs:   OS5000S_ParseSubString
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 4858 - 485A (0x3 bytes), align: 0
+  Segment part 4.             Intra module refs:   OS5000S_ParseSubString
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 485B - 485C (0x2 bytes), align: 0
+  Segment part 5.             Intra module refs:   OS5000S_ParseSubString
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 485D - 485E (0x2 bytes), align: 0
+  Segment part 6.             Intra module refs:   OS5000S_ParseSubString
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 485F - 4860 (0x2 bytes), align: 0
+  Segment part 7.             Intra module refs:   OS5000S_ParseSubString
+
+    *************************************************************************
+
+  FILE NAME : C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Debug\Obj\timer.r43
+  PROGRAM MODULE, NAME : timer
+
+  SEGMENTS IN THE MODULE
+  ======================
+DATA16_AN
+  Relative segment, address: 0340 - 0341 (0x2 bytes), align: 0
+  Segment part 1. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TA0CTL                  0340 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0352 - 0353 (0x2 bytes), align: 0
+  Segment part 2. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TA0CCR0                 0352 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 036E - 036F (0x2 bytes), align: 0
+  Segment part 3. ROOT        Intra module refs:   TIMER0_A0_ISR
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TA0IV                   036E 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0380 - 0381 (0x2 bytes), align: 0
+  Segment part 4. ROOT        Intra module refs:   TIMER_A1_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TA1CTL                  0380 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0382 - 0383 (0x2 bytes), align: 0
+  Segment part 5. ROOT        Intra module refs:   TIMER_A1_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TA1CCTL0                0382 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 0392 - 0393 (0x2 bytes), align: 0
+  Segment part 6. ROOT        Intra module refs:   TIMER_A1_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TA1CCR0                 0392 
+    -------------------------------------------------------------------------
+DATA16_P
+  Relative segment, address: 4416 - 441B (0x6 bytes), align: 1
+  Segment part 10.            Intra module refs:   TIMER1_A0_ISR
+                                                   pOSTimer
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           OSTimer                 4416 
+    -------------------------------------------------------------------------
+DATA16_P
+  Relative segment, address: 441C - 441D (0x2 bytes), align: 1
+  Segment part 11.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           pOSTimer                441C            UART_ClearStruct_OS (UART)
+    -------------------------------------------------------------------------
+DATA16_P
+  Relative segment, address: 441E - 4423 (0x6 bytes), align: 1
+  Segment part 12.            Intra module refs:   TIMER1_A0_ISR
+                                                   pFLTimer
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           FLTimer                 441E 
+    -------------------------------------------------------------------------
+DATA16_P
+  Relative segment, address: 4424 - 4425 (0x2 bytes), align: 1
+  Segment part 13.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           pFLTimer                4424            UART_ClearStruct_FLEX (UART)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 70DA - 70ED (0x14 bytes), align: 1
+  Segment part 15.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TIMER_A1_Init           70DA            main (main)
+    -------------------------------------------------------------------------
+ISR_CODE
+  Relative segment, address: 48E0 - 48FB (0x1c bytes), align: 1
+  Segment part 17.            Intra module refs:   TIMER0_A0_ISR::??INTVEC 90
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TIMER0_A0_ISR           48E0 
+               interrupt function
+    -------------------------------------------------------------------------
+ISR_CODE
+  Relative segment, address: 48FC - 4949 (0x4e bytes), align: 1
+  Segment part 18.            Intra module refs:   TIMER1_A0_ISR::??INTVEC 82
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TIMER1_A0_ISR           48FC 
+               interrupt function
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: FF90 - FFE3 (0x54 bytes), align: 1
+  Segment part 7. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TIMER1_A0_ISR::??INTVEC 82
+                                   FFE2 
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: FF90 - FFEB (0x5c bytes), align: 1
+  Segment part 8. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TIMER0_A0_ISR::??INTVEC 90
+                                   FFEA 
+
+    *************************************************************************
+
+  FILE NAME : C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Debug\Obj\UART.r43
+  PROGRAM MODULE, NAME : UART
+
+  SEGMENTS IN THE MODULE
+  ======================
+DATA16_AN
+  Relative segment, address: 05C0 - 05C1 (0x2 bytes), align: 0
+  Segment part 3. ROOT        Intra module refs:   OS5000S_UART_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_UCA0CTLW0_L          05C0 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UCA0CTLW0               05C0 
+           UCA0CTLW0_H             05C1 
+           UCA0CTLW0_L             05C0 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05C6 - 05C7 (0x2 bytes), align: 0
+  Segment part 4. ROOT        Intra module refs:   OS5000S_UART_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_UCA0BRW_L            05C6 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UCA0BRW                 05C6 
+           UCA0BRW_H               05C7 
+           UCA0BRW_L               05C6 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05C8 - 05C9 (0x2 bytes), align: 0
+  Segment part 5. ROOT        Intra module refs:   OS5000S_UART_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_UCA0MCTLW_L          05C8 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UCA0MCTLW               05C8 
+           UCA0MCTLW_H             05C9 
+           UCA0MCTLW_L             05C8 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05DA - 05DB (0x2 bytes), align: 0
+  Segment part 8. ROOT        Intra module refs:   OS5000S_Attach_Rx_Interrupt
+                                                   OS5000S_UART_Halt
+                                                   OS5000S_UART_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_UCA0IE_L             05DA 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UCA0IE                  05DA 
+           UCA0IE_H                05DB 
+           UCA0IE_L                05DA 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05DE - 05DF (0x2 bytes), align: 0
+  Segment part 9. ROOT        Intra module refs:   USCI_A0_ISR
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           UCA0IV                  05DE 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05E0 - 05E1 (0x2 bytes), align: 0
+  Segment part 10. ROOT       Intra module refs:   TFLEX_UART_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_UCA1CTLW0_L          05E0 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UCA1CTLW0               05E0 
+           UCA1CTLW0_H             05E1 
+           UCA1CTLW0_L             05E0 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05E6 - 05E7 (0x2 bytes), align: 0
+  Segment part 11. ROOT       Intra module refs:   TFLEX_UART_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_UCA1BRW_L            05E6 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UCA1BRW                 05E6 
+           UCA1BRW_H               05E7 
+           UCA1BRW_L               05E6 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05E8 - 05E9 (0x2 bytes), align: 0
+  Segment part 12. ROOT       Intra module refs:   TFLEX_UART_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_UCA1MCTLW_L          05E8 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UCA1MCTLW               05E8 
+           UCA1MCTLW_H             05E9 
+           UCA1MCTLW_L             05E8 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05FA - 05FB (0x2 bytes), align: 0
+  Segment part 16. ROOT       Intra module refs:   TFLEX_UART_Halt
+                                                   TFLEX_UART_Init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_UCA1IE_L             05FA 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UCA1IE                  05FA 
+           UCA1IE_H                05FB 
+           UCA1IE_L                05FA 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05FC - 05FD (0x2 bytes), align: 0
+  Segment part 17. ROOT       Intra module refs:   USCI_A1_ISR
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_UCA1IFG_L            05FC 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UCA1IFG                 05FC 
+           UCA1IFG_H               05FD 
+           UCA1IFG_L               05FC 
+    -------------------------------------------------------------------------
+DATA16_AN
+  Relative segment, address: 05FE - 05FF (0x2 bytes), align: 0
+  Segment part 18. ROOT       Intra module refs:   USCI_A1_ISR
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           UCA1IV                  05FE 
+    -------------------------------------------------------------------------
+DATA16_P
+  Relative segment, address: 4426 - 452F (0x10a bytes), align: 1
+  Segment part 22.            Intra module refs:   UART_ClearStruct_OS
+                                                   USCI_A0_ISR
+                                                   pOS_UART
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           OS_UART                 4426 
+    -------------------------------------------------------------------------
+DATA16_P
+  Relative segment, address: 4530 - 4531 (0x2 bytes), align: 1
+  Segment part 23.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           pOS_UART                4530            OS5000S_Init (OS5000S)
+    -------------------------------------------------------------------------
+DATA16_P
+  Relative segment, address: 4532 - 463B (0x10a bytes), align: 1
+  Segment part 24.            Intra module refs:   UART_ClearStruct_FLEX
+                                                   USCI_A1_ISR
+                                                   pFL_UART
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           FL_UART                 4532 
+    -------------------------------------------------------------------------
+DATA16_P
+  Relative segment, address: 463C - 463D (0x2 bytes), align: 1
+  Segment part 25.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           pFL_UART                463C            FLEX_Init (FLEX)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6D94 - 6DC3 (0x30 bytes), align: 1
+  Segment part 27.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TFLEX_UART_Init         6D94            SETUP_MicroPeripherals (main)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 7270 - 7275 (0x6 bytes), align: 1
+  Segment part 28.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TFLEX_UART_Halt         7270            FLEX_ParseBuffer (FLEX)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6D00 - 6D31 (0x32 bytes), align: 1
+  Segment part 31.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           OS5000S_UART_Init       6D00            SETUP_MicroPeripherals (main)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 726A - 726F (0x6 bytes), align: 1
+  Segment part 32.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           OS5000S_UART_Halt       726A            FLEX_ParseBuffer (FLEX)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 7264 - 7269 (0x6 bytes), align: 1
+  Segment part 34.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           OS5000S_Attach_Rx_Interrupt
+                                   7264            main (main)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6E7C - 6EA3 (0x28 bytes), align: 1
+  Segment part 36.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           UART_WriteChar          6E7C            FLEX_FilterSet (FLEX)
+                                                   FLEX_HeadingCmd (FLEX)
+                                                   FLEX_MountingSet (FLEX)
+                                                   FLEX_TiltCmd (FLEX)
+                                                   SYS_ConfigurationRoutine (main)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 71BC - 71C9 (0xe bytes), align: 1
+  Segment part 26.            Intra module refs:   TFLEX_UART_Init
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UART_ClearStruct_FLEX   71BC 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 71E6 - 71F3 (0xe bytes), align: 1
+  Segment part 30.            Intra module refs:   OS5000S_UART_Init
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           UART_ClearStruct_OS     71E6 
+               calls direct
+    -------------------------------------------------------------------------
+ISR_CODE
+  Relative segment, address: 494A - 4971 (0x28 bytes), align: 1
+  Segment part 42.            Intra module refs:   USCI_A0_ISR::??INTVEC 96
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           USCI_A0_ISR             494A 
+               interrupt function
+               calls direct
+    -------------------------------------------------------------------------
+ISR_CODE
+  Relative segment, address: 4972 - 499F (0x2e bytes), align: 1
+  Segment part 43.            Intra module refs:   USCI_A1_ISR::??INTVEC 86
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           USCI_A1_ISR             4972 
+               interrupt function
+               calls direct
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: FF90 - FFE7 (0x58 bytes), align: 1
+  Segment part 19. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           USCI_A1_ISR::??INTVEC 86
+                                   FFE6 
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: FF90 - FFF1 (0x62 bytes), align: 1
+  Segment part 20. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           USCI_A0_ISR::??INTVEC 96
+                                   FFF0 
+
+    *************************************************************************
+
+  FILE NAME : C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\430\lib\dlib\dl430xlsfn.r43
+  LIBRARY MODULE, NAME : ?__dbg_break
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 728A - 728B (0x2 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __DebugBreak            728A            __exit (?__exit)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?__exit
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 70EE - 7101 (0x14 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __exit                  70EE            Segment part 6 (?_exit)
+                                                   _exit (?_exit)
+               calls direct
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?atof
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 7236 - 723F (0xa bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           atof                    7236            OS5000S_ParseSubString (OS5000S)
+               calls direct
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?_exit
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 727E, align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _exit                   727E            exit (?exit)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 727E - 7281 (0x4 bytes), align: 1
+  Segment part 6.             Intra module refs:   _exit
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?cstart
+
+  SEGMENTS IN THE MODULE
+  ======================
+CSTACK
+  Relative segment, address: 1F1E, align: 1
+  Segment part 1.
+    -------------------------------------------------------------------------
+DATA16_Z
+  Relative segment, address: 1C02, align: 1
+  Segment part 2.
+    -------------------------------------------------------------------------
+DATA16_I
+  Relative segment, address: 1C00, align: 1
+  Segment part 3.
+    -------------------------------------------------------------------------
+DATA16_ID
+  Relative segment, address: 487A, align: 1
+  Segment part 4.
+    -------------------------------------------------------------------------
+CODE_I
+  Relative segment, address: 1C06, align: 1
+  Segment part 5.
+    -------------------------------------------------------------------------
+CODE_ID
+  Relative segment, address: 728E, align: 1
+  Segment part 6.
+    -------------------------------------------------------------------------
+DATA20_Z
+  Relative segment, address: 1C06, align: 1
+  Segment part 7.
+    -------------------------------------------------------------------------
+DATA20_I
+  Relative segment, address: 1C06, align: 1
+  Segment part 8.
+    -------------------------------------------------------------------------
+DATA20_ID
+  Relative segment, address: 728E, align: 1
+  Segment part 9.
+    -------------------------------------------------------------------------
+DATA20_C
+  Relative segment, address: 728E, align: 1
+  Segment part 10.
+    -------------------------------------------------------------------------
+DATA20_N
+  Relative segment, address: 1C06, align: 1
+  Segment part 12.
+    -------------------------------------------------------------------------
+CSTART
+  Relative segment, address: 487C - 487F (0x4 bytes), align: 1
+  Segment part 15.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __program_start         487C            ?reset_vector (?reset_vector)
+                                                   Absolute parts (?ABS_ENTRY_MOD)
+           ?cstart_begin           487C 
+    -------------------------------------------------------------------------
+CSTART
+  Relative segment, address: 4880 - 4883 (0x4 bytes), align: 1
+  Segment part 16.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?cstart_call_mpu_init   4880            ?mpu2_init (?MpuInit)
+    -------------------------------------------------------------------------
+CSTART
+  Relative segment, address: 4884 - 488B (0x8 bytes), align: 1
+  Segment part 17.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?cstart_call_low_level_init
+                                   4884            __low_level_init (low_level_init)
+    -------------------------------------------------------------------------
+CSTART
+  Relative segment, address: 488C - 4897 (0xc bytes), align: 1
+  Segment part 19.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?cstart_init_zero       488C            Segment part 2 (?strtok)
+                                                   __iar_Errno (?errno)
+    -------------------------------------------------------------------------
+CSTART
+  Relative segment, address: 4898 - 48A7 (0x10 bytes), align: 1
+  Segment part 20.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?cstart_init_copy       4898            OSSeq_len (FLEX)
+    -------------------------------------------------------------------------
+CSTART
+  Relative segment, address: 48A8 - 48AF (0x8 bytes), align: 1
+  Segment part 26.            Intra module refs:   ?cstart_call_low_level_init
+                                                   Segment part 15
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?cstart_call_main       48A8 
+           ?cstart_end             48B0 
+    -------------------------------------------------------------------------
+CODE_ID
+  Relative segment, address: 728E, align: 1
+  Segment part 27.            Intra module refs:   Segment part 5
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?reset_vector
+
+  SEGMENTS IN THE MODULE
+  ======================
+RESET
+  Relative segment, address: FFFE - FFFF (0x2 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?reset_vector           FFFE            Segment part 15 (?cstart)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?div64i
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 61D8 - 627D (0xa6 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _Div64u                 61D8            _LitobLarge (?xprintflarge)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 707E - 7097 (0x1a bytes), align: 1
+  Segment part 4.             Intra module refs:   _Div64u
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?div
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 70B0 - 70C5 (0x16 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           div                     70B0            _GenldLarge (?xprintflarge)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?errno
+
+  SEGMENTS IN THE MODULE
+  ======================
+DATA16_Z
+  Relative segment, address: 1C02 - 1C03 (0x2 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __iar_Errno             1C02            __iar_Dtentox (?xdtento)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?exit
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 7276 - 7279 (0x4 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           exit                    7276            Segment part 26 (?cstart)
+               calls direct
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?Mul32fHw32
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 5CB6 - 5DCB (0x116 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?Mul32fHw32             5CB6            OS5000S_CurrentHeading_Int (OS5000S)
+                                                   OS5000S_CurrentPandR_Int (OS5000S)
+                                                   Segment part 6 (?xdtento)
+                                                   _LdtobLarge (?xprintflarge)
+                                                   __iar_Stodx (?xstod)
+                                                   dmul (?xdtento)
+                                                   scale (?xprintflarge)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?Cast32f32i
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 6314 - 6327 (0x14 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _Cast32sto32f           6314            __iar_Stodx (?xstod)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6328 - 63A5 (0x7e bytes), align: 1
+  Segment part 1.             Intra module refs:   _Cast32sto32f
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _Cast32uto32f           6328            _LdtobLarge (?xprintflarge)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : _Cast32fto32u
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 720C - 7217 (0xc bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _Cast32fto32u           720C            _LdtobLarge (?xprintflarge)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : _Cast32fto32s
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 6D32 - 6D63 (0x32 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _Cast32fto32s           6D32            OS5000S_CurrentHeading_Int (OS5000S)
+                                                   OS5000S_CurrentPandR_Int (OS5000S)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?FLT_Extract
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 68C8 - 6913 (0x4c bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?FLT_Extract            68C8            _Cast32fto32s (_Cast32fto32s)
+                                                   _Cast32fto32u (_Cast32fto32u)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?FLT_EQ
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 6D64 - 6D93 (0x30 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?FLT_EQ                 6D64            __iar_Dtentox (?xdtento)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?FLT_LT
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 67D8 - 6829 (0x52 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?FLT_LT                 67D8            _LdtobLarge (?xprintflarge)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : _Div32f
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 5A66 - 5B95 (0x130 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _Div32f                 5A66            OS5000S_CurrentHeading_Int (OS5000S)
+                                                   OS5000S_CurrentPandR_Int (OS5000S)
+                                                   _LdtobLarge (?xprintflarge)
+                                                   __iar_Dtentox (?xdtento)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : _Add32f
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 57B0 - 57B3 (0x4 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _Sub32f                 57B0            _LdtobLarge (?xprintflarge)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 57B4 - 5913 (0x160 bytes), align: 1
+  Segment part 1.             Intra module refs:   _Sub32f
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _Add32f                 57B4            __iar_Stodx (?xstod)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?isdigit
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 71D8 - 71E5 (0xe bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           isdigit                 71D8            Segment part 4 (?xstoflt)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?DivMod816u
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 7098 - 70AF (0x18 bytes), align: 1
+  Segment part 1.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?DivMod16u              7098            ?DivMod16s (?DivMod816s)
+                                                   BufferC_Get (buffer_c)
+                                                   BufferC_HasChar (buffer_c)
+                                                   BufferC_HasNewline (buffer_c)
+                                                   BufferC_HasSequence (buffer_c)
+                                                   BufferC_Put (buffer_c)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?DivMod816s
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 6DC4 - 6DF3 (0x30 bytes), align: 1
+  Segment part 1.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?DivMod16s              6DC4            Segment part 6 (?xstoflt)
+                                                   div (?div)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?DivMod32u
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 6DF4 - 6E23 (0x30 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?DivMod32u              6DF4            ?DivMod32s (?DivMod32s)
+                                                   _LdtobLarge (?xprintflarge)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?DivMod32s
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 69E6 - 6A25 (0x40 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?DivMod32s              69E6            _LdtobLarge (?xprintflarge)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?memchr
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 70C6 - 70D9 (0x14 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __iar_Memchr            70C6            _PrintfLarge (?xprintflarge)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?memcmp
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 7026 - 7043 (0x1e bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           memcmp                  7026            BufferC_HasSequence (buffer_c)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?memcpy
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 7114 - 7125 (0x12 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           memcpy                  7114            OS5000S_SplitSubString (OS5000S)
+                                                   Segment part 12 (?xprintflarge)
+                                                   _GenldLarge (?xprintflarge)
+                                                   _LdtobLarge (?xprintflarge)
+                                                   __data16_memcpy (?memzero)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?CopyMemoryBytes
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 719E - 71AD (0x10 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?CopyMemoryBytes        719E            FLEX_FilterSet (FLEX)
+                                                   FLEX_HeadingCmd (FLEX)
+                                                   FLEX_MountingSet (FLEX)
+                                                   FLEX_SplitSubstring (FLEX)
+                                                   FLEX_TiltCmd (FLEX)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?memset
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 7138 - 7149 (0x12 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           memset                  7138            BufferC_HasSequence (buffer_c)
+                                                   FLEX_ParseBuffer (FLEX)
+                                                   OS5000S_ParseBuffer (OS5000S)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?memzero
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 716E - 717D (0x10 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __data16_memzero        716E            ?cstart_init_zero (?cstart)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 7282 - 7285 (0x4 bytes), align: 1
+  Segment part 3.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __data16_memcpy         7282            ?cstart_init_copy (?cstart)
+               calls direct
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?MpuInit
+
+  SEGMENTS IN THE MODULE
+  ======================
+MPU_B1
+  Relative segment, address: 4800, align: 1
+  Segment part 0.
+    -------------------------------------------------------------------------
+MPU_B2
+  Relative segment, address: 4800, align: 1
+  Segment part 1.
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6FC8, align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __iar_430_mpu_init      6FC8            ?cstart_call_mpu_init (?cstart)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6FC8 - 6FE7 (0x20 bytes), align: 1
+  Segment part 6.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?mpu2_init              6FC8            Absolute parts (?ABS_ENTRY_MOD)
+    -------------------------------------------------------------------------
+MPU_B1
+  Relative segment, address: 4800, align: 10
+  Segment part 13.            Intra module refs:   ?mpu2_init
+    -------------------------------------------------------------------------
+MPU_B2
+  Relative segment, address: 4800, align: 10
+  Segment part 14.            Intra module refs:   ?mpu2_init
+    -------------------------------------------------------------------------
+CODE_PAD
+  Relative segment, address: 728C - 728D (0x2 bytes), align: 1
+  Segment part 15.            Intra module refs:   __iar_430_mpu_init
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?Mul8Hw
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 6FE8 - 6FEB (0x4 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?Mul8Hw                 6FE8            _LitobLarge (?xprintflarge)
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6FEC - 7007 (0x1c bytes), align: 1
+  Segment part 1.             Intra module refs:   ?Mul8Hw
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?Mul16Hw                6FEC 
+           ?Mul16to32uHw           6FEC 
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?Mul16to32sHw
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 7062 - 707D (0x1c bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?Mul16to32sHw           7062            _LdtobLarge (?xprintflarge)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?Mul32Hw32
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 6F1A - 6F3D (0x24 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?Mul32Hw32              6F1A            Segment part 3 (?xstoflt)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?IndCallR11
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 727A - 727D (0x4 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?IndCallR11             727A            _PutcharLarge (?xprintflarge)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?sprintf
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 695A - 699F (0x46 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           sprintf                 695A            OS5000S_ParseSubString (OS5000S)
+               calls direct
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?strchr
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 71CA - 71D7 (0xe bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __iar_Strchr            71CA            _PrintfLarge (?xprintflarge)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?strcmp
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 7044 - 7061 (0x1e bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           strcmp                  7044            OS5000S_ParseSubString (OS5000S)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?strcpy
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 718E - 719D (0x10 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           strcpy                  718E            OS5000S_ParseSubString (OS5000S)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?strcspn
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 6FA6 - 6FC7 (0x22 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           strcspn                 6FA6            strtok (?strtok)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?strlen
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 714A - 715B (0x12 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           strlen                  714A            OS5000S_ParseSubString (OS5000S)
+                                                   _PrintfLarge (?xprintflarge)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?strspn
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 6F62 - 6F83 (0x22 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           strspn                  6F62            strtok (?strtok)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?strstr
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 6BFC - 6C2F (0x34 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __iar_Strstr            6BFC            strstr (FLEX)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?strtok
+
+  SEGMENTS IN THE MODULE
+  ======================
+DATA16_Z
+  Relative segment, address: 1C04 - 1C05 (0x2 bytes), align: 1
+  Segment part 2.             Intra module refs:   strtok
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 687C - 68C7 (0x4c bytes), align: 1
+  Segment part 4.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           strtok                  687C            OS5000S_ParseSubString (OS5000S)
+               calls direct
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?toupper
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 7126 - 7137 (0x12 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           toupper                 7126            OS5000S_ParseSubString (OS5000S)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?xdscale
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 63A6 - 6433 (0x8e bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __iar_Dscale            63A6            __iar_Dtentox (?xdtento)
+                                                   dmul (?xdtento)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?xdtento
+
+  SEGMENTS IN THE MODULE
+  ======================
+DATA16_C
+  Relative segment, address: 4800 - 4817 (0x18 bytes), align: 1
+  Segment part 2.             Intra module refs:   Segment part 6
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6A26 - 6A63 (0x3e bytes), align: 1
+  Segment part 3.             Intra module refs:   Segment part 5
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           dmul                    6A26 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 5B96 - 5CB5 (0x120 bytes), align: 1
+  Segment part 4.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __iar_Dtentox           5B96            __iar_Stodx (?xstod)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 717E - 718D (0x10 bytes), align: 1
+  Segment part 5.             Intra module refs:   __iar_Dtentox
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 7008 - 7025 (0x1e bytes), align: 1
+  Segment part 6.             Intra module refs:   __iar_Dtentox
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?xdunscal
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 69A0 - 69E5 (0x46 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __iar_Dunscale          69A0            _LdtobLarge (?xprintflarge)
+                                                   __iar_Dtentox (?xdtento)
+                                                   dmul (?xdtento)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?xprintflarge
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 510A - 55A7 (0x49e bytes), align: 1
+  Segment part 19.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _PrintfLarge            510A            sprintf (?sprintf)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6F84 - 6F8B (0x8 bytes), align: 1
+  Segment part 23.            Intra module refs:   Segment part 26
+                                                   _PrintfLarge
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6F8C - 6F93 (0x8 bytes), align: 1
+  Segment part 24.            Intra module refs:   _PrintfLarge
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6F94 - 6F9F (0xc bytes), align: 1
+  Segment part 25.            Intra module refs:   Segment part 23
+                                                   Segment part 24
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6FA0 - 6FA5 (0x6 bytes), align: 1
+  Segment part 26.            Intra module refs:   _PrintfLarge
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 49A0 - 4A23 (0x84 bytes), align: 1
+  Segment part 8.             Intra module refs:   _PrintfLarge
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           LoadInt                 49A0 
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 4A24 - 4A31 (0xe bytes), align: 1
+  Segment part 9.             Intra module refs:   LoadInt
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 4A32 - 4C6F (0x23e bytes), align: 1
+  Segment part 10.            Intra module refs:   _LdtobLarge
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           _GenldLarge             4A32 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 4C70 - 4C7F (0x10 bytes), align: 1
+  Segment part 11.            Intra module refs:   _GenldLarge
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 4C80 - 4C8D (0xe bytes), align: 1
+  Segment part 12.            Intra module refs:   Segment part 11
+                                                   _GenldLarge
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 4C8E - 4CAB (0x1e bytes), align: 1
+  Segment part 13.            Intra module refs:   _GenldLarge
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 4CAC - 4CED (0x42 bytes), align: 1
+  Segment part 14.            Intra module refs:   _LdtobLarge
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           scale                   4CAC 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 4CEE - 4F2B (0x23e bytes), align: 1
+  Segment part 15.            Intra module refs:   _PrintfLarge
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           _LdtobLarge             4CEE 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 4F2C - 50ED (0x1c2 bytes), align: 1
+  Segment part 16.            Intra module refs:   _PrintfLarge
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           _LitobLarge             4F2C 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 50EE - 50FF (0x12 bytes), align: 1
+  Segment part 17.            Intra module refs:   _LitobLarge
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 5100 - 5109 (0xa bytes), align: 1
+  Segment part 18.            Intra module refs:   LoadInt
+                                                   _LitobLarge
+                                                   _PrintfLarge
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6BC6 - 6BFB (0x36 bytes), align: 1
+  Segment part 28.            Intra module refs:   Segment part 23
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           pad                     6BC6 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6ECC - 6EF3 (0x28 bytes), align: 1
+  Segment part 29.            Intra module refs:   _PrintfLarge
+                                                   _PutcharsLarge
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           _PutcharLarge           6ECC 
+               calls indirect
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6E24 - 6E4F (0x2c bytes), align: 1
+  Segment part 30.            Intra module refs:   Segment part 24
+                                                   pad
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           _PutcharsLarge          6E24 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 71AE - 71BB (0xe bytes), align: 1
+  Segment part 20.            Intra module refs:   _PrintfLarge
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 7200 - 720B (0xc bytes), align: 1
+  Segment part 21.            Intra module refs:   _PrintfLarge
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 715C - 716D (0x12 bytes), align: 1
+  Segment part 22.            Intra module refs:   _PrintfLarge
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 6A64 - 6AA1 (0x3e bytes), align: 1
+  Segment part 27.            Intra module refs:   _PrintfLarge
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 4861 - 4867 (0x7 bytes), align: 0
+  Segment part 2.             Intra module refs:   _PrintfLarge
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 4868 - 486B (0x4 bytes), align: 0
+  Segment part 3.             Intra module refs:   _LdtobLarge
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 486C - 486F (0x4 bytes), align: 0
+  Segment part 4.             Intra module refs:   _LdtobLarge
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 4870 - 4873 (0x4 bytes), align: 0
+  Segment part 5.             Intra module refs:   _LdtobLarge
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 4874 - 4877 (0x4 bytes), align: 0
+  Segment part 6.             Intra module refs:   _LdtobLarge
+    -------------------------------------------------------------------------
+DATA16_C
+  Relative segment, address: 4878 - 4879 (0x2 bytes), align: 0
+  Segment part 7.             Intra module refs:   _GenldLarge
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?xsprout
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 71F4 - 71FF (0xc bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _SProut                 71F4            sprintf (?sprintf)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?xstod
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 5FA6 - 606F (0xca bytes), align: 1
+  Segment part 2.             Intra module refs:   __iar_Stod
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __iar_Stodx             5FA6 
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 7218 - 7221 (0xa bytes), align: 1
+  Segment part 3.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __iar_Stod              7218            atof (?atof)
+               calls direct
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?xstoflt
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 55A8 - 57AF (0x208 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _Stoflt                 55A8            __iar_Stodx (?xstod)
+               calls direct
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 724A - 7253 (0xa bytes), align: 1
+  Segment part 3.             Intra module refs:   _Stoflt
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 7222 - 722B (0xa bytes), align: 1
+  Segment part 4.             Intra module refs:   _Stoflt
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 7240 - 7249 (0xa bytes), align: 1
+  Segment part 5.             Intra module refs:   _Stoflt
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 7254 - 725B (0x8 bytes), align: 1
+  Segment part 6.             Intra module refs:   _Stoflt
+    -------------------------------------------------------------------------
+<CODE> 1 (was CODE)
+  Relative segment, address: 7102 - 7113 (0x12 bytes), align: 1
+  Segment part 7.             Intra module refs:   _Stoflt
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?xstopfx
+
+  SEGMENTS IN THE MODULE
+  ======================
+<CODE> 1 (was CODE)
+  Relative segment, address: 5DCC - 5ECD (0x102 bytes), align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _Stopfx                 5DCC            __iar_Stodx (?xstod)
+
+
+
+
+                ****************************************
+                *                                      *
+                *      SEGMENTS IN ADDRESS ORDER       *
+                *                                      *
+                ****************************************
+
+
+SEGMENT              SPACE    START ADDRESS   END ADDRESS     SIZE  TYPE  ALIGN
+=======              =====    =============   ===========     ====  ====  =====
+DATA16_AN                              0102 - 0103               2   rel    0
+                                       0130 - 0131               2 
+                                       015C - 015D               2 
+                                       0160 - 016B               C 
+                                       0200 - 0207               8 
+                                       020A - 020D               4 
+                                       0218 - 021D               6 
+                                       0220 - 0227               8 
+                                       022A - 022D               4 
+                                       0238 - 023D               6 
+                                       032A - 032D               4 
+                                       0340 - 0341               2 
+                                       0352 - 0353               2 
+                                       036E - 036F               2 
+                                       0380 - 0383               4 
+                                       0392 - 0393               2 
+                                       0500 - 0501               2 
+                                       050E - 051B               E 
+                                       0520 - 052B               C 
+                                       05C0 - 05C1               2 
+                                       05C6 - 05C9               4 
+                                       05CC - 05CF               4 
+                                       05DA - 05DB               2 
+                                       05DE - 05E1               4 
+                                       05E6 - 05EA               5 
+                                       05EC - 05EF               4 
+                                       05FA - 05FF               6 
+DATA16_I                               1C00 - 1C00               1   rel    1
+DATA16_Z                               1C02 - 1C05               4   rel    1
+CODE_I                                    1C06                       rel    1
+DATA20_I                                  1C06                       rel    1
+DATA20_Z                                  1C06                       rel    1
+DATA20_N                                  1C06                       rel    1
+CSTACK                                 1F1E - 23FF             4E2   rel    1
+DATA16_P                               4400 - 463D             23E   rel    1
+MPU_B2                                    4800                       rel   10
+MPU_B1                                    4800                       rel   10
+DATA16_C                               4800 - 4879              7A   rel    1
+DATA16_ID                              487A - 487A               1   rel    1
+CSTART                                 487C - 48AF              34   rel    1
+ISR_CODE                               48B0 - 499F              F0   rel    1
+<CODE> 1                               49A0 - 728B            28EC   rel    1
+CODE_PAD                               728C - 728D               2   rel    1
+CODE_ID                                   728E                       rel    1
+DATA20_ID                                 728E                       rel    1
+DATA20_C                                  728E                       rel    1
+INTVEC                                 FF90 - FFF1              62   com    1
+RESET                                  FFFE - FFFF               2   rel    1
+
+                ****************************************
+                *                                      *
+                *        END OF CROSS REFERENCE        *
+                *                                      *
+                ****************************************
+
+ 10 870 bytes of CODE  memory
+  1 255 bytes of DATA  memory (+ 129 absolute )
+    697 bytes of CONST memory
+
+Errors: none
+Warnings: none
+
