@@ -51,7 +51,7 @@ compass installed in a PMEL modified Gill Wind sensor housing.
 &nbsp;
 - [ ] With the compass "Alive", select the "Program" button from the top menu.
 
-![Step_4](https:\\github.com\NOAA-PMEL\micro\tree\master\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_4.png)
+![Step_4](https://github.com/NOAA-PMEL/micro/blob/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small/Cal_Step_4.png)
 
 
 <div style="page-break-after: always;"></div>
