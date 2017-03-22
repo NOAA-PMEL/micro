@@ -32,13 +32,13 @@ compass installed in a PMEL modified Gill Wind sensor housing.
 ### Software Setup
 - [ ] Load the Ocean-Server Compass Utility Program
 
-![Fig1](Figures_Small\Cal_Step_1.png)
+![Fig1](https://github.com/NOAA-PMEL/micro/tree/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small\Cal_Step_1.png)
 
 
 &nbsp;
 - [ ] Select "Scan for Compass" from the top menu
 
-![Step_2](Figures_Small\Cal_Step_2alt.png)
+![Step_2](https://github.com/NOAA-PMEL/micro/tree/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small\Figures_Small\Cal_Step_2alt.png)
 
 
 
@@ -46,12 +46,12 @@ compass installed in a PMEL modified Gill Wind sensor housing.
   * You should see the following result.  If not, verify that the serial and power
   are connected and restart the test.
 
-![Step_3](Figures_Small\Cal_Step_3alt.png)
+![Step_3](https://github.com/NOAA-PMEL/micro/tree/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small\Cal_Step_3alt.png)
 
 &nbsp;
 - [ ] With the compass "Alive", select the "Program" button from the top menu.
 
-![Step_4](Figures_Small\Cal_Step_4.png)
+![Step_4](https://github.com/NOAA-PMEL/micro/tree/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small\Cal_Step_4.png)
 
 
 <div style="page-break-after: always;"></div>
@@ -62,7 +62,7 @@ compass installed in a PMEL modified Gill Wind sensor housing.
   * When started, rotate the turntable clockwise so that it performs one revolution in 20+ seconds.
   * Press the **Spacebar** when complete
 
-![Step_5](Figures_Small\Cal_Step_5.png)
+![Step_5](https://github.com/NOAA-PMEL/micro/tree/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small\Cal_Step_5.png)
 
 
 -----
@@ -78,7 +78,7 @@ compass installed in a PMEL modified Gill Wind sensor housing.
   * Rotate the turntable through 360&deg; over 20+ seconds
   * Press the **Spacebar**
 
-![Step_6](Figures_Small\Cal_Step_6.png)
+![Step_6](https://github.com/NOAA-PMEL/micro/tree/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small\Cal_Step_6.png)
 
 
 
@@ -107,7 +107,7 @@ compass installed in a PMEL modified Gill Wind sensor housing.
   * Press **Enter** to exit the pop-up window
   * Press the **Spacebar**
 
-![Step_7](Figures_Small\Cal_Step_7.png)
+![Step_7](https://github.com/NOAA-PMEL/micro/tree/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small\Cal_Step_7.png)
 
 
 -----
@@ -117,7 +117,7 @@ compass installed in a PMEL modified Gill Wind sensor housing.
 
 - [ ] Select ***"Trim Roll and Pitch (Tilt on <3&deg;): Set"***
 
-![Step_9](Figures_Small\Cal_Step_9.png)
+![Step_9](https://github.com/NOAA-PMEL/micro/tree/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small\Cal_Step_9.png)
 
 
 
@@ -127,14 +127,14 @@ compass installed in a PMEL modified Gill Wind sensor housing.
 - [ ] Select ***"Azimuth", "Pitch", "Roll"*** from check boxes.  Deselect all others
 
 - [ ] Select ***"Set"*** To the right of check boxes
-![Step_10b](Figures_Small\Cal_Step_10b.png)
+![Step_10b](https://github.com/NOAA-PMEL/micro/tree/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small\Cal_Step_10b.png)
 
 
 &nbsp;
 - [ ] Select ***"Baud Rate: 9600"*** from pull-down menu.
 
 - [ ] Select ***"Set"***
-![Step_10b4](Figures_Small\Cal_Step_10b4.png)
+![Step_10b4](https://github.com/NOAA-PMEL/micro/tree/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small\Cal_Step_10b4.png)
 
 
 &nbsp;
@@ -142,7 +142,7 @@ compass installed in a PMEL modified Gill Wind sensor housing.
 
 - [ ] Select ***"Set"***
 
-![Step_10b5](Figures_Small\Cal_Step_10b5.png)
+![Step_10b5](https://github.com/NOAA-PMEL/micro/tree/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small\Cal_Step_10b5.png)
 
 
 
@@ -171,7 +171,7 @@ and press corresponding ***"Set"***
 
 
 
-![Step_1](Figures_Small\Cal_Step_11.png)
+![Step_1](https://github.com/NOAA-PMEL/micro/tree/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small\Cal_Step_11.png)
 
 
 &nbsp;
@@ -184,7 +184,7 @@ and press corresponding ***"Set"***
 
 - [ ] Copy, paste and save data in text document
 
-![Step_12](Figures_Small\Cal_Step_12.png)
+![Step_12](https://github.com/NOAA-PMEL/micro/tree/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small\Cal_Step_12.png)
 
 
 ## Validate Compass Calibration
@@ -193,7 +193,7 @@ and press corresponding ***"Set"***
 
 - [ ] Select ***"Output"*** from top menu
 
-![Step_13](Figures_Small\Cal_Step_13.png)
+![Step_13](https://github.com/NOAA-PMEL/micro/tree/master/SpartonReplacement/Documents/CompassCalibration/Figures_Small\Cal_Step_13.png)
 
 
 - [ ] Rotate the turntable to the following points and record the output.
