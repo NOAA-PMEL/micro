@@ -931,11 +931,11 @@
         </option>
         <option>
           <name>AllowExtraOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GenerateExtraOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>XExtraOutOverride</name>
@@ -943,12 +943,12 @@
         </option>
         <option>
           <name>ExtraOutputFile</name>
-          <state>TAO_CompassReplacement.a43</state>
+          <state>TAO_CompassReplacement.txt</state>
         </option>
         <option>
           <name>ExtraOutputFormat</name>
           <version>11</version>
-          <state>23</state>
+          <state>33</state>
         </option>
         <option>
           <name>ExtraFormatVariant</name>

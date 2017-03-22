@@ -1,0 +1,370 @@
+<h1 id="how-to-calibrate-gill-wind-sensors-os-5000s-compass-for-pmel-instruments">How To Calibrate Gill Wind Sensors OS-5000S Compass for PMEL Instruments</h1>
+<p>The following documents the procedure for calibrating the Ocean Server OS-5000S compass installed in a PMEL modified Gill Wind sensor housing.</p>
+<hr />
+<h2 id="requirements">Requirements</h2>
+<table>
+<thead>
+<tr class="header">
+<th align="left">NAME</th>
+<th align="left">Description</th>
+<th align="center">Qty</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Wind Sensor</td>
+<td align="left"><em>PMEL Modified Wind Sensor with OS-5000S Compass</em></td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Cable</td>
+<td align="left"><em>Compass Test Cable</em></td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Power Supply</td>
+<td align="left"><em>Power Supply or Battery (3.3 - 24VDC)</em></td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Laptop</td>
+<td align="left">*Laptop with Ocean Server Compass Utility Installed</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="left">RS232 Adapter</td>
+<td align="left">USB-to-RS232 Device/Cable</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">Test Jig</td>
+<td align="left">Wind Sensor Test Jig with Pitch &amp; Roll Gimbal</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="procedure">Procedure</h2>
+<h3 id="test-setup">Test Setup</h3>
+<ul>
+<li>[ ] Install the Wind Sensor</li>
+<li>[ ] Attach the Cable to the Wind Sensor</li>
+<li>[ ] Mount the Wind Sensor on the Test Jig</li>
+<li>[ ] Align the gimbal so pitch &amp; roll are at 0°</li>
+<li>[ ] Install the jig on the rotary monument with north indicators aligned.</li>
+<li>[ ] Rotate turn-table to 0°</li>
+<li>[ ] Connect the RS232 Adapter to the Laptop</li>
+<li>[ ] Connect the Power Supply to the Test Cable</li>
+</ul>
+<h3 id="software-setup">Software Setup</h3>
+<ul>
+<li>[ ] Load the Ocean-Server Compass Utility Program</li>
+</ul>
+<div class="figure">
+<img src="C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_1.png" alt="Fig1" />
+<p class="caption">Fig1</p>
+</div>
+<p>  - [ ] Select &quot;Scan for Compass&quot; from the top menu</p>
+<div class="figure">
+<img src="C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_2alt.png" alt="Step_2" />
+<p class="caption">Step_2</p>
+</div>
+<p>  * You should see the following result. If not, verify that the serial and power are connected and restart the test.</p>
+<div class="figure">
+<img src="C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_3alt.png" alt="Step_3" />
+<p class="caption">Step_3</p>
+</div>
+<p>  - [ ] With the compass &quot;Alive&quot;, select the &quot;Program&quot; button from the top menu.</p>
+<div class="figure">
+<img src="C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_4.png" alt="Step_4" />
+<p class="caption">Step_4</p>
+</div>
+<h3 id="xy-calibration">X,Y Calibration</h3>
+<ul>
+<li>[ ] Select <strong><em>&quot;Calibration X,Y Compass Level: Start&quot;</em></strong> from the menu (press button).</li>
+<li>Press <strong>Enter</strong> to exit the pop-up window</li>
+<li>When started, rotate the turntable clockwise so that it performs one revolution in 20+ seconds.</li>
+<li>Press the <strong>Spacebar</strong> when complete</li>
+</ul>
+<div class="figure">
+<img src="C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_5.png" alt="Step_5" />
+<p class="caption">Step_5</p>
+</div>
+<hr />
+<h3 id="z-calibration">Z Calibration</h3>
+<ul>
+<li><p>[ ] Adjust the pitch axis of the gibal so that compass is 90° to normal.</p></li>
+<li><p>[ ] Align sensor North with 0° on the monument</p></li>
+<li>[ ] Press <strong><em>&quot;Calibrate Z; Compass <span class="citation">@90</span> Degrees: Start&quot;</em></strong></li>
+<li>Press <strong>Enter</strong> to exit the pop-up window</li>
+<li>Rotate the turntable through 360° over 20+ seconds</li>
+<li><p>Press the <strong>Spacebar</strong></p></li>
+</ul>
+<div class="figure">
+<img src="C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_6.png" alt="Step_6" />
+<p class="caption">Step_6</p>
+</div>
+<h3 id="soft-iron-calibration">Soft Iron Calibration</h3>
+<ul>
+<li><p>[ ] Adjust the pitch axis of the gibal so that compass is 0° to normal.</p></li>
+<li><p>[ ] Align sensor North with 0° on the monument</p></li>
+<li><p>[ ] Select <strong><em>&quot;Soft Iron: On&quot;</em></strong> Radio Button</p></li>
+<li><p>[ ] Press <strong><em>&quot;Soft Iron: Calibrate&quot;</em></strong></p></li>
+<li>Press <strong>Enter</strong> to exit the pop-up window</li>
+<li>Press the <strong>Spacebar</strong>  </li>
+<li>[ ] Rotate the turntable to 90°</li>
+<li>Press <strong>Enter</strong> to exit the pop-up window</li>
+<li>Press the <strong>Spacebar</strong>  </li>
+<li>[ ] Rotate the turntable to180°</li>
+<li>Press <strong>Enter</strong> to exit the pop-up window</li>
+<li>Press the <strong>Spacebar</strong>  </li>
+<li>[ ] Rotate the turntable to 270°</li>
+<li>Press <strong>Enter</strong> to exit the pop-up window</li>
+<li><p>Press the <strong>Spacebar</strong></p></li>
+</ul>
+<div class="figure">
+<img src="C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_7.png" alt="Step_7" />
+<p class="caption">Step_7</p>
+</div>
+<hr />
+<h3 id="trim-roll-pitch">Trim Roll &amp; Pitch</h3>
+<ul>
+<li><p>[ ] Ensure the Pitch &amp; Roll axis of the gibal so that compass is 0° to normal.</p></li>
+<li><p>[ ] Select <strong><em>&quot;Trim Roll and Pitch (Tilt on &lt;3°): Set&quot;</em></strong></p></li>
+</ul>
+<div class="figure">
+<img src="C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_9.png" alt="Step_9" />
+<p class="caption">Step_9</p>
+</div>
+<h3 id="set-baud-rate-and-data-format">Set Baud Rate and Data Format</h3>
+<ul>
+<li><p>[ ] Select <strong><em>&quot;Display&quot;</em></strong> from the menu</p></li>
+<li><p>[ ] Select <strong><em>&quot;Azimuth&quot;, &quot;Pitch&quot;, &quot;Roll&quot;</em></strong> from check boxes. Deselect all others</p></li>
+<li><p>[ ] Select <strong><em>&quot;Set&quot;</em></strong> To the right of check boxes <img src="C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_10b.png" alt="Step_10b" /></p></li>
+</ul>
+<p>  - [ ] Select <strong><em>&quot;Baud Rate: 9600&quot;</em></strong> from pull-down menu.</p>
+<ul>
+<li>[ ] Select <strong><em>&quot;Set&quot;</em></strong> <img src="C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_10b4.png" alt="Step_10b4" /></li>
+</ul>
+<p>  - [ ] Select <strong><em>&quot;Output Rate: 5 samples/sec&quot;</em></strong> from menu.</p>
+<ul>
+<li>[ ] Select <strong><em>&quot;Set&quot;</em></strong></li>
+</ul>
+<div class="figure">
+<img src="C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_10b5.png" alt="Step_10b5" />
+<p class="caption">Step_10b5</p>
+</div>
+<ul>
+<li><p>[ ] Select <strong><em>&quot;Maths/Offsets&quot;</em></strong> from the menu</p></li>
+<li><p>[ ] Ensure the following settings are correct. If they are not, apply change and press corresponding <strong><em>&quot;Set&quot;</em></strong></p></li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Variable</th>
+<th align="center">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Set-Reset Rate</td>
+<td align="center">100 sentences</td>
+</tr>
+<tr class="even">
+<td align="left">Skip n first readings</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Euler Math</td>
+<td align="center">4=v2.4</td>
+</tr>
+<tr class="even">
+<td align="left">Average Samples</td>
+<td align="center">4</td>
+</tr>
+<tr class="odd">
+<td align="left">AD Decimation Filter</td>
+<td align="center">3</td>
+</tr>
+<tr class="even">
+<td align="left">Deviation</td>
+<td align="center"><strong>Enter Deviation if Required</strong></td>
+</tr>
+<tr class="odd">
+<td align="left">Declination</td>
+<td align="center"><strong>Enter Declination if Required</strong></td>
+</tr>
+<tr class="even">
+<td align="left">Temperature Offset</td>
+<td align="center"><strong>DO NOT CHANGE</strong></td>
+</tr>
+<tr class="odd">
+<td align="left">Acc Range</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="left">Max Pressure [PSI]</td>
+<td align="center">N/A</td>
+</tr>
+</tbody>
+</table>
+<p>  - [ ] Select <strong><em>&quot;Set&quot;</em></strong></p>
+<div class="figure">
+<img src="C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_11.png" alt="Step_1" />
+<p class="caption">Step_1</p>
+</div>
+<p> </p>
+<hr />
+<h3 id="grab-compass-calibration-data">Grab Compass Calibration Data</h3>
+<ul>
+<li><p>[ ] Select <strong><em>&quot;Compass Data&quot;</em></strong> from top menu</p></li>
+<li><p>[ ] Copy, paste and save data in text document</p></li>
+</ul>
+<div class="figure">
+<img src="C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_12.png" alt="Step_12" />
+<p class="caption">Step_12</p>
+</div>
+<h2 id="validate-compass-calibration">Validate Compass Calibration</h2>
+<ul>
+<li><p>[ ] Rotate the Turntable to 0°</p></li>
+<li><p>[ ] Select <strong><em>&quot;Output&quot;</em></strong> from top menu</p></li>
+</ul>
+<div class="figure">
+<img src="C:\Users\Casari\version-control\PMEL\micro\SpartonReplacement\Documents\CompassCalibration\Figures_Small\Cal_Step_13.png" alt="Step_13" />
+<p class="caption">Step_13</p>
+</div>
+<ul>
+<li>[ ] Rotate the turntable to the following points and record the output.</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Turntable Heading</th>
+<th align="right">Recorded Value</th>
+<th align="right">Error (expected - actual)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">0°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="even">
+<td align="left">15°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="odd">
+<td align="left">30°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="even">
+<td align="left">45°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="odd">
+<td align="left">60°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="even">
+<td align="left">75°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="odd">
+<td align="left">90°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="even">
+<td align="left">15°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="odd">
+<td align="left">120°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="even">
+<td align="left">135°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="odd">
+<td align="left">150°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="even">
+<td align="left">165°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="odd">
+<td align="left">1800°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="even">
+<td align="left">195°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="odd">
+<td align="left">210°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="even">
+<td align="left">225°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="odd">
+<td align="left">240°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="even">
+<td align="left">255°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="odd">
+<td align="left">270°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="even">
+<td align="left">285°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="odd">
+<td align="left">300°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="even">
+<td align="left">315°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="odd">
+<td align="left">330°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+<tr class="even">
+<td align="left">345°</td>
+<td align="right">°</td>
+<td align="right">°</td>
+</tr>
+</tbody>
+</table>
+<h2 id="calibration-complete">Calibration Complete</h2>
